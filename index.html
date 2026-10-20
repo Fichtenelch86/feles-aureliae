@@ -871,27 +871,99 @@ function altarFire(ctx, x, y, t, big) {
 SCENES.atrium = {
   name: "Atrium",
   draw(ctx, t) {
+// ---- Boden: Marmor mit Aederung ----
     RN(ctx, 0, 0, 640, 360, "#e8dcc0");
-    tiles(ctx, 0, 0, 640, 360, 40, 20, "#e0d0b0", "#cbb995"); // Marmor
+    tiles(ctx, 0, 0, 640, 360, 40, 20, "#e0d0b0", "#cbb995");
+    ctx.globalAlpha = 0.18;
+    ctx.strokeStyle = "#a89468"; ctx.lineWidth = 0.7;
+    for (let i = 0; i < 16; i++) {
+      const vx = (i * 137) % 640, vy = (i * 89) % 360;
+      ctx.beginPath();
+      ctx.moveTo(vx, vy);
+      ctx.quadraticCurveTo(vx + 30 + (i % 3) * 10, vy + 8, vx + 70, vy + 4 + (i % 5) * 3);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // ---- Hintergrundsmauer mit Verlauf + Eck-Pilastern ----
     brickWall(ctx, 40, 40, 560, 240);
     RN(ctx, 40, 40, 560, 6, "#f0e4c8");
     RN(ctx, 40, 40, 6, 240, "#d8bc90");
     RN(ctx, 594, 40, 6, 240, "#8a6444");
     RN(ctx, 40, 274, 560, 6, "#8a6a48");
-    for (let i = 0; i < 4; i++) R(ctx, 60 + i * 150, 0, 18, 44, "#8a6848"); // Balken
-    // Impluvium: Himmel + Becken
+    for (let i = 0; i < 4; i++) {
+      R(ctx, 60 + i * 150, 0, 18, 44, "#8a6848");
+      ctx.globalAlpha = 0.4;
+      ctx.strokeStyle = "#5e4630"; ctx.lineWidth = 0.8;
+      for (let g2 = 0; g2 < 3; g2++) {
+        ctx.beginPath();
+        ctx.moveTo(63 + i * 150, 6 + g2 * 14);
+        ctx.lineTo(75 + i * 150, 6 + g2 * 14);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+    // Fresken an der Wand (rechteckige Rahmen mit Motiven)
+    for (let i = 0; i < 3; i++) {
+      const fx2 = 130 + i * 170;
+      rr(ctx, fx2, 60, 60, 46, "#d8c8a8", true, 4);
+      ctx.globalAlpha = 0.5;
+      ell(ctx, fx2 + 30, i % 2 ? 84 : 90, 12, 8, i % 2 ? "#a85838" : "#8a9058", false);
+      RN(ctx, fx2 + 20, 88, 4, 12, "#6a7a48");
+      RN(ctx, fx2 + 36, 88, 4, 12, "#6a7a48");
+      ctx.globalAlpha = 1;
+    }
+    // Impluvium-Oeffnung: Himmel + tiefere Wand-
     skyGradient(ctx, "#7ec8e8", "#a8d8f0", "#c8e8f0");
     cloud(ctx, 80, 26, 1); cloud(ctx, 300, 16, 1);
-    RN(ctx, 290, 120, 60, 30, "#88ccf0");
+    cloud(ctx, 170, 52, 0.7); cloud(ctx, 430, 30, 0.8);
+    // Raender der Dachoffnung
+    RN(ctx, 270, 100, 110, 8, "#9a8a68");
+    RN(ctx, 270, 190, 110, 8, "#7a6a4c");
+    RN(ctx, 270, 100, 8, 98, "#8a7a58");
+    RN(ctx, 372, 100, 8, 98, "#6a5a40");
+    // Rand des Beckens (Marmor-Einfassung)
+    rr(ctx, 268, 162, 114, 76, "#d8ccb0", true, 5);
     water(ctx, 280, 170, 90, 60, t);
-    // Tisch mit Brot/Krug (mit Outlines)
+    // Laub am Rand der Dachoffnung
+    bush(ctx, 240, 96, 0.8); bush(ctx, 380, 92, 0.9);
+    // ---- Tisch: Platte mit Maserung, Beine mit Querstreben ----
     R(ctx, 110, 150, 90, 9, "#9a6a38");
+    ctx.globalAlpha = 0.4;
+    ctx.strokeStyle = "#6a4a24"; ctx.lineWidth = 0.7;
+    for (let i2 = 0; i2 < 5; i2++) {
+      ctx.beginPath();
+      ctx.moveTo(114 + i2 * 17, 152);
+      ctx.quadraticCurveTo(122 + i2 * 17, 155, 128 + i2 * 17, 153);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
     R(ctx, 114, 159, 11, 27, "#7a4c22"); R(ctx, 185, 159, 11, 27, "#7a4c22");
-    R(ctx, 130, 136, 27, 13, "#e0b060"); // Brot
+    R(ctx, 114, 178, 82, 4, "#8a5c2e"); // Querstrebe
+    R(ctx, 130, 136, 27, 13, "#e0b060"); // Brot mit Einschnitten
+    ctx.globalAlpha = 0.5;
+    ctx.strokeStyle = "#b88638"; ctx.lineWidth = 0.8;
+    for (let i2 = 0; i2 < 3; i2++) {
+      ctx.beginPath();
+      ctx.moveTo(134 + i2 * 6, 138);
+      ctx.quadraticCurveTo(136 + i2 * 6, 144, 134 + i2 * 6, 148);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
     RN(ctx, 134, 134, 18, 4, "#f0cc8c");
-    R(ctx, 158, 130, 17, 20, "#b06040"); // Krug
+    R(ctx, 158, 130, 17, 20, "#b06040"); // Krug mit Henkel
     RN(ctx, 162, 126, 9, 5, "#8a4828");
-    // Figuren
+    ctx.strokeStyle = INK; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.arc(158, 140, 6, 0.6, Math.PI - 0.6); ctx.stroke();
+    ctx.globalAlpha = 0.4;
+    ell(ctx, 174, 132, 2, 4, "#d88050", false);
+    ctx.globalAlpha = 1;
+    // Amphora in Ecke
+    ell(ctx, 52, 300, 7, 10, "#b06040", true);
+    RN(ctx, 48, 288, 8, 5, "#8a4828");
+    ctx.globalAlpha = 0.4;
+    ell(ctx, 49, 296, 2, 4, "#d88050", false);
+    ctx.globalAlpha = 1;
+    // ---- Figuren ----
     person(ctx, 150, 140, { skin: "#f0c090", hair: "#4a3018", tunic: "#c03838", trim: "#e05858", tunicDark: "#9c2828", skirt: false }, t);
     person(ctx, 440, 210, { skin: "#e0b080", hair: "#8a5a20", tunic: "#3860c0", trim: "#5880e0", tunicDark: "#28489c", skirt: false }, t);
     cat(ctx, 500, 300, t);
@@ -934,32 +1006,111 @@ SCENES.atrium = {
 SCENES.hortus = {
   name: "Hortus",
   draw(ctx, t) {
+    // ---- Himmel + fern: Huegelsilhouette ----
     skyGradient(ctx, "#68b8e8", "#8ed8f0", "#c8f0d8");
     cloud(ctx, 60, 40, 1); cloud(ctx, 200, 20, 1); cloud(ctx, 440, 48, 1);
-    RN(ctx, 0, 200, 640, 160, "#5aa048"); // Wiese
-    for (let i = 0; i < 22; i++) {
+    cloud(ctx, 130, 60, 0.7); cloud(ctx, 560, 30, 0.6);
+    ctx.globalAlpha = 0.35;
+    ell(ctx, 140, 200, 220, 42, "#8fbf7a", false);
+    ell(ctx, 500, 205, 240, 48, "#7fae6c", false);
+    ell(ctx, 320, 190, 160, 30, "#9cc98a", false);
+    ctx.globalAlpha = 1;
+    // ---- Wiese: Farbverlauf + Grasbüschel + Blumen ----
+    const mg = ctx.createLinearGradient(0, 200, 0, 360);
+    mg.addColorStop(0, "#6cb258"); mg.addColorStop(1, "#4a9040");
+    ctx.fillStyle = mg;
+    ctx.fillRect(0, 200, 640, 160);
+    for (let i = 0; i < 30; i++) {
       const gx = (i * 71) % 640, gy = 210 + (i * 37) % 130;
-      RN(ctx, gx, gy, 3, 6, "#3e8038"); RN(ctx, gx + 4, gy + 1, 3, 5, "#3e8038"); RN(ctx, gx + 8, gy, 3, 6, "#74bc60");
+      ctx.globalAlpha = 0.7;
+      ctx.strokeStyle = "#3e8038"; ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(gx, gy + 6);
+      ctx.quadraticCurveTo(gx + 1, gy + 2, gx + (hash01(i, 3) - 0.5) * 4, gy - 1);
+      ctx.moveTo(gx + 4, gy + 5);
+      ctx.quadraticCurveTo(gx + 5, gy + 1, gx + 4 + (hash01(i, 7) - 0.5) * 4, gy);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      if (i % 5 === 0) {
+        ctx.globalAlpha = 0.8;
+        ell(ctx, gx + 3, gy - 2, 1.5, 1.5, i % 10 ? "#e8d048" : "#e87888", false);
+        ctx.globalAlpha = 1;
+      }
     }
+    // Pfad durch den Garten
+    ctx.globalAlpha = 0.85;
+    ctx.beginPath();
+    ctx.moveTo(290, 360); ctx.quadraticCurveTo(300, 300, 270, 260);
+    ctx.quadraticCurveTo(250, 240, 240, 235); ctx.lineTo(260, 232);
+    ctx.quadraticCurveTo(280, 248, 310, 300); ctx.quadraticCurveTo(320, 330, 322, 360);
+    ctx.closePath();
+    ctx.fillStyle = "#d8c8a0"; ctx.fill();
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = "#b8a878";
+    for (let i = 0; i < 8; i++) ell(ctx, 292 + (i % 3) * 8, 280 + i * 10, 3, 2, "#b8a878", false);
+    ctx.globalAlpha = 1;
+    // ---- Mauer mit Wandbeet und Ranken ----
     brickWall(ctx, 0, 60, 640, 140);
     RN(ctx, 0, 60, 640, 6, "#d8c0a0");
+    // Efeu-Ranken an der Mauer
+    ctx.strokeStyle = "#4e8040"; ctx.lineWidth = 1.2;
+    for (let i = 0; i < 4; i++) {
+      const vx2 = 25 + i * 160;
+      ctx.beginPath();
+      ctx.moveTo(vx2, 200);
+      ctx.quadraticCurveTo(vx2 + 12, 160, vx2 + 4, 130);
+      ctx.quadraticCurveTo(vx2 - 6, 110, vx2 + 8, 90);
+      ctx.stroke();
+      ctx.globalAlpha = 0.75;
+      for (let l = 0; l < 6; l++) {
+        ell(ctx, vx2 + (l % 2 ? -5 : 7), 190 - l * 18, 3, 2.5, l % 2 ? "#5e9050" : "#4a7a3e", false);
+      }
+      ctx.globalAlpha = 1;
+    }
     windowFrame(ctx, 80, 100, 40, 40, false);
     windowFrame(ctx, 500, 100, 40, 40, false);
-    // Blumenbeet
-    R(ctx, 220, 250, 200, 50, "#8a6044");
+    // ---- Blumenbeet: gewölbtes Beet mit 8 Blumen + Blättern ----
+    rr(ctx, 220, 250, 200, 50, "#8a6044");
+    ctx.globalAlpha = 0.35;
+    ctx.fillStyle = "#6a4630";
+    ctx.fillRect(224, 292, 192, 8);
+    ctx.globalAlpha = 1;
     RN(ctx, 224, 246, 192, 6, "#a07850");
-    for (let i = 0; i < 5; i++) {
-      const fx = 240 + i * 36;
-      R(ctx, fx, 234, 4, 20, "#3a8a32"); // Stängel mit Outline
-      R(ctx, fx - 4, 226, 12, 10, i % 2 ? "#e86070" : "#e8d040"); // Blüte
-      RN(ctx, fx - 2, 228, 6, 5, i % 2 ? "#f8a0b0" : "#f8f0a0");
-      RN(ctx, fx + 6, 240, 5, 4, "#46a03c");
+    for (let i = 0; i < 8; i++) {
+      const fx = 232 + i * 24;
+      ctx.strokeStyle = "#3a8a32"; ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(fx + 2, 296);
+      ctx.quadraticCurveTo(fx + 1, 265, fx + 2, 238);
+      ctx.stroke();
+      ell(ctx, fx - 3, 292, 3, 1.8, "#46a03c", false);
+      ell(ctx, fx + 7, 288, 3, 1.8, "#46a03c", false);
+      ell(ctx, fx, 232, 5.5, 5, i % 2 ? "#e86070" : "#e8d040", true);
+      ctx.globalAlpha = 0.85;
+      ell(ctx, fx - 1.5, 230.5, 2, 2, i % 2 ? "#f8a0b0" : "#f8f0a0", false);
+      ell(ctx, fx + 2.5, 233, 1.5, 1.5, "#c84858", false);
+      ctx.globalAlpha = 1;
     }
+    // ---- Baeume + Buesche + Tor ----
     tree(ctx, 70, 210, 2); tree(ctx, 560, 200, 2);
     bush(ctx, 160, 240, 1); bush(ctx, 460, 250, 1);
+    bush(ctx, 120, 300, 1.2); bush(ctx, 520, 310, 1.1);
     door(ctx, 10, 140, 60, 90);
+    // Schmetterling
+    ctx.globalAlpha = 0.85;
+    const bf = Math.sin((t || 0) / 400) * 4;
+    ell(ctx, 380, 220 + bf, 2.4, 1.8, "#e8a838", false);
+    ell(ctx, 384.5, 219 + bf, 2.4, 1.8, "#d88828", false);
+    ctx.globalAlpha = 1;
     person(ctx, 300, 240, { skin: "#f0c090", hair: "#6a3818", tunic: "#d04868", trim: "#e87090", tunicDark: "#a83450", skirt: true }, t);
     cat(ctx, 480, 150, t);
+    // Vogel am Himmel
+    ctx.strokeStyle = "rgba(84,62,42,0.5)"; ctx.lineWidth = 1;
+    const bx = ((t || 0) / 60) % 700 - 30;
+    ctx.beginPath();
+    ctx.moveTo(bx, 46); ctx.quadraticCurveTo(bx + 4, 42, bx + 8, 46);
+    ctx.moveTo(bx + 8, 46); ctx.quadraticCurveTo(bx + 12, 42, bx + 16, 46);
+    ctx.stroke();
   },
   hotspots: [
     { x: 260, y: 240, w: 120, h: 80, la: "flos",
@@ -997,40 +1148,131 @@ SCENES.hortus = {
 SCENES.macellum = {
   name: "Macellum",
   draw(ctx, t) {
+    // ---- Markt: fern Staedte-Silhouetten + Dunst ----
     skyGradient(ctx, "#f0c860", "#f8dc90", "#f0b870");
     cloud(ctx, 100, 24, 1); cloud(ctx, 420, 14, 1);
+    cloud(ctx, 250, 40, 0.7); cloud(ctx, 560, 32, 0.6);
+    ctx.globalAlpha = 0.3;
+    for (let i = 0; i < 6; i++) {
+      const hx = 30 + i * 105;
+      rr(ctx, hx, 70, 40, 36, "#b09878", false, 3);
+      rr(ctx, hx + 12, 56, 14, 18, "#c0a888", false, 2);
+    }
+    ctx.globalAlpha = 0.18;
+    ctx.fillStyle = "#e8d8b8";
+    ctx.fillRect(0, 100, 640, 30);
+    ctx.globalAlpha = 1;
     stoneFloor(ctx, 260);
     RN(ctx, 0, 260, 640, 4, "#d0b088");
+    // Bodenrefekte / Markierungen
+    ctx.globalAlpha = 0.25;
+    ctx.strokeStyle = "#a88c68"; ctx.lineWidth = 1;
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath();
+      ctx.moveTo(80 + i * 200, 300);
+      ctx.quadraticCurveTo(110 + i * 200, 340, 80 + i * 200, 358);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // ---- Marktstaende: 4 Stnde mit Markisen, Detailware ----
     for (let i = 0; i < 4; i++) {
       const sx = 10 + i * 160;
-      R(ctx, sx + 4, 140, 9, 92, "#7a5428"); R(ctx, sx + 117, 140, 9, 92, "#7a5428"); // Pfosten
-      for (let m = 0; m < 6; m++) R(ctx, sx + m * 22, 120, 22, 16, m % 2 ? "#f0e8d8" : "#e05858"); // Markise
+      R(ctx, sx + 4, 140, 9, 92, "#7a5428"); R(ctx, sx + 117, 140, 9, 92, "#7a5428");
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = "#4e3618"; ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.moveTo(sx + 8, 145); ctx.lineTo(sx + 8, 228); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx + 121, 145); ctx.lineTo(sx + 121, 228); ctx.stroke();
+      ctx.globalAlpha = 1;
+      for (let m = 0; m < 6; m++) R(ctx, sx + m * 22, 120, 22, 16, m % 2 ? "#f0e8d8" : "#e05858");
       RN(ctx, sx, 134, 132, 6, "#c04848");
+      // Markisen-Wellen
+      ctx.globalAlpha = 0.25;
+      ctx.strokeStyle = "#a03838"; ctx.lineWidth = 0.8;
+      for (let m = 1; m < 6; m += 2) {
+        ctx.beginPath();
+        ctx.moveTo(sx + m * 22 + 11, 132);
+        ctx.quadraticCurveTo(sx + m * 22 + 11, 138, sx + m * 22 + 11, 136);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
       R(ctx, sx, 210, 132, 13, "#9a6a38"); // Theke
       RN(ctx, sx + 5, 223, 122, 8, "#7a4c22");
       RN(ctx, sx, 210, 132, 4, "#c89258");
-      if (i === 0) { // Früchte
-        for (let f = 0; f < 4; f++) {
-          R(ctx, sx + 14 + f * 28, 194, 15, 15, f % 2 ? "#f08838" : "#e05828");
-          RN(ctx, sx + 18 + f * 28, 190, 7, 5, "#f8b060");
+      if (i === 0) { // Fruechte: Pyramiden-Stacks mit Blättern
+        for (let f = 0; f < 5; f++) {
+          const frx = sx + 12 + f * 24;
+          ell(ctx, frx + 7, 196, 7, 7, f % 2 ? "#f08838" : "#e05828", true);
+          ell(ctx, frx + 7, 187, 6.5, 6.5, f % 2 ? "#f89848" : "#e86838", true);
+          ctx.globalAlpha = 0.7;
+          ell(ctx, frx + 4, 185, 2, 1.2, "#78a848", false);
+          ctx.globalAlpha = 1;
         }
-      } else if (i === 1) { // Käse
-        R(ctx, sx + 20, 190, 32, 20, "#f0d060"); RN(ctx, sx + 25, 195, 22, 10, "#f8e490");
-        R(ctx, sx + 70, 194, 28, 16, "#e0c040");
-      } else if (i === 2) { // Töpfe
-        R(ctx, sx + 18, 188, 22, 22, "#b06040"); R(ctx, sx + 21, 182, 16, 8, "#8a4828");
-        R(ctx, sx + 70, 190, 24, 20, "#a060c0"); R(ctx, sx + 74, 184, 16, 8, "#78389c");
-      } else { // Körbe mit Korn
-        R(ctx, sx + 16, 190, 26, 20, "#c8a050"); RN(ctx, sx + 20, 184, 18, 8, "#f0dca0");
-        R(ctx, sx + 72, 192, 24, 18, "#c8a050"); RN(ctx, sx + 76, 186, 16, 8, "#f0dca0");
+      } else if (i === 1) { // Kaese: Raeder mit Lochern
+        ell(ctx, sx + 34, 198, 15, 11, "#f0d060", true);
+        ell(ctx, sx + 70, 202, 13, 10, "#e0c040", true);
+        ctx.globalAlpha = 0.6;
+        for (let k = 0; k < 4; k++) {
+          ell(ctx, sx + 28 + k * 4, 196 + (k % 2) * 4, 1.5, 1.2, "#c8a030", false);
+          ell(ctx, sx + 65 + k * 3, 200 + (k % 2) * 4, 1.4, 1.1, "#c09828", false);
+        }
+        ctx.globalAlpha = 1;
+        ell(ctx, sx + 105, 200, 9, 8, "#e8cc58", true);
+      } else if (i === 2) { // Toepfe: gestapelte Amphoren
+        ell(ctx, sx + 28, 198, 10, 11, "#b06040", true);
+        RN(ctx, sx + 23, 184, 10, 6, "#8a4828");
+        ell(ctx, sx + 55, 195, 8, 9, "#c07050", true);
+        ell(ctx, sx + 85, 199, 11, 10, "#a060c0", true);
+        RN(ctx, sx + 80, 186, 11, 6, "#78389c");
+        ell(ctx, sx + 112, 196, 8, 8, "#8848a8", true);
+        ctx.globalAlpha = 0.5;
+        ell(ctx, sx + 26, 194, 2.5, 4, "#d88050", false);
+        ell(ctx, sx + 83, 195, 3, 4, "#c088e8", false);
+        ctx.globalAlpha = 1;
+      } else { // Koerner: Kegel-Haufen mit Ahren
+        ctx.beginPath();
+        ctx.moveTo(sx + 18, 208);
+        ctx.quadraticCurveTo(sx + 30, 178, sx + 42, 208);
+        ctx.closePath();
+        const gg = ctx.createLinearGradient(0, 178, 0, 208);
+        gg.addColorStop(0, "#f0dca0"); gg.addColorStop(1, "#c8a050");
+        ctx.fillStyle = gg; ctx.fill();
+        ctx.strokeStyle = INK; ctx.lineWidth = 1; ctx.stroke();
+        for (let a = 0; a < 3; a++) {
+          RN(ctx, sx + 26 + a * 5, 172 - a * 2, 1.6, 8, "#e8c858");
+          ell(ctx, sx + 26.5 + a * 5, 171 - a * 2, 2, 1.6, "#f8e0a0", false);
+        }
+        rr(ctx, sx + 72, 192, 24, 18, "#c8a050", true);
+        ctx.globalAlpha = 0.6;
+        for (let k2 = 0; k2 < 5; k2++) RN(ctx, sx + 75 + k2 * 4.5, 188 - (k2 % 2), 3, 5, "#f0dca0");
+        ctx.globalAlpha = 1;
       }
     }
-    // Annona-Tafel
+    // ---- Annona-Tafel mit Schnur + Zahlen ----
     R(ctx, 300, 180, 62, 36, "#f0e0a8");
     R(ctx, 296, 174, 70, 8, "#b09048");
-    RN(ctx, 310, 192, 44, 4, "#6a5838"); RN(ctx, 310, 200, 36, 4, "#6a5838");
+    ctx.strokeStyle = INK; ctx.lineWidth = 0.9;
+    ctx.beginPath(); ctx.moveTo(296, 178); ctx.lineTo(288, 168); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(366, 178); ctx.lineTo(374, 168); ctx.stroke();
+    ctx.globalAlpha = 0.8;
+    ctx.fillStyle = "#6a5838";
+    ctx.font = "7px Georgia";
+    ctx.fillText("X V III", 312, 196);
+    ctx.fillText("IIII", 320, 206);
+    ctx.globalAlpha = 1;
+    RN(ctx, 310, 210, 44, 3, "#6a5838");
+    // Markt-Details: Korb am Boden, Waage
+    rr(ctx, 470, 286, 22, 14, "#c8a050", true);
+    ctx.globalAlpha = 0.4;
+    ctx.strokeStyle = "#8a6a28"; ctx.lineWidth = 0.7;
+    for (let w2 = 0; w2 < 3; w2++) { ctx.beginPath(); ctx.moveTo(473 + w2 * 7, 288); ctx.lineTo(473 + w2 * 7, 299); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.moveTo(480, 286); ctx.quadraticCurveTo(481, 280, 480, 278); ctx.stroke();
     person(ctx, 170, 210, { skin: "#e0b080", hair: "#2a1a10", tunic: "#4aa858", trim: "#70c878", tunicDark: "#388c40", skirt: false }, t);
     person(ctx, 420, 280, { skin: "#f0c090", hair: "#e0b860", tunic: "#b050d0", trim: "#d078e8", tunicDark: "#8c38a8", skirt: true }, t);
+    // Kundin im Hintergrund
+    ctx.globalAlpha = 0.8;
+    person(ctx, 560, 232, { skin: "#e8c098", hair: "#7a5028", tunic: "#8a6848", trim: "#a88860", tunicDark: "#6a4c30", skirt: true }, t);
+    ctx.globalAlpha = 1;
     cat(ctx, 590, 320, t);
   },
   hotspots: [
@@ -1063,38 +1305,109 @@ SCENES.macellum = {
 SCENES.taberna = {
   name: "Taberna",
   draw(ctx, t) {
-    RN(ctx, 0, 0, 640, 360, "#3a2a1c");
-    for (let i = 0; i < 5; i++) R(ctx, 20 + i * 130, 0, 20, 60, "#6a4c2c"); // Balken
-    RN(ctx, 0, 60, 640, 300, "#8a6444");
+    // ---- Taberna: warmes Innenlicht ----
+    const tg = ctx.createLinearGradient(0, 0, 0, 360);
+    tg.addColorStop(0, "#3a2a1c"); tg.addColorStop(0.4, "#6a5034"); tg.addColorStop(1, "#8a6444");
+    ctx.fillStyle = tg;
+    ctx.fillRect(0, 0, 640, 360);
+    for (let i = 0; i < 5; i++) {
+      R(ctx, 20 + i * 130, 0, 20, 60, "#6a4c2c");
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = "#4e3618"; ctx.lineWidth = 0.8;
+      for (let g2 = 0; g2 < 3; g2++) {
+        ctx.beginPath();
+        ctx.moveTo(24 + i * 130, 8 + g2 * 18);
+        ctx.quadraticCurveTo(30 + i * 130, 16 + g2 * 18, 36 + i * 130, 8 + g2 * 18);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
     RN(ctx, 0, 60, 640, 8, "#9c7450");
     brickWall(ctx, 0, 250, 640, 110);
     tiles(ctx, 0, 320, 640, 40, 40, 20, "#7a5c3c", "#684c30");
-    // Theke
+    // Rauch/Trophäen an der Wand
+    ell(ctx, 320, 80, 14, 6, "#a89468", true);
+    ell(ctx, 320, 74, 6, 4, "#8a7448", false);
+    RN(ctx, 300, 76, 2, 8, "#8a7448");
+    // ---- Theke mit Plattenfugen + Ware ----
     R(ctx, 40, 180, 260, 17, "#9a6a38");
     R(ctx, 48, 197, 244, 11, "#7a4c22");
     RN(ctx, 40, 180, 260, 5, "#c89258");
+    ctx.globalAlpha = 0.35;
+    ctx.strokeStyle = "#6a4a24"; ctx.lineWidth = 0.7;
+    for (let i2 = 0; i2 < 6; i2++) {
+      ctx.beginPath(); ctx.moveTo(80 + i2 * 40, 182); ctx.lineTo(80 + i2 * 40, 196); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
     R(ctx, 52, 208, 13, 42, "#6a4c2c"); R(ctx, 235, 208, 13, 42, "#6a4c2c");
-    // Ware auf der Theke
-    R(ctx, 70, 162, 32, 18, "#e0b060"); RN(ctx, 75, 158, 22, 7, "#f0cc8c");
-    R(ctx, 130, 166, 24, 14, "#f0d060");
+    R(ctx, 52, 236, 196, 4, "#7a5c34"); // Querstrebe
+    // Brotlaibe mit Glanz
+    R(ctx, 70, 162, 32, 18, "#e0b060");
+    ell(ctx, 86, 168, 13, 7, "#f0cc8c", false);
+    ctx.globalAlpha = 0.5;
+    ctx.strokeStyle = "#c89848"; ctx.lineWidth = 0.7;
+    ctx.beginPath(); ctx.moveTo(74, 164); ctx.quadraticCurveTo(76, 170, 74, 177); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(84, 164); ctx.quadraticCurveTo(86, 170, 84, 177); ctx.stroke();
+    ctx.globalAlpha = 1;
+    R(ctx, 130, 166, 24, 14, "#f0d060"); // Kaesestück
+    ell(ctx, 142, 172, 9, 5, "#f8e490", false);
     R(ctx, 190, 156, 22, 24, "#b06040"); RN(ctx, 195, 151, 12, 6, "#8a4828");
-    // Regal mit Amphoren
+    ctx.strokeStyle = INK; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(190, 168, 6, Math.PI * 0.6, Math.PI * 1.4); ctx.stroke();
+    ctx.globalAlpha = 0.35;
+    ell(ctx, 205, 160, 2, 5, "#d88050", false);
+    ctx.globalAlpha = 1;
+    // ---- Regal mit Amphoren + Körben ----
     R(ctx, 380, 120, 220, 9, "#9a6a38");
     R(ctx, 384, 129, 11, 42, "#6a4c2c"); R(ctx, 585, 129, 11, 42, "#6a4c2c");
     for (let i = 0; i < 4; i++) {
-      R(ctx, 404 + i * 48, 90, 26, 30, "#c8a070");
-      R(ctx, 410 + i * 48, 80, 14, 11, "#a07848");
-      RN(ctx, 407 + i * 48, 96, 7, 7, "#e0c090");
+      ell(ctx, 417 + i * 48, 104, 12, 13, "#c8a070", true);
+      RN(ctx, 411 + i * 48, 88, 12, 8, "#a07848");
+      ctx.globalAlpha = 0.45;
+      ell(ctx, 413 + i * 48, 100, 2.5, 5, "#e0c090", false);
+      ctx.globalAlpha = 1;
+      // Amphoren-Fuss
+      RN(ctx, 413 + i * 48, 117, 8, 3, "#a07848");
     }
-    RN(ctx, 30, 70, 20, 112, "#b84040"); RN(ctx, 590, 70, 20, 112, "#b84040"); // Vorhänge
-    // Coquus mit Kochmütze
+    rr(ctx, 448, 96, 24, 24, "#c8a050", true);
+    ctx.globalAlpha = 0.5;
+    ctx.strokeStyle = "#8a6a28"; ctx.lineWidth = 0.7;
+    for (let w2 = 0; w2 < 3; w2++) { ctx.beginPath(); ctx.moveTo(451 + w2 * 8, 98); ctx.lineTo(451 + w2 * 8, 118); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+    RN(ctx, 30, 70, 20, 112, "#b84040"); RN(ctx, 590, 70, 20, 112, "#b84040");
+    // Vorhang-Falten
+    ctx.globalAlpha = 0.3;
+    ctx.strokeStyle = "#903030"; ctx.lineWidth = 1;
+    for (let i2 = 0; i2 < 4; i2++) {
+      ctx.beginPath();
+      ctx.moveTo(34 + i2 * 5, 72);
+      ctx.quadraticCurveTo(36 + i2 * 5, 128, 34 + i2 * 5, 180);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(594 + i2 * 5, 72);
+      ctx.quadraticCurveTo(596 + i2 * 5, 128, 594 + i2 * 5, 180);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // ---- Coquus + Murmillo-Ecke ----
     person(ctx, 130, 180, { skin: "#f0c090", hair: "#2a1a10", tunic: "#c06028", trim: "#e08040", tunicDark: "#984818", skirt: false }, t);
     R(ctx, 112, 152, 36, 12, "#f8f8f0");
     RN(ctx, 116, 147, 28, 6, "#e0e0d0");
-    // Murmillo-Tisch
+    // Kochlöffel
+    ctx.strokeStyle = "#8a6a38"; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(150, 148); ctx.lineTo(158, 130); ctx.stroke();
+    ell(ctx, 159, 128, 3, 3.5, "#a88858", true);
     R(ctx, 390, 250, 120, 15, "#9a6a38"); R(ctx, 396, 265, 13, 38, "#6a4c2c"); R(ctx, 489, 265, 13, 38, "#6a4c2c");
-    R(ctx, 420, 236, 22, 14, "#e0c050"); // Becher
+    R(ctx, 390, 278, 106, 4, "#7a5c34");
+    // Becher mit Wein
+    ell(ctx, 431, 234, 8, 6, "#e0c050", true);
+    ctx.globalAlpha = 0.7;
+    ell(ctx, 431, 232, 6, 2, "#a03848", false);
+    ctx.globalAlpha = 1;
     murmilloSprite(ctx, 460, 250, t);
+    // Karten-Spiel-Miniatur auf dem Tisch
+    RN(ctx, 415, 244, 7, 10, "#f0ece0");
+    RN(ctx, 446, 246, 7, 10, "#f0ece0");
     cat(ctx, 260, 320, t);
     torch(ctx, 340, 98, t); torch(ctx, 40, 88, t);
   },
@@ -1136,36 +1449,102 @@ SCENES.taberna = {
 SCENES.thermae = {
   name: "Thermae",
   draw(ctx, t) {
-    RN(ctx, 0, 0, 640, 360, "#8a90a8");
-    RN(ctx, 0, 0, 640, 240, "#c0c0ca");
+    // ---- Thermen: Dampfende Halle ----
+    const hg = ctx.createLinearGradient(0, 0, 0, 360);
+    hg.addColorStop(0, "#a8acb8"); hg.addColorStop(0.5, "#c0c0ca"); hg.addColorStop(1, "#8a90a8");
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, 0, 640, 360);
+    // Gewoelbe-Bogen
     for (let i = 0; i < 4; i++) {
+      ctx.strokeStyle = "rgba(140,140,158,0.7)"; ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(101 + i * 160, 40, 50, Math.PI, 0);
+      ctx.stroke();
       R(ctx, 40 + i * 160, 22, 122, 9, "#a0a0b0");
       R(ctx, 60 + i * 160, 0, 82, 22, "#b0b0be");
+      // Bogen-Felder
+      ctx.globalAlpha = 0.25;
+      ctx.fillStyle = "#d8d8e2";
+      ctx.fillRect(60 + i * 160, 0, 82, 16);
+      ctx.globalAlpha = 1;
     }
     RN(ctx, 0, 236, 640, 10, "#a09078");
-    // Großes Becken
+    // ---- Grosses Becken mit Marmor-Rand ----
+    rr(ctx, 54, 94, 532, 172, "#c8bda8", true, 8);
     R(ctx, 60, 100, 520, 160, "#7090c0");
-    water(ctx, 68, 108, 504, 144, t);
-    for (let i = 0; i < 5; i++) {
-      const sx2 = 120 + i * 100, sy = 90 + Math.sin((t || 0) / 700 + i) * 6;
-      RN(ctx, sx2, sy, 42, 11, "rgba(235,240,245,0.6)");
-      RN(ctx, sx2 + 11, sy - 9, 20, 9, "rgba(235,240,245,0.45)");
+    ctx.globalAlpha = 0.3;
+    ctx.strokeStyle = "#98b8d8"; ctx.lineWidth = 1;
+    for (let i2 = 0; i2 < 5; i2++) {
+      ctx.beginPath(); ctx.moveTo(90 + i2 * 110, 104); ctx.lineTo(90 + i2 * 110, 255); ctx.stroke();
     }
+    ctx.globalAlpha = 1;
+    water(ctx, 68, 108, 504, 144, t);
+    // Dampf-Schwaden
+    for (let i = 0; i < 6; i++) {
+      const sx2 = 120 + i * 100, sy = 90 + Math.sin((t || 0) / 700 + i) * 6;
+      ctx.globalAlpha = 0.35;
+      ell(ctx, sx2 + 21, sy + 5, 21, 5.5, "#ebf0f5", false);
+      ctx.globalAlpha = 0.25;
+      ell(ctx, sx2 + 11, sy - 9, 10, 4.5, "#ebf0f5", false);
+      ctx.globalAlpha = 1;
+    }
+    // Dampfueber dem Wasser
+    ctx.globalAlpha = 0.12;
+    for (let i2 = 0; i2 < 4; i2++) {
+      const dyy = ((t || 0) / 30 + i2 * 40) % 60;
+      ell(ctx, 150 + i2 * 130, 120 - dyy, 30, 12, "#ffffff", false);
+    }
+    ctx.globalAlpha = 1;
     tiles(ctx, 40, 260, 560, 30, 44, 16, "#d0b890", "#bca878");
     RN(ctx, 40, 260, 560, 5, "#e8d8b8");
-    R(ctx, 120, 244, 62, 15, "#b09870"); // Leiter
+    // ---- Leiter mit Sprossen ----
+    R(ctx, 120, 244, 62, 15, "#b09870");
+    ctx.strokeStyle = "#8a7450"; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(126, 246); ctx.lineTo(126, 258); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(176, 246); ctx.lineTo(176, 258); ctx.stroke();
+    for (let i2 = 0; i2 < 4; i2++) {
+      ctx.beginPath(); ctx.moveTo(128 + i2 * 13, 248 + i2 * 3); ctx.lineTo(174 - i2 * 13, 248 + i2 * 3); ctx.stroke();
+    }
+    // Fensterreihe mit Licht
     for (let i = 0; i < 8; i++) {
       R(ctx, 80 + i * 60, 68, 42, 5, "#8aa8d0");
+      ctx.globalAlpha = 0.5;
+      RN(ctx, 82 + i * 60, 68, 42, 2, "#b8d0e8");
+      ctx.globalAlpha = 0.25;
       RN(ctx, 102 + i * 60, 76, 32, 5, "#6080b0");
+      ctx.globalAlpha = 0.18;
+      RN(ctx, 96 + i * 60, 82, 44, 20, "#a8c8e8");
+      ctx.globalAlpha = 1;
     }
+    // ---- Badender + Tuch + Schlüssel-Motiv ----
     person(ctx, 140, 250, { skin: "#e0b080", hair: "#2a1a10", tunic: "#50b0b8", trim: "#78d0d8", tunicDark: "#388c94", skirt: false }, t);
     R(ctx, 106, 218, 14, 24, "#f0ece0"); // Tuch
-    // Pfeil + glitzernder Schlüssel im Wasser
+    ctx.globalAlpha = 0.3;
+    ctx.strokeStyle = "#c8c0a8"; ctx.lineWidth = 0.8;
+    ctx.beginPath(); ctx.moveTo(109, 221); ctx.lineTo(109, 240); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(116, 221); ctx.lineTo(116, 240); ctx.stroke();
+    ctx.globalAlpha = 1;
+    // Pfeil + Schluessel mit Glitzer
     R(ctx, 310, 178, 42, 6, "#d0b050");
+    ctx.globalAlpha = 0.4;
+    RN(ctx, 314, 180, 34, 2, "#f0d888");
+    ctx.globalAlpha = 1;
     R(ctx, 344, 172, 10, 14, "#b89440");
     R(ctx, 304, 172, 10, 12, "#e8e8f4");
     R(ctx, 352, 186, 10, 10, "#f0e8c8");
     RN(ctx, 356, 182, 5, 5, "#fdf8e0");
+    // Funkelnder Glanz am Schluessel
+    const sp2 = Math.sin((t || 0) / 300);
+    if (sp2 > 0.3) {
+      ctx.globalAlpha = (sp2 - 0.3) * 1.2;
+      RN(ctx, 350, 174, 14, 1.6, "#ffffff");
+      RN(ctx, 357, 167, 1.6, 14, "#ffffff");
+      ctx.globalAlpha = 1;
+    }
+    // Zweiter Badender im Hintergrund
+    ctx.globalAlpha = 0.75;
+    person(ctx, 480, 240, { skin: "#e8c0a0", hair: "#5a4a38", tunic: "#70a8c0", trim: "#98c8d8", tunicDark: "#588898", skirt: true }, t);
+    ctx.globalAlpha = 1;
     cat(ctx, 560, 320, t);
     torch(ctx, 40, 58, t); torch(ctx, 600, 58, t);
   },
@@ -1208,34 +1587,96 @@ SCENES.thermae = {
 SCENES.domus_vicini = {
   name: "Domus Vicini",
   draw(ctx, t) {
-    RN(ctx, 0, 0, 640, 360, "#2a2018");
+    // ---- Domus Vicini: gemuetliche Stube ----
+    const dg = ctx.createLinearGradient(0, 0, 0, 360);
+    dg.addColorStop(0, "#2a2018"); dg.addColorStop(0.5, "#554030"); dg.addColorStop(1, "#755736");
+    ctx.fillStyle = dg;
+    ctx.fillRect(0, 0, 640, 360);
     RN(ctx, 0, 290, 640, 70, "#553e28");
-    for (let i = 0; i < 12; i++) R(ctx, i * 55, 290, 4, 70, "#3e2c1c"); // Dielenfugen
+    for (let i = 0; i < 12; i++) {
+      R(ctx, i * 55, 290, 4, 70, "#3e2c1c");
+      ctx.globalAlpha = 0.25;
+      ctx.strokeStyle = "#6a4c30"; ctx.lineWidth = 0.6;
+      ctx.beginPath(); ctx.moveTo(i * 55 + 2, 292); ctx.lineTo(i * 55 + 2, 358); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
     RN(ctx, 0, 40, 640, 250, "#755736");
     RN(ctx, 0, 40, 640, 8, "#876540");
-    for (let i = 0; i < 5; i++) R(ctx, 30 + i * 130, 20, 22, 24, "#6a4c2c");
+    for (let i = 0; i < 5; i++) {
+      R(ctx, 30 + i * 130, 20, 22, 24, "#6a4c2c");
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = "#4e3618"; ctx.lineWidth = 0.7;
+      for (let g2 = 0; g2 < 2; g2++) {
+        ctx.beginPath(); ctx.moveTo(34 + i * 130, 26 + g2 * 10); ctx.lineTo(48 + i * 130, 26 + g2 * 10); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+    // Familienbild an der Wand
+    rr(ctx, 180, 70, 40, 32, "#9a7a4c", true, 2);
+    ctx.globalAlpha = 0.85;
+    ell(ctx, 200, 84, 5, 5, "#e0c0a0", false);
+    ell(ctx, 190, 92, 3.5, 4, "#c8a888", false);
+    ell(ctx, 210, 92, 3.5, 4, "#c8a888", false);
+    ctx.globalAlpha = 1;
     door(ctx, 280, 140, 80, 110);
     torch(ctx, 250, 118, t); torch(ctx, 390, 118, t);
-    // Prunktruhe (Cista)
+    // ---- Prunktruhe mit Schnitzereien ----
     R(ctx, 90, 190, 150, 70, "#9a6a38");
     R(ctx, 94, 182, 142, 14, "#b4814c");
     R(ctx, 90, 206, 150, 7, "#e8c040");
     R(ctx, 90, 240, 150, 7, "#e8c040");
     R(ctx, 148, 194, 16, 22, "#f0cc50");
     RN(ctx, 153, 201, 7, 9, "#3e2c1c");
+    ctx.globalAlpha = 0.5;
+    ctx.strokeStyle = "#c89248"; ctx.lineWidth = 0.8;
+    for (let i2 = 0; i2 < 3; i2++) {
+      ctx.beginPath();
+      ctx.arc(120 + i2 * 40, 222, 6, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
     RN(ctx, 96, 212, 12, 46, "rgba(0,0,0,0.18)");
-    // Regal mit Krügen
+    // ---- Regal mit Kruügen + Vorratskorb ----
     R(ctx, 440, 150, 130, 9, "#9a6a38");
     R(ctx, 446, 159, 11, 42, "#6a4c2c"); R(ctx, 553, 159, 11, 42, "#6a4c2c");
     for (let i = 0; i < 3; i++) {
-      R(ctx, 460 + i * 40, 118, 24, 32, "#b86040");
-      R(ctx, 466 + i * 40, 108, 12, 10, "#8a4828");
-      RN(ctx, 463 + i * 40, 126, 7, 7, "#d88050");
+      ell(ctx, 472 + i * 40, 110, 11, 13, "#b86040", true);
+      RN(ctx, 466 + i * 40, 94, 12, 8, "#8a4828");
+      ctx.globalAlpha = 0.4;
+      ell(ctx, 468 + i * 40, 106, 2.5, 5, "#d88050", false);
+      ctx.globalAlpha = 1;
     }
-    // Teppich
-    R(ctx, 240, 300, 160, 50, "#b04040");
-    R(ctx, 250, 308, 140, 34, "#c85850");
-    RN(ctx, 260, 316, 120, 18, "#a03838");
+    rr(ctx, 90, 252, 30, 22, "#c8a050", true);
+    ctx.globalAlpha = 0.5;
+    ctx.strokeStyle = "#8a6a28"; ctx.lineWidth = 0.7;
+    for (let w2 = 0; w2 < 3; w2++) { ctx.beginPath(); ctx.moveTo(94 + w2 * 9, 254); ctx.lineTo(94 + w2 * 9, 272); ctx.stroke(); }
+    ctx.globalAlpha = 0.8;
+    ell(ctx, 105, 250, 8, 4, "#e8c878", false);
+    ctx.globalAlpha = 1;
+    // ---- Teppich mit Muster ----
+    ctx.beginPath();
+    ctx.moveTo(240, 300); ctx.lineTo(400, 300); ctx.lineTo(390, 350); ctx.lineTo(250, 350);
+    ctx.closePath();
+    const rg = ctx.createLinearGradient(0, 300, 0, 350);
+    rg.addColorStop(0, "#b04040"); rg.addColorStop(1, "#903030");
+    ctx.fillStyle = rg; ctx.fill();
+    ctx.strokeStyle = INK; ctx.lineWidth = 1; ctx.stroke();
+    ctx.globalAlpha = 0.55;
+    for (let i2 = 0; i2 < 3; i2++) {
+      ctx.strokeStyle = "#e8c060"; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(255 + i2 * 4, 310 + i2 * 12);
+      ctx.lineTo(385 - i2 * 4, 310 + i2 * 12);
+      ctx.stroke();
+      ell(ctx, 320, 322 + i2 * 8, 20 - i2 * 5, 4, "#c85850", false);
+    }
+    ctx.globalAlpha = 1;
+    // Katzenkorb in der Ecke
+    rr(ctx, 560, 290, 44, 26, "#c8a050", true);
+    ctx.globalAlpha = 0.4;
+    ctx.strokeStyle = "#8a6a28"; ctx.lineWidth = 0.8;
+    for (let w2 = 0; w2 < 4; w2++) { ctx.beginPath(); ctx.moveTo(564 + w2 * 11, 292); ctx.lineTo(564 + w2 * 11, 314); ctx.stroke(); }
+    ctx.globalAlpha = 1;
     person(ctx, 470, 260, { skin: "#f0c090", hair: "#4a3018", tunic: "#c0a040", trim: "#e0c060", tunicDark: "#988028", skirt: false }, t);
     cat(ctx, 40, 320, t);
   },
@@ -1276,10 +1717,21 @@ SCENES.domus_vicini = {
 SCENES.theatrum = {
   name: "Theatrum",
   draw(ctx, t) {
+    // ---- Theatrum: Nachmittagsonne ----
     skyGradient(ctx, "#f0a848", "#f8cc88", "#fce0a8");
     cloud(ctx, 80, 18, 1); cloud(ctx, 400, 32, 1);
+    cloud(ctx, 200, 44, 0.7); cloud(ctx, 540, 24, 0.6);
+    // Fern: Hügel + Stadt
+    ctx.globalAlpha = 0.3;
+    ell(ctx, 120, 84, 180, 30, "#c8a888", false);
+    ell(ctx, 520, 80, 200, 34, "#b89878", false);
+    ctx.globalAlpha = 0.25;
+    for (let i = 0; i < 5; i++) rr(ctx, 60 + i * 110, 60, 26, 20, "#a08868", false, 2);
+    ctx.globalAlpha = 1;
+    // ---- Buehnenhaus ----
     R(ctx, 60, 80, 520, 200, "#f0e0bc");
     RN(ctx, 60, 80, 520, 10, "#c8a878");
+    // Saeulen mit Kapitell + Basis + Kanneluren
     for (let i = 0; i < 6; i++) {
       const cx2 = 90 + i * 90;
       R(ctx, cx2, 100, 20, 170, "#e0d0a8");
@@ -1287,26 +1739,70 @@ SCENES.theatrum = {
       RN(ctx, cx2 + 13, 100, 5, 170, "#c0b088");
       R(ctx, cx2 - 5, 90, 30, 11, "#d0c098");
       R(ctx, cx2 - 5, 262, 30, 9, "#d0c098");
+      ctx.globalAlpha = 0.25;
+      ctx.strokeStyle = "#b8a880"; ctx.lineWidth = 0.7;
+      for (let k2 = 0; k2 < 3; k2++) {
+        ctx.beginPath(); ctx.moveTo(cx2 + 5 + k2 * 4, 102); ctx.lineTo(cx2 + 5 + k2 * 4, 268); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#e8dcb8";
+      RN(ctx, cx2 + 2, 93, 16, 4, "#e8dcb8");
     }
-    for (let r = 0; r < 6; r++) R(ctx, 84 + r * 40, 80 - r * 13, 472 - r * 80, 13, "#e8dcc0"); // Giebel
+    // Giebel mit Zahnrad-Fries
+    for (let r = 0; r < 6; r++) R(ctx, 84 + r * 40, 80 - r * 13, 472 - r * 80, 13, r % 2 ? "#e0d8c0" : "#eae2cc");
+    ctx.globalAlpha = 0.4;
+    for (let i2 = 0; i2 < 24; i2++) RN(ctx, 120 + i2 * 18, 76, 6, 4, "#c8b890");
+    ctx.globalAlpha = 1;
     R(ctx, 100, 270, 440, 27, "#c8a070");
     for (let i = 0; i < 11; i++) RN(ctx, 102 + i * 40, 270, 3, 27, "#a88050");
     RN(ctx, 100, 270, 440, 4, "#e0c090");
-    // Vorhang
+    // ---- Vorhang mit Faltenwurf + Quasten ----
     R(ctx, 130, 120, 380, 150, "#c04040");
-    for (let i = 0; i < 9; i++) R(ctx, 140 + i * 42, 120, 11, 150, "#e05858");
+    for (let i = 0; i < 9; i++) {
+      R(ctx, 140 + i * 42, 120, 11, 150, "#e05858");
+      ctx.globalAlpha = 0.3;
+      ctx.strokeStyle = "#a83030"; ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(145 + i * 42, 124);
+      ctx.quadraticCurveTo(147 + i * 42, 195, 145 + i * 42, 266);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      // Quasten
+      ell(ctx, 145 + i * 42, 272, 2.5, 3.5, "#d48838", true);
+    }
     RN(ctx, 130, 120, 380, 9, "#8a2828");
-    // Publikum
+    RN(ctx, 130, 266, 380, 5, "#8a2828");
+    // Maske ueber der Buehne
+    ell(ctx, 320, 112, 12, 9, "#f0ece0", true);
+    ctx.fillStyle = "#5a4630";
+    ctx.beginPath(); ctx.arc(316, 110, 1.6, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(324, 110, 1.6, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "#5a4630"; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(320, 113, 4, 0.3, Math.PI - 0.3); ctx.stroke();
+    // ---- Publikum: 2 Reihen mit Koerpern + Kaegen ----
     for (let r = 0; r < 2; r++) {
       for (let i = 0; i < 10; i++) {
         const px2 = 50 + i * 60 + (r % 2) * 30, py = 316 + r * 20;
-        R(ctx, px2, py, 18, 15, r ? "#f0c090" : "#e0b080");
-        RN(ctx, px2 + 4, py + 5, 3, 3, "#141210"); RN(ctx, px2 + 11, py + 5, 3, 3, "#141210");
-        R(ctx, px2 - 2, py + 13, 22, 15, r ? "#5880e0" : "#e07090");
+        ell(ctx, px2 + 9, py + 7, 9, 8, r ? "#f0c090" : "#e0b080", true);
+        ctx.fillStyle = "#3a2c20";
+        ctx.beginPath(); ctx.arc(px2 + 6, py + 6, 1.3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(px2 + 12, py + 6, 1.3, 0, Math.PI * 2); ctx.fill();
+        rr(ctx, px2 - 2, py + 13, 22, 15, r ? "#5880e0" : "#e07090", true, 4);
+        ctx.globalAlpha = 0.4;
+        RN(ctx, px2, py + 13, 22, 3, r ? "#7898f0" : "#f090a8");
+        ctx.globalAlpha = 1;
+        // Haar
+        ell(ctx, px2 + 9, py + 2, 7, 4, i % 3 ? "#4a3620" : "#8a6a38", false);
       }
     }
+    // Buehnenfiguren
     person(ctx, 200, 266, { skin: "#f0c090", hair: "#2a1a10", tunic: "#e05848", trim: "#f88070", tunicDark: "#b83c30", skirt: false }, t);
-    R(ctx, 186, 236, 30, 8, "#f0ece0"); // Maske
+    R(ctx, 186, 236, 30, 8, "#f0ece0"); // Maske in Hand
+    ctx.globalAlpha = 0.6;
+    ctx.fillStyle = "#8a7858";
+    ctx.beginPath(); ctx.arc(196, 240, 1.4, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(206, 240, 1.4, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
     person(ctx, 430, 266, { skin: "#f0c090", hair: "#e0b860", tunic: "#5870e0", trim: "#8098f0", tunicDark: "#4058b8", skirt: true }, t);
     cat(ctx, 570, 330, t);
   },
@@ -1349,44 +1845,116 @@ SCENES.theatrum = {
 SCENES.templum = {
   name: "Templum Ceres",
   draw(ctx, t) {
+    // ---- Templum Ceres: goldene Abendsonne ----
     skyGradient(ctx, "#b08868", "#d0a888", "#f0dcb8");
     cloud(ctx, 150, 26, 1); cloud(ctx, 450, 16, 1);
+    cloud(ctx, 60, 44, 0.7); cloud(ctx, 560, 40, 0.6);
+    // fern: Zypressen-Allee
+    ctx.globalAlpha = 0.3;
+    for (let i = 0; i < 6; i++) {
+      ell(ctx, 40 + i * 40, 286, 5, 16, "#5e7848", false);
+      ell(ctx, 470 + i * 36, 280, 4.5, 14, "#5e7848", false);
+    }
+    ctx.globalAlpha = 1;
     RN(ctx, 0, 300, 640, 60, "#d0c098");
     RN(ctx, 0, 290, 640, 12, "#e0d0a8");
     RN(ctx, 0, 310, 640, 4, "#b8a880");
+    // ---- Tempelgebaeude mit Staffelgiebel ----
     R(ctx, 140, 90, 360, 210, "#f0ead4");
     RN(ctx, 140, 90, 360, 10, "#d0c098");
     brickWall(ctx, 140, 150, 360, 150);
     RN(ctx, 140, 90, 8, 210, "#f8f4e4");
     RN(ctx, 492, 90, 8, 210, "#c8c0a0");
-    for (let r = 0; r < 8; r++) R(ctx, 164 + r * 28, 90 - r * 11, 312 - r * 56, 12, r % 2 ? "#e0d8c0" : "#eae2cc");
+    for (let r = 0; r < 8; r++) {
+      R(ctx, 164 + r * 28, 90 - r * 11, 312 - r * 56, 12, r % 2 ? "#e0d8c0" : "#eae2cc");
+      ctx.globalAlpha = 0.3;
+      RN(ctx, 164 + r * 28, 101 - r * 11, 312 - r * 56, 2, "#c8bca0");
+      ctx.globalAlpha = 1;
+    }
+    // Saeulen mit Basis + Kapitell
     for (let i = 0; i < 5; i++) {
       const cx2 = 170 + i * 75;
       R(ctx, cx2, 110, 24, 190, "#f0ead0");
       RN(ctx, cx2 + 2, 110, 6, 190, "#faf6e8");
       RN(ctx, cx2 + 16, 110, 6, 190, "#d8d0b0");
       R(ctx, cx2 - 6, 100, 36, 13, "#d0c098");
+      // Basis
+      RN(ctx, cx2 - 2, 296, 28, 5, "#c0b090");
+      ctx.globalAlpha = 0.2;
+      ctx.strokeStyle = "#b8a878"; ctx.lineWidth = 0.7;
+      for (let k2 = 0; k2 < 3; k2++) {
+        ctx.beginPath(); ctx.moveTo(cx2 + 6 + k2 * 4, 112); ctx.lineTo(cx2 + 6 + k2 * 4, 298); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
     }
-    // Ceres-Statue (mit Outline)
+    // ---- Ceres-Statue mit Gewandfalten + Aehren ----
     R(ctx, 300, 130, 40, 130, "#e0d4b0");
     R(ctx, 304, 98, 32, 34, "#ece0c0");
     RN(ctx, 310, 112, 6, 6, "#a89068"); RN(ctx, 324, 112, 6, 6, "#a89068");
     RN(ctx, 312, 126, 16, 4, "#b89878");
+    ctx.globalAlpha = 0.35;
+    ctx.strokeStyle = "#b8a878"; ctx.lineWidth = 0.9;
+    for (let i2 = 0; i2 < 4; i2++) {
+      ctx.beginPath();
+      ctx.moveTo(306 + i2 * 8, 136);
+      ctx.quadraticCurveTo(304 + i2 * 8, 190, 308 + i2 * 8, 256);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
     R(ctx, 292, 100, 9, 42, "#d0c0a0");
     R(ctx, 339, 100, 9, 42, "#d0c0a0");
-    R(ctx, 274, 94, 22, 48, "#e8c858"); // Getreidebündel
+    // Getreidebuendel mit Ahren-Spitzen
+    R(ctx, 274, 94, 22, 48, "#e8c858");
+    for (let a = 0; a < 4; a++) {
+      RN(ctx, 276 + a * 5, 88 - a % 2, 2, 10, "#e8c858");
+      ell(ctx, 277 + a * 5, 87 - a % 2, 2.4, 2, "#f8e0a0", false);
+    }
     RN(ctx, 280, 88, 10, 7, "#f8e0a0");
     R(ctx, 344, 94, 22, 48, "#e8c858");
+    for (let a = 0; a < 4; a++) {
+      RN(ctx, 346 + a * 5, 88 - a % 2, 2, 10, "#e8c858");
+      ell(ctx, 347 + a * 5, 87 - a % 2, 2.4, 2, "#f8e0a0", false);
+    }
+    // Sockel mit Widmung
+    rr(ctx, 292, 258, 56, 10, "#c0b090", true, 2);
+    // ---- Altarfeuer + Gaben ----
     altarFire(ctx, 240, 290, t, true);
     altarFire(ctx, 400, 290, t, true);
-    R(ctx, 214, 274, 30, 17, "#c8a050"); // Gabenkorb
-    RN(ctx, 218, 268, 22, 8, "#f08838");
+    rr(ctx, 214, 274, 30, 17, "#c8a050", true);
+    ctx.globalAlpha = 0.4;
+    ctx.strokeStyle = "#8a6a28"; ctx.lineWidth = 0.7;
+    for (let w2 = 0; w2 < 3; w2++) { ctx.beginPath(); ctx.moveTo(217 + w2 * 9, 276); ctx.lineTo(217 + w2 * 9, 289); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+    // Fruechte im Korb
+    ell(ctx, 222, 270, 3.5, 3, "#e05828", false);
+    ell(ctx, 230, 269, 3.5, 3, "#e88038", false);
+    ell(ctx, 226, 266, 3, 2.6, "#f09848", false);
     R(ctx, 424, 270, 18, 22, "#b06040"); RN(ctx, 428, 264, 10, 7, "#8a4828");
+    ctx.globalAlpha = 0.35;
+    ell(ctx, 426, 276, 2.5, 5, "#d88050", false);
+    ctx.globalAlpha = 1;
+    // ---- Priesterin + Katze + Blumenvasen ----
     person(ctx, 520, 300, { skin: "#f0c090", hair: "#4a3018", tunic: "#faf4e4", trim: "#e8c040", tunicDark: "#d8d0b0", skirt: true }, t);
+    // Blumenstand
+    ell(ctx, 170, 300, 5, 6, "#a85868", true);
+    ell(ctx, 170, 293, 3, 3, "#e87888", false);
+    ell(ctx, 150, 302, 5, 6, "#8868a8", true);
+    ell(ctx, 150, 295, 3, 3, "#b088d8", false);
     cat(ctx, 80, 330, t);
+    // Girlanden zwischen Saeulen mit Blaettern
     for (let i = 0; i < 4; i++) {
       const gx = 180 + i * 90;
-      for (let g = 0; g < 5; g++) R(ctx, gx + g * 7, 128 + Math.sin(g) * 6, 7, 7, g % 2 ? "#e86070" : "#e8d040");
+      ctx.strokeStyle = "#4a6a38"; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(gx - 30, 128);
+      ctx.quadraticCurveTo(gx, 140, gx + 30, 128);
+      ctx.stroke();
+      for (let g2 = 0; g2 < 6; g2++) {
+        const t2 = g2 / 5;
+        const fx3 = gx - 30 + t2 * 60;
+        const fy3 = 128 + Math.sin(t2 * Math.PI) * 12;
+        ell(ctx, fx3, fy3, 2.6, 2.2, g2 % 2 ? "#e86070" : "#e8d048", false);
+      }
     }
   },
   hotspots: [
@@ -1414,44 +1982,130 @@ SCENES.templum = {
 SCENES.vicus_nocturnus = {
   name: "Vicus Nocturnus",
   draw(ctx, t) {
+    // ---- Vicus Nocturnus: mondenachtliche Gasse ----
     skyGradient(ctx, "#100c20", "#181428", "#282048");
     stars(ctx, t);
-    // Mond mit Outline
-    R(ctx, 500, 28, 38, 38, "#f8f0d0");
-    RN(ctx, 512, 22, 22, 11, "#181428");
-    RN(ctx, 506, 42, 28, 15, "#181428");
-    RN(ctx, 517, 40, 9, 9, "#e8e0c0");
-    // Gasse
+    // Sterne zweiter Ordnung + Sternbild
+    ctx.globalAlpha = 0.5;
+    for (let i = 0; i < 20; i++) {
+      const sx3 = (i * 97 + 41) % 640, sy3 = (i * 43) % 150;
+      RN(ctx, sx3, sy3, 1, 1, "#d8d4e8");
+    }
+    ctx.globalAlpha = 1;
+    // Mond mit Kratern
+    ell(ctx, 519, 47, 19, 19, "#f8f0d0", true);
+    ctx.globalAlpha = 0.25;
+    ell(ctx, 513, 42, 4, 4, "#c8bca0", false);
+    ell(ctx, 524, 50, 5, 4, "#c8bca0", false);
+    ell(ctx, 517, 54, 3, 2.5, "#c8bca0", false);
+    ctx.globalAlpha = 1;
+    // Mond-Glow
+    const mg2 = ctx.createRadialGradient(519, 47, 12, 519, 47, 60);
+    mg2.addColorStop(0, "rgba(248,240,208,0.25)");
+    mg2.addColorStop(1, "rgba(248,240,208,0)");
+    ctx.fillStyle = mg2;
+    ctx.fillRect(460, 0, 120, 110);
+    // ---- Gasse mit Pflaster + Pfützen ----
     RN(ctx, 0, 260, 640, 100, "#282030");
     tiles(ctx, 0, 260, 640, 100, 34, 16, "#403850", "#38304a");
     RN(ctx, 0, 260, 640, 4, "#484058");
-    // Häuser links
+    // Pfütze mit Mond-Reflexion
+    ctx.globalAlpha = 0.5;
+    ell(ctx, 210, 310, 34, 9, "#283048", false);
+    ctx.globalAlpha = 0.35;
+    ell(ctx, 210, 310, 30, 7, "#384868", false);
+    ctx.globalAlpha = 0.6;
+    ell(ctx, 218, 309, 6, 2.5, "#d8d0b0", false);
+    ctx.globalAlpha = 1;
+    // ---- Hauser links mit Putz-Textur ----
     R(ctx, 20, 90, 180, 180, "#383050");
     roofTiles(ctx, 12, 74, 196, 18);
     RN(ctx, 20, 90, 6, 180, "#443c5c");
+    ctx.globalAlpha = 0.25;
+    ctx.strokeStyle = "#584868"; ctx.lineWidth = 0.8;
+    for (let i2 = 0; i2 < 6; i2++) {
+      ctx.beginPath();
+      ctx.moveTo(30 + i2 * 28, 96);
+      ctx.quadraticCurveTo(38 + i2 * 28, 130, 30 + i2 * 28, 168);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
     windowFrame(ctx, 40, 130, 36, 44, false);
     windowFrame(ctx, 90, 180, 28, 36, true);
     door(ctx, 60, 190, 44, 76);
     RN(ctx, 54, 184, 54, 5, "#f8f0b0");
-    // Häuser rechts
+    // Blumentopf am Fenster
+    ell(ctx, 128, 176, 5, 4, "#a86048", true);
+    ctx.globalAlpha = 0.8;
+    ell(ctx, 128, 172, 3, 3, "#4a7840", false);
+    ctx.globalAlpha = 1;
+    // ---- Hauser rechts ----
     R(ctx, 400, 80, 200, 190, "#383050");
     roofTiles(ctx, 392, 62, 216, 20);
     RN(ctx, 594, 80, 6, 190, "#2c2438");
+    ctx.globalAlpha = 0.25;
+    ctx.strokeStyle = "#2c2444"; ctx.lineWidth = 0.8;
+    for (let i2 = 0; i2 < 7; i2++) {
+      ctx.beginPath();
+      ctx.moveTo(410 + i2 * 26, 86);
+      ctx.quadraticCurveTo(418 + i2 * 26, 120, 410 + i2 * 26, 160);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
     windowFrame(ctx, 430, 130, 36, 44, false);
     windowFrame(ctx, 500, 130, 36, 44, true);
+    // Wascheleine zwischen Hausern
+    ctx.strokeStyle = "rgba(200,190,170,0.5)"; ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(200, 100);
+    ctx.quadraticCurveTo(300, 118, 400, 96);
+    ctx.stroke();
+    ctx.globalAlpha = 0.7;
+    rr(ctx, 240, 102, 16, 20, "#b8c0c8", false, 1);
+    rr(ctx, 290, 107, 14, 18, "#c8a898", false, 1);
+    rr(ctx, 340, 103, 16, 20, "#a8b8a0", false, 1);
+    ctx.globalAlpha = 1;
     torch(ctx, 380, 158, t);
-    // Laterne mit Lichtkegel
+    // ---- Laterne mit warmem Lichtkegel ----
+    const lg = ctx.createRadialGradient(613, 152, 4, 613, 152, 44);
+    lg.addColorStop(0, "rgba(248,224,96,0.4)");
+    lg.addColorStop(1, "rgba(248,224,96,0)");
+    ctx.fillStyle = lg;
+    ctx.fillRect(570, 110, 90, 90);
     R(ctx, 610, 150, 8, 62, "#443c50");
     R(ctx, 600, 138, 26, 20, "#443c50");
     R(ctx, 604, 142, 18, 15, "#f8e060");
+    ctx.globalAlpha = 0.35;
+    RN(ctx, 607, 145, 12, 9, "#fcf0a0");
+    ctx.globalAlpha = 1;
     RN(ctx, 594, 158, 38, 42, "rgba(248,224,96,0.14)");
-    // Senex mit Stab
+    // ---- Senex mit Stab + Bodenlaterne ----
     person(ctx, 260, 300, { skin: "#e0b088", hair: "#d8d0c0", tunic: "#2c3850", trim: "#3c4860", tunicDark: "#1e2840", skirt: false }, t);
     R(ctx, 300, 238, 7, 62, "#6a5438");
     R(ctx, 294, 230, 15, 10, "#7a6448");
-    R(ctx, 320, 288, 16, 14, "#443c50"); // Bodenlaterne
+    R(ctx, 320, 288, 16, 14, "#443c50");
+    // Bodenlaterne mit Glow
+    const bg2 = ctx.createRadialGradient(328, 295, 2, 328, 295, 26);
+    bg2.addColorStop(0, "rgba(248,224,96,0.5)");
+    bg2.addColorStop(1, "rgba(248,224,96,0)");
+    ctx.fillStyle = bg2;
+    ctx.fillRect(302, 270, 52, 50);
     RN(ctx, 323, 291, 9, 9, "#f8e060");
+    // Katze mit leuchtenden Augen
     cat(ctx, 180, 330, t);
+    ctx.globalAlpha = 0.5;
+    ell(ctx, 206, 326, 2, 2, "#a8f0b0", false);
+    ell(ctx, 214, 326, 2, 2, "#a8f0b0", false);
+    ctx.globalAlpha = 1;
+    // Nacht-Fledermaus
+    const bat = Math.sin((t || 0) / 500);
+    ctx.strokeStyle = "rgba(40,32,48,0.9)"; ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(240, 60 + bat * 8);
+    ctx.quadraticCurveTo(246, 54 + bat * 8, 252, 60 + bat * 8);
+    ctx.moveTo(252, 60 + bat * 8);
+    ctx.quadraticCurveTo(258, 54 + bat * 8, 264, 60 + bat * 8);
+    ctx.stroke();
   },
   hotspots: [
     { x: 248, y: 170, w: 100, h: 120, la: "senex",
@@ -1501,43 +2155,145 @@ SCENES.vicus_nocturnus = {
 SCENES.festum = {
   name: "Festum Ceres",
   draw(ctx, t) {
+    // ---- Festum Ceres: abendliches Fest ----
     skyGradient(ctx, "#282048", "#483868", "#684878");
     stars(ctx, t);
+    ctx.globalAlpha = 0.4;
+    for (let i = 0; i < 16; i++) {
+      const sx3 = (i * 83 + 29) % 640, sy3 = (i * 47) % 120;
+      RN(ctx, sx3, sy3, 1, 1, "#e8d8f0");
+    }
+    ctx.globalAlpha = 1;
+    // fern: Stadt-Silhouette in Dämmerung
+    ctx.globalAlpha = 0.3;
+    for (let i = 0; i < 7; i++) {
+      rr(ctx, 20 + i * 92, 152, 34, 28, "#585070", false, 2);
+      rr(ctx, 30 + i * 92, 144, 12, 12, "#686080", false, 1);
+    }
+    ctx.globalAlpha = 1;
     RN(ctx, 0, 240, 640, 120, "#9a7a50");
     tiles(ctx, 0, 240, 640, 120, 40, 20, "#ac8a58", "#9a7a50");
-    // Festzelte
+    // ---- Festzelte mit Wimpeln + Schnüren ----
     for (let i = 0; i < 3; i++) {
       const zx = 30 + i * 200;
-      for (let m = 0; m < 6; m++) R(ctx, zx + m * 20, 118, 22, 18, m % 2 ? "#f0e8d8" : "#e05858");
+      for (let m = 0; m < 6; m++) {
+        R(ctx, zx + m * 20, 118, 22, 18, m % 2 ? "#f0e8d8" : "#e05858");
+        ctx.globalAlpha = 0.25;
+        ctx.strokeStyle = "#c04848"; ctx.lineWidth = 0.7;
+        ctx.beginPath(); ctx.moveTo(zx + m * 20 + 11, 120); ctx.lineTo(zx + m * 20 + 11, 136); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
       RN(ctx, zx, 134, 122, 6, "#c04848");
       R(ctx, zx + 6, 140, 9, 102, "#7a5428"); R(ctx, zx + 107, 140, 9, 102, "#7a5428");
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = "#4e3618"; ctx.lineWidth = 0.7;
+      ctx.beginPath(); ctx.moveTo(zx + 10, 145); ctx.lineTo(zx + 10, 238); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(zx + 111, 145); ctx.lineTo(zx + 111, 238); ctx.stroke();
+      ctx.globalAlpha = 1;
+      // Wimpel an der Markise
+      ctx.fillStyle = "#e8c040";
+      ctx.beginPath();
+      ctx.moveTo(zx + 30, 118); ctx.lineTo(zx + 40, 118); ctx.lineTo(zx + 35, 127);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#4878b8";
+      ctx.beginPath();
+      ctx.moveTo(zx + 70, 118); ctx.lineTo(zx + 80, 118); ctx.lineTo(zx + 75, 127);
+      ctx.closePath(); ctx.fill();
+    }
+    // Lichterkette zwischen Zelten
+    ctx.strokeStyle = "rgba(240,220,150,0.4)"; ctx.lineWidth = 0.7;
+    for (let i = 0; i < 2; i++) {
+      ctx.beginPath();
+      ctx.moveTo(152 + i * 200, 108);
+      ctx.quadraticCurveTo(230 + i * 200, 122, 230 + i * 200, 108);
+      ctx.stroke();
+      for (let l = 0; l < 4; l++) {
+        const lx2 = 152 + i * 200 + l * 20 + 10;
+        const ly2 = 108 + Math.sin(l / 3 * Math.PI) * 12;
+        ctx.globalAlpha = 0.8;
+        RN(ctx, lx2, ly2, 2.5, 2.5, l % 2 ? "#f8e060" : "#f0a848");
+        ctx.globalAlpha = 0.3;
+        ell(ctx, lx2 + 1, ly2 + 1, 4, 4, "#f8e060", false);
+        ctx.globalAlpha = 1;
+      }
     }
     for (let i = 0; i < 5; i++) altarFire(ctx, 80 + i * 120, 210, t, false);
-    // Ceres-Schrein
+    // ---- Ceres-Schrein mit Statue-Nische ----
     R(ctx, 260, 160, 120, 80, "#f0ead4");
     RN(ctx, 260, 160, 120, 10, "#d0c098");
     R(ctx, 264, 174, 112, 58, "#e4d8b8");
+    ctx.globalAlpha = 0.3;
+    ctx.strokeStyle = "#c8bca0"; ctx.lineWidth = 0.8;
+    for (let i2 = 0; i2 < 3; i2++) {
+      ctx.beginPath(); ctx.moveTo(268 + i2 * 36, 176); ctx.lineTo(268 + i2 * 36, 230); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
     altarFire(ctx, 320, 156, t, true);
-    // Ähre
+    // Aehren-Buendel am Schrein
     R(ctx, 314, 188, 14, 36, "#e8c858");
     R(ctx, 309, 182, 24, 11, "#f8e0a0");
-    for (let g = 0; g < 4; g++) { RN(ctx, 311 - g, 196 + g * 8, 7, 5, "#f8e0a0"); RN(ctx, 323 + g, 196 + g * 8, 7, 5, "#f8e0a0"); }
-    // Girlanden
+    for (let g = 0; g < 4; g++) {
+      RN(ctx, 311 - g, 196 + g * 8, 7, 5, "#f8e0a0");
+      RN(ctx, 323 + g, 196 + g * 8, 7, 5, "#f8e0a0");
+    }
+    for (let a = 0; a < 3; a++) {
+      RN(ctx, 306 + a * 16, 172, 2, 12, "#e8c858");
+      ell(ctx, 307 + a * 16, 171, 2.4, 2, "#f8e0a0", false);
+    }
+    // ---- Girlanden + Festgemeinschaft ----
     for (let i = 0; i < 6; i++) {
       const gx = 40 + i * 110;
-      for (let g = 0; g < 6; g++) R(ctx, gx + g * 9, 138 + Math.sin(g * 1.2) * 8, 7, 7, g % 2 ? "#e86070" : "#f0e060");
+      ctx.strokeStyle = "#4a6a38"; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(gx - 40, 134);
+      ctx.quadraticCurveTo(gx, 148, gx + 40, 134);
+      ctx.stroke();
+      for (let g2 = 0; g2 < 7; g2++) {
+        const t2 = g2 / 6;
+        const fx3 = gx - 40 + t2 * 80;
+        const fy3 = 134 + Math.sin(t2 * Math.PI) * 13;
+        ell(ctx, fx3, fy3, 3, 2.6, g2 % 2 ? "#e86070" : "#f0e060", false);
+        ctx.globalAlpha = 0.6;
+        ell(ctx, fx3, fy3 + 3, 1.6, 1.4, "#4a7a3e", false);
+        ctx.globalAlpha = 1;
+      }
     }
+    // Tische mit Speisen
+    rr(ctx, 60, 300, 60, 10, "#9a6a38", true, 2);
+    ctx.globalAlpha = 0.8;
+    ell(ctx, 75, 296, 5, 4, "#e0b060", false);
+    ell(ctx, 90, 295, 6, 5, "#c88050", false);
+    ell(ctx, 105, 296, 4.5, 3.5, "#e8c858", false);
+    ctx.globalAlpha = 1;
+    rr(ctx, 520, 306, 54, 9, "#9a6a38", true, 2);
+    ctx.globalAlpha = 0.8;
+    ell(ctx, 535, 302, 5, 4, "#e05828", false);
+    ell(ctx, 552, 301, 5, 4, "#f0d060", false);
+    ctx.globalAlpha = 1;
+    // Festgemeinschaft
     person(ctx, 120, 320, { skin: "#f0c090", hair: "#2a1a10", tunic: "#e05848", trim: "#f88070", tunicDark: "#b83c30", skirt: false }, t);
     person(ctx, 190, 330, { skin: "#f0c090", hair: "#e0b860", tunic: "#5870e0", trim: "#8098f0", tunicDark: "#4058b8", skirt: true }, t);
     person(ctx, 500, 320, { skin: "#e0b080", hair: "#4a3018", tunic: "#4aa858", trim: "#70c878", tunicDark: "#388c40", skirt: false }, t);
     person(ctx, 440, 260, { skin: "#f0c090", hair: "#4a3018", tunic: "#faf4e4", trim: "#e8c040", tunicDark: "#d8d0b0", skirt: true }, t);
+    // tanzendes Kind
+    person(ctx, 380, 310, { skin: "#f0c090", hair: "#8a5a20", tunic: "#d88848", trim: "#f0a868", tunicDark: "#b06838", skirt: true }, t);
     cat(ctx, 250, 340, t);
-    // Konfetti
-    for (let i = 0; i < 12; i++) {
+    // Konfetti mit Drehung
+    for (let i = 0; i < 20; i++) {
       const fx = (i * 73 + (t || 0) / 50) % 640;
       const fy = 100 + ((i * 47 + (t || 0) / 30) % 160);
-      R(ctx, fx, fy, 5, 5, i % 3 === 0 ? "#f8e060" : (i % 3 === 1 ? "#e86070" : "#78c878"));
+      ctx.globalAlpha = 0.7;
+      if (i % 2) RN(ctx, fx, fy, 5, 2.4, i % 3 === 0 ? "#f8e060" : (i % 3 === 1 ? "#e86070" : "#78c878"));
+      else RN(ctx, fx, fy, 2.4, 5, i % 3 === 0 ? "#f8e060" : (i % 3 === 1 ? "#e86070" : "#78c878"));
+      ctx.globalAlpha = 1;
     }
+    // Luftballon-artige Lampions
+    ctx.globalAlpha = 0.6;
+    ell(ctx, 180, 80 + Math.sin((t || 0) / 600) * 4, 7, 8, "#e87848", true);
+    RN(ctx, 179, 90, 1, 10, "rgba(232,200,120,0.5)");
+    ell(ctx, 480, 70 + Math.cos((t || 0) / 700) * 4, 7, 8, "#4888c8", true);
+    RN(ctx, 479, 80, 1, 10, "rgba(232,200,120,0.5)");
+    ctx.globalAlpha = 1;
   },
   hotspots: [
     { x: 260, y: 100, w: 120, h: 140, la: "ara",
