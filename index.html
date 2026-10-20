@@ -162,7 +162,7 @@ body {
 </div>
 <div id="ui-top">
 <div id="location-bar"><span id="scene-name"></span></div>
-<div id="verba-counter">VERBA: <b id="verba-count">0</b></div><div id="version-tag" style="color:#7a6a84;font-size:.75em;padding:0 10px;">v8.6</div>
+<div id="verba-counter">VERBA: <b id="verba-count">0</b></div><div id="version-tag" style="color:#7a6a84;font-size:.75em;padding:0 10px;">v8.7</div>
 </div>
 <div id="bottom-bar"><div class="bb-section"><div class="bb-label">SACCA</div><div class="bb-chips" id="bb-items"><span class="bb-empty">sacca vacua est</span></div></div><div class="bb-section"><div class="bb-label">VERBA COLLECTA · <span id="bb-verba-count">0</span></div><div class="bb-chips" id="bb-verba"><span class="bb-empty">nondum verba</span></div></div></div>
 <div id="feles-box" hidden>
@@ -635,62 +635,165 @@ function altarFire(ctx, x, y, t, big) {
 SCENES.atrium = {
   name: "Atrium",
   draw(ctx, t) {
-// ---- Boden: Marmor mit Aederung ----
-    RN(ctx, 0, 0, 640, 360, "#e8dcc0");
-    tiles(ctx, 0, 0, 640, 360, 40, 20, "#e0d0b0", "#cbb995");
-    ctx.globalAlpha = 0.18;
-    ctx.strokeStyle = "#a89468"; ctx.lineWidth = 0.7;
-    for (let i = 0; i < 16; i++) {
-      const vx = (i * 137) % 640, vy = (i * 89) % 360;
-      ctx.beginPath();
-      ctx.moveTo(vx, vy);
-      ctx.quadraticCurveTo(vx + 30 + (i % 3) * 10, vy + 8, vx + 70, vy + 4 + (i % 5) * 3);
-      ctx.stroke();
+    // ---- ATRIUM: Innenhalle mit Compluvium (Dachoeffnung) + Impluvium ----
+    // 1) Rueckwand: Ziegelmauer mit Fresken
+    RN(ctx, 0, 0, 640, 280, "#e8dcc0");
+    tiles(ctx, 0, 0, 640, 280, 40, 20, "#e0d0b0", "#cbb995");
+    brickWall(ctx, 0, 30, 640, 250);
+    RN(ctx, 0, 30, 640, 6, "#f0e4c8");
+    // Fresken an der Wand
+    for (let i = 0; i < 3; i++) {
+      const fx2 = 150 + i * 160;
+      rr(ctx, fx2, 52, 54, 42, "#d8c8a8", true, 4);
+      ctx.globalAlpha = 0.5;
+      ell(ctx, fx2 + 27, i % 2 ? 74 : 80, 11, 7, i % 2 ? "#a85838" : "#8a9058", false);
+      RN(ctx, fx2 + 18, 78, 4, 11, "#6a7a48");
+      RN(ctx, fx2 + 32, 78, 4, 11, "#6a7a48");
+      ctx.globalAlpha = 1;
+    }
+    // 2) Dach mit Compluvium-Oeffnung: schraege Dachflaechen zur Oeffnung
+    const openX = 268, openW = 104, openY = 8, openH = 96;
+    // linke/rechte Dachflaeche (Trapeze zur Oeffnung)
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(openX, openY); ctx.lineTo(openX, openY + openH);
+    ctx.lineTo(0, 150); ctx.closePath();
+    ctx.fillStyle = "#b89068"; ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(640, 0); ctx.lineTo(openX + openW, openY); ctx.lineTo(openX + openW, openY + openH);
+    ctx.lineTo(640, 150); ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "#8a6848"; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(openX, openY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(640, 0); ctx.lineTo(openX + openW, openY); ctx.stroke();
+    // Deckenbalken
+    ctx.strokeStyle = "#9a7850"; ctx.lineWidth = 5;
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath(); ctx.moveTo(0, 30 + i * 40); ctx.lineTo(openX, openY + 16 + i * 22); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(640, 30 + i * 40); ctx.lineTo(openX + openW, openY + 16 + i * 22); ctx.stroke();
+    }
+    // 3) Compluvium: Himmel in der Oeffnung + Rand
+    skyGradient(ctx, "#7ec8e8", "#a8d8f0", "#c8e8f0");
+    RN(ctx, openX, openY, openW, openH, "#a8d8f0");
+    ctx.globalAlpha = 0.5;
+    ell(ctx, openX + 30, openY + 20, 16, 7, "#f6f1e6", false);
+    ell(ctx, openX + 66, openY + 46, 13, 6, "#f6f1e6", false);
+    ctx.globalAlpha = 1;
+    // Oeffnungsrand (Stein)
+    RN(ctx, openX - 6, openY - 6, openW + 12, 8, "#d8ccb0");
+    RN(ctx, openX - 6, openY + openH, openW + 12, 8, "#c8bca0");
+    // 4) Lichtkegel vom Compluvium auf das Impluvium
+    const lg2 = ctx.createLinearGradient(0, openY, 0, 240);
+    lg2.addColorStop(0, "rgba(255,246,200,0.34)");
+    lg2.addColorStop(0.7, "rgba(255,246,200,0.14)");
+    lg2.addColorStop(1, "rgba(255,246,200,0)");
+    ctx.beginPath();
+    ctx.moveTo(openX, openY + openH);
+    ctx.lineTo(openX + openW, openY + openH);
+    ctx.lineTo(openX + openW + 34, 236);
+    ctx.lineTo(openX - 34, 236);
+    ctx.closePath();
+    ctx.fillStyle = lg2; ctx.fill();
+    // Staub im Lichtstrahl
+    ctx.globalAlpha = 0.5;
+    for (let i = 0; i < 7; i++) {
+      const px2 = openX + 16 + (hash01(i, 3) * (openW - 32));
+      const py2 = openY + openH + 20 + ((t || 0) / 60 + i * 30) % 110;
+      ell(ctx, px2, py2, 1, 1, "#fdf8e0", false);
     }
     ctx.globalAlpha = 1;
-    // ---- Hintergrundsmauer mit Verlauf + Eck-Pilastern ----
-    brickWall(ctx, 40, 40, 560, 240);
-    RN(ctx, 40, 40, 560, 6, "#f0e4c8");
-    RN(ctx, 40, 40, 6, 240, "#d8bc90");
-    RN(ctx, 594, 40, 6, 240, "#8a6444");
-    RN(ctx, 40, 274, 560, 6, "#8a6a48");
-    for (let i = 0; i < 4; i++) {
-      R(ctx, 60 + i * 150, 0, 18, 44, "#8a6848");
-      ctx.globalAlpha = 0.4;
-      ctx.strokeStyle = "#5e4630"; ctx.lineWidth = 0.8;
-      for (let g2 = 0; g2 < 3; g2++) {
-        ctx.beginPath();
-        ctx.moveTo(63 + i * 150, 6 + g2 * 14);
-        ctx.lineTo(75 + i * 150, 6 + g2 * 14);
-        ctx.stroke();
+    // 5) Saulen rahmen die Oeffnung
+    for (const colX of [248, 392]) {
+      R(ctx, colX, 40, 22, 240, "#f0ead0");
+      RN(ctx, colX + 2, 40, 6, 240, "#faf6e8");
+      RN(ctx, colX + 14, 40, 6, 240, "#d8d0b0");
+      R(ctx, colX - 5, 30, 32, 12, "#d0c098");
+      RN(ctx, colX - 2, 276, 26, 6, "#c0b090");
+      ctx.globalAlpha = 0.2;
+      ctx.strokeStyle = "#b8a878"; ctx.lineWidth = 0.8;
+      for (let k2 = 0; k2 < 3; k2++) {
+        ctx.beginPath(); ctx.moveTo(colX + 6 + k2 * 4, 44); ctx.lineTo(colX + 6 + k2 * 4, 278); ctx.stroke();
       }
       ctx.globalAlpha = 1;
     }
-    // Fresken an der Wand (rechteckige Rahmen mit Motiven)
-    for (let i = 0; i < 3; i++) {
-      const fx2 = 130 + i * 170;
-      rr(ctx, fx2, 60, 60, 46, "#d8c8a8", true, 4);
+    // 6) Impluvium: Marmorbecken mit Wasser unter der Oeffnung
+    rr(ctx, 264, 166, 112, 76, "#d8ccb0", true, 5);
+    RN(ctx, 268, 170, 104, 68, "#c8bda0");
+    water(ctx, 276, 176, 88, 56, t);
+    // Wasser-Reflex vom Licht
+    ctx.globalAlpha = 0.3;
+    ell(ctx, 320, 200, 30, 12, "#e8f4f8", false);
+    ctx.globalAlpha = 1;
+    // 7) Tablinum: Vorhang + Podest hinter dem Pater
+    ctx.beginPath();
+    ctx.moveTo(150, 46); ctx.lineTo(268, 46);
+    ctx.lineTo(268, 210); ctx.quadraticCurveTo(210, 218, 150, 206);
+    ctx.closePath();
+    const tg2 = ctx.createLinearGradient(0, 46, 0, 210);
+    tg2.addColorStop(0, "#a84848"); tg2.addColorStop(1, "#883838");
+    ctx.fillStyle = tg2; ctx.fill();
+    ctx.strokeStyle = "#783030"; ctx.lineWidth = 1.2; ctx.stroke();
+    // Vorhangfalten
+    ctx.globalAlpha = 0.35;
+    ctx.strokeStyle = "#c86868"; ctx.lineWidth = 1;
+    for (let i = 0; i < 5; i++) {
+      ctx.beginPath();
+      ctx.moveTo(158 + i * 22, 48);
+      ctx.quadraticCurveTo(161 + i * 22, 130, 158 + i * 22, 208);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // Stange
+    RN(ctx, 148, 44, 122, 4, "#8a6a3c");
+    // Podest
+    rr(ctx, 158, 214, 106, 8, "#c8b890", true, 2);
+    // Schreibtisch mit Wachstafeln
+    R(ctx, 168, 226, 60, 7, "#9a6a38");
+    R(ctx, 172, 233, 8, 20, "#7a4c22"); R(ctx, 216, 233, 8, 20, "#7a4c22");
+    rr(ctx, 176, 219, 16, 7, "#d8c8a0", true, 1);
+    rr(ctx, 196, 221, 14, 5, "#c8b890", true, 1);
+    // 8) Lararium: Wandnische mit Ceres-Statuette + Votivkerzen
+    rr(ctx, 556, 60, 66, 92, "#d8ccb0", true, 6);
+    RN(ctx, 562, 66, 54, 80, "#c0b090");
+    // Statuette
+    rr(ctx, 581, 108, 16, 30, "#e8dcc0", false, 2);
+    ell(ctx, 589, 102, 8, 8, "#ece0c0", false);
+    ctx.globalAlpha = 0.6;
+    RN(ctx, 583, 104, 3, 3, "#a89068"); RN(ctx, 592, 104, 3, 3, "#a89068");
+    RN(ctx, 586, 112, 6, 2, "#b89878");
+    ctx.globalAlpha = 1;
+    // Aehrenbuschel in der Hand
+    RN(ctx, 575, 116, 3, 14, "#e8c858");
+    ell(ctx, 576, 114, 2.4, 3, "#f8e0a0", false);
+    RN(ctx, 600, 116, 3, 14, "#e8c858");
+    ell(ctx, 601, 114, 2.4, 3, "#f8e0a0", false);
+    // Votivkerzen mit Flamme
+    for (let i = 0; i < 2; i++) {
+      const kx = 568 + i * 40;
+      rr(ctx, kx, 134, 4, 8, "#f4ecd8", false, 1);
+      const kf = Math.sin((t || 0) / 120 + i) * 1;
+      ell(ctx, kx + 2, 130 + kf, 1.6, 2.6, "#f8b860", false);
       ctx.globalAlpha = 0.5;
-      ell(ctx, fx2 + 30, i % 2 ? 84 : 90, 12, 8, i % 2 ? "#a85838" : "#8a9058", false);
-      RN(ctx, fx2 + 20, 88, 4, 12, "#6a7a48");
-      RN(ctx, fx2 + 36, 88, 4, 12, "#6a7a48");
+      ell(ctx, kx + 2, 129 + kf, 0.8, 1.4, "#fdf0b0", false);
       ctx.globalAlpha = 1;
     }
-    // Impluvium-Oeffnung: Himmel + tiefere Wand-
-    skyGradient(ctx, "#7ec8e8", "#a8d8f0", "#c8e8f0");
-    cloud(ctx, 80, 26, 1); cloud(ctx, 300, 16, 1);
-    cloud(ctx, 170, 52, 0.7); cloud(ctx, 430, 30, 0.8);
-    // Raender der Dachoffnung
-    RN(ctx, 270, 100, 110, 8, "#9a8a68");
-    RN(ctx, 270, 190, 110, 8, "#7a6a4c");
-    RN(ctx, 270, 100, 8, 98, "#8a7a58");
-    RN(ctx, 372, 100, 8, 98, "#6a5a40");
-    // Rand des Beckens (Marmor-Einfassung)
-    rr(ctx, 268, 162, 114, 76, "#d8ccb0", true, 5);
-    water(ctx, 280, 170, 90, 60, t);
-    // Laub am Rand der Dachoffnung
-    bush(ctx, 240, 96, 0.8); bush(ctx, 380, 92, 0.9);
-    // ---- Tisch: Platte mit Maserung, Beine mit Querstreben ----
+    // 9) Boden: Marmor mit Perspektive + Aederung
+    const fg2 = ctx.createLinearGradient(0, 280, 0, 360);
+    fg2.addColorStop(0, "#e0d0b0"); fg2.addColorStop(1, "#cbb995");
+    ctx.fillStyle = fg2;
+    ctx.fillRect(0, 280, 640, 80);
+    tiles(ctx, 0, 280, 640, 80, 40, 20, "#e0d0b0", "#cbb995");
+    ctx.globalAlpha = 0.18;
+    ctx.strokeStyle = "#a89468"; ctx.lineWidth = 0.7;
+    for (let i = 0; i < 8; i++) {
+      const vx = (i * 137) % 640, vy = 284 + (i * 13) % 70;
+      ctx.beginPath();
+      ctx.moveTo(vx, vy);
+      ctx.quadraticCurveTo(vx + 30, vy + 6, vx + 70, vy + 4);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    RN(ctx, 0, 278, 640, 5, "#b8a880");
+    // 10) Tisch mit Brot/Krug (unten links)
     R(ctx, 110, 150, 90, 9, "#9a6a38");
     ctx.globalAlpha = 0.4;
     ctx.strokeStyle = "#6a4a24"; ctx.lineWidth = 0.7;
@@ -702,8 +805,8 @@ SCENES.atrium = {
     }
     ctx.globalAlpha = 1;
     R(ctx, 114, 159, 11, 27, "#7a4c22"); R(ctx, 185, 159, 11, 27, "#7a4c22");
-    R(ctx, 114, 178, 82, 4, "#8a5c2e"); // Querstrebe
-    R(ctx, 130, 136, 27, 13, "#e0b060"); // Brot mit Einschnitten
+    R(ctx, 114, 178, 82, 4, "#8a5c2e");
+    R(ctx, 130, 136, 27, 13, "#e0b060");
     ctx.globalAlpha = 0.5;
     ctx.strokeStyle = "#b88638"; ctx.lineWidth = 0.8;
     for (let i2 = 0; i2 < 3; i2++) {
@@ -714,29 +817,17 @@ SCENES.atrium = {
     }
     ctx.globalAlpha = 1;
     RN(ctx, 134, 134, 18, 4, "#f0cc8c");
-    R(ctx, 158, 130, 17, 20, "#b06040"); // Krug mit Henkel
-    RN(ctx, 162, 126, 9, 5, "#8a4828");
+    R(ctx, 158, 130, 17, 20, "#b06040"); RN(ctx, 162, 126, 9, 5, "#8a4828");
     ctx.strokeStyle = INK; ctx.lineWidth = 1.6;
     ctx.beginPath(); ctx.arc(158, 140, 6, 0.6, Math.PI - 0.6); ctx.stroke();
-    ctx.globalAlpha = 0.4;
-    ell(ctx, 174, 132, 2, 4, "#d88050", false);
-    ctx.globalAlpha = 1;
-    // Amphora in Ecke
-    ell(ctx, 52, 300, 7, 10, "#b06040", true);
-    RN(ctx, 48, 288, 8, 5, "#8a4828");
-    ctx.globalAlpha = 0.4;
-    ell(ctx, 49, 296, 2, 4, "#d88050", false);
-    ctx.globalAlpha = 1;
-    // ---- Figuren ----
-    person(ctx, 210, 200, { skin: "#f0c090", hair: "#4a3018", tunic: "#c03838", trim: "#e05858", tunicDark: "#9c2828", skirt: false }, t);
-    person(ctx, 440, 210, { skin: "#e0b080", hair: "#8a5a20", tunic: "#3860c0", trim: "#5880e0", tunicDark: "#28489c", skirt: false }, t);
-    cat(ctx, 500, 300, t);
-    torch(ctx, 90, 88, t);
-  drawExitArt(ctx, t);
+    // 11) Figuren: Pater im Tablinum, Familienmitglied, Feles
+    person(ctx, 210, 214, { skin: "#f0c090", hair: "#4a3018", tunic: "#c03838", trim: "#e05858", tunicDark: "#9c2828", skirt: false }, t);
+    person(ctx, 440, 300, { skin: "#e0b080", hair: "#8a5a20", tunic: "#3860c0", trim: "#5880e0", tunicDark: "#28489c", skirt: false }, t);
+    cat(ctx, 500, 330, t);
   },
   hotspots: [
     { x: 80, y: 160, w: 160, h: 120, la: "ianua", target: "hortus", verbum: "ianua" },
-    { x: 172, y: 128, w: 80, h: 110, la: "pater",
+    { x: 176, y: 146, w: 72, h: 96, la: "pater",
       onUse(s, G) {
         if (!G.has("pecunia") && !G.flag("pecuniaGiven")) {
           G.setFlag("pecuniaGiven");
@@ -749,17 +840,17 @@ SCENES.atrium = {
         }
         return { type: "dialog", lines: [["Pater", "Festum Ceres exspecta! Dis curre!"]] };
       } },
-    { x: 110, y: 120, w: 100, h: 100, la: "cibus",
+    { x: 106, y: 126, w: 104, h: 62, la: "cibus",
       onUse(s, G) {
         if (!G.has("panis")) { G.verbaAdd("panis"); return { type: "take", item: "panis" }; }
         return { type: "text", la: "Panis iam in saccā est." };
       } },
-    { x: 500, y: 280, w: 70, h: 60, la: "feles",
+    { x: 492, y: 292, w: 84, h: 70, la: "feles",
       onUse(s, G) {
         G.verbaAdd("feles");
         return { type: "feles", text: "Miau! Ego sum Feles. Tecum semper ambulo. Verba nova collige!" };
       } },
-    { x: 290, y: 120, w: 60, h: 60, la: "aqua",
+    { x: 272, y: 170, w: 96, h: 66, la: "aqua",
       onUse(s, G) { G.verbaAdd("aqua"); return { type: "text", la: "Aqua in impluvio splendet." }; } }
   ],
   exits: [
