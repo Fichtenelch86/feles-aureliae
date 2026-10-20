@@ -90,7 +90,7 @@ body {
 #combine-hint { color: #9b8465; font-size: .85em; font-style: italic; }
 
 #dialog-box {
-  position: absolute; left: 4%; right: 4%; bottom: 4%;
+  position: absolute; left: 4%; right: 4%; bottom: 3.5%;
   background: rgba(42, 36, 47, .95);
   border: 2px solid #d4a545;
   padding: 14px 40px 14px 16px;
@@ -153,18 +153,18 @@ body {
 <div id="stage-wrap">
 <canvas id="stage" width="2560" height="1440"></canvas>
 <div id="overlay"></div>
-</div>
-<div id="ui-top">
-<div id="location-bar"><span id="scene-name"></span></div>
-<div id="verba-counter">VERBA: <b id="verba-count">0</b></div><div id="version-tag" style="color:#7a6a84;font-size:.75em;padding:0 10px;">v8.2</div>
-</div>
-<div id="bottom-bar"><div class="bb-section"><div class="bb-label">SACCA</div><div class="bb-chips" id="bb-items"><span class="bb-empty">sacca vacua est</span></div></div><div class="bb-section"><div class="bb-label">VERBA COLLECTA · <span id="bb-verba-count">0</span></div><div class="bb-chips" id="bb-verba"><span class="bb-empty">nondum verba</span></div></div></div>
 <div id="dialog-box" hidden>
 <div id="speaker"></div>
 <div id="text"></div>
 <div id="choices"></div>
 <div id="dialog-next">➤</div>
 </div>
+</div>
+<div id="ui-top">
+<div id="location-bar"><span id="scene-name"></span></div>
+<div id="verba-counter">VERBA: <b id="verba-count">0</b></div><div id="version-tag" style="color:#7a6a84;font-size:.75em;padding:0 10px;">v8.3</div>
+</div>
+<div id="bottom-bar"><div class="bb-section"><div class="bb-label">SACCA</div><div class="bb-chips" id="bb-items"><span class="bb-empty">sacca vacua est</span></div></div><div class="bb-section"><div class="bb-label">VERBA COLLECTA · <span id="bb-verba-count">0</span></div><div class="bb-chips" id="bb-verba"><span class="bb-empty">nondum verba</span></div></div></div>
 <div id="feles-box" hidden>
 <div id="feles-text"></div>
 <button id="feles-close">✕</button>
@@ -2094,6 +2094,94 @@ const ITEMS = {
 };
 
 // Kombinationen (Inventar-Mechanik)
+// ---------- Item-Icons (Mini-Zeichnungen fuer die Sacca-Leiste) ----------
+function drawItemIcon(ctx, item) {
+  ctx.clearRect(0, 0, 40, 40);
+  ctx.lineWidth = 1.6;
+  if (item === "pecunia") {
+    // Muenzbeutel mit Goldstueck
+    ell(ctx, 20, 26, 10, 8, "#d8b070");
+    ctx.strokeStyle = "#8a6a38"; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(16, 20); ctx.lineTo(24, 20); ctx.stroke();
+    ell(ctx, 20, 14, 6, 5, "#f0d888");
+    ctx.fillStyle = "#b89448";
+    ctx.font = "bold 6px Georgia"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText("V", 20, 14.5);
+  } else if (item === "panis") {
+    // Brotlaib mit Einschnitten
+    ell(ctx, 20, 22, 12, 8, "#e8bc78");
+    ctx.strokeStyle = "#b88848"; ctx.lineWidth = 1;
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath(); ctx.moveTo(14 + i * 5, 17); ctx.quadraticCurveTo(15 + i * 5, 22, 14 + i * 5, 26); ctx.stroke();
+    }
+  } else if (item === "flores") {
+    // Blumenstrauß: 3 Bluete + Staengel
+    ctx.strokeStyle = "#4a8a40"; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(13, 34); ctx.quadraticCurveTo(15, 24, 14, 16); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(20, 34); ctx.lineTo(20, 14); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(27, 34); ctx.quadraticCurveTo(25, 24, 26, 16); ctx.stroke();
+    ell(ctx, 14, 14, 4.5, 4.5, "#e87888"); ell(ctx, 20, 12, 4.5, 4.5, "#f0c040"); ell(ctx, 26, 15, 4.5, 4.5, "#e87888");
+    ell(ctx, 14, 14, 1.6, 1.6, "#f8d8a0", false); ell(ctx, 20, 12, 1.6, 1.6, "#f8f0c0", false); ell(ctx, 26, 15, 1.6, 1.6, "#f8d8a0", false);
+  } else if (item === "frumentum") {
+    // Getreidebuendel
+    ctx.strokeStyle = "#c8a048"; ctx.lineWidth = 1.8;
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath(); ctx.moveTo(14 + i * 6, 34); ctx.quadraticCurveTo(15 + i * 6, 22, 14 + i * 6, 14); ctx.stroke();
+      ell(ctx, 14 + i * 6, 12, 2.2, 3.4, "#e8cc70", false);
+    }
+    rr(ctx, 11, 26, 18, 4, "#b8944a", false, 2);
+  } else if (item === "vinum") {
+    // Amphore
+    ell(ctx, 20, 22, 8, 10, "#c88058");
+    rr(ctx, 16, 9, 8, 5, "#a06840", false, 1.5);
+    ctx.strokeStyle = "#a06840"; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(12, 22, 4, -1.2, 1.2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(28, 22, 4, Math.PI - 1.2, Math.PI + 1.2); ctx.stroke();
+    ell(ctx, 20, 30, 4, 2.5, "#a06840", false);
+  } else if (item === "sagitta") {
+    // Pfeil mit Feder
+    ctx.strokeStyle = "#a88858"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(10, 30); ctx.lineTo(30, 10); ctx.stroke();
+    ctx.fillStyle = "#8a8a94";
+    ctx.beginPath(); ctx.moveTo(30, 10); ctx.lineTo(24, 11); ctx.lineTo(29, 16); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#e87888";
+    ctx.beginPath(); ctx.moveTo(10, 30); ctx.lineTo(9, 25); ctx.lineTo(14, 30); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(10, 30); ctx.lineTo(15, 31); ctx.lineTo(10, 35); ctx.closePath(); ctx.fill();
+  } else if (item === "clavis") {
+    // Schluessel
+    ell(ctx, 13, 13, 6, 6, "#f0d888");
+    ell(ctx, 13, 13, 2.2, 2.2, "#4a404e", false);
+    ctx.strokeStyle = "#f0d888"; ctx.lineWidth = 2.4;
+    ctx.beginPath(); ctx.moveTo(17, 17); ctx.lineTo(30, 30); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(26, 30); ctx.lineTo(30, 26); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(23, 33); ctx.lineTo(27, 29); ctx.stroke();
+  } else if (item === "corona_rohling") {
+    // Kranz-Rohling: gruener Reifen
+    ctx.strokeStyle = "#5a9450"; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.ellipse(20, 20, 11, 11, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = "#7ab468"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.ellipse(20, 20, 11, 11, 0, 0, Math.PI * 2); ctx.stroke();
+  } else if (item === "stella") {
+    // Stern
+    ctx.fillStyle = "#f0d858";
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const r = i % 2 ? 4.5 : 11;
+      const a = -Math.PI / 2 + i * Math.PI / 5;
+      const px2 = 20 + Math.cos(a) * r, py2 = 20 + Math.sin(a) * r;
+      if (i === 0) ctx.moveTo(px2, py2); else ctx.lineTo(px2, py2);
+    }
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = "#c8a838"; ctx.lineWidth = 1.2; ctx.stroke();
+    ell(ctx, 17, 17, 2, 2, "#fdf8d8", false);
+  } else if (item === "corona") {
+    // fertiger Kranz: Reifen + Bluete
+    ctx.strokeStyle = "#5a9450"; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.ellipse(20, 20, 11, 11, 0, 0, Math.PI * 2); ctx.stroke();
+    ell(ctx, 13, 14, 3, 3, "#e87888"); ell(ctx, 20, 10, 3, 3, "#f0c040"); ell(ctx, 27, 14, 3, 3, "#e87888");
+    ell(ctx, 29, 22, 3, 3, "#e8a8c8"); ell(ctx, 22, 30, 3, 3, "#f0c040"); ell(ctx, 13, 26, 3, 3, "#e8a8c8");
+  }
+}
 const COMBINES = [
   { a: "flores", b: "corona_rohling", la: "Flores et corona rudis!",
     hint: "Miau! In theatro histrio coronam perficit – non hic!" },
@@ -2536,6 +2624,60 @@ function drawScrollShade(ctx, x, w, fromRight) {
   ctx.fillStyle = sg;
   ctx.fillRect(fromRight ? x - 14 : x + w, 0, 14, 360);
 }
+// Zielsymbole fuer Wegweiser-Tafeln (mini-Ikonen der Szenen)
+function drawTargetIcon(ctx, target, cx, cy) {
+  ctx.lineWidth = 1.3;
+  if (target === "hortus") {
+    // Blume
+    ell(ctx, cx, cy - 2, 3, 3, "#e87888");
+    ell(ctx, cx, cy + 4, 1.4, 2.4, "#4a8a40");
+  } else if (target === "macellum" || target === "ager") {
+    // Aehre
+    ell(ctx, cx, cy - 4, 2, 3.4, "#e8cc70");
+    ctx.strokeStyle = "#a88838"; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(cx, cy - 1); ctx.lineTo(cx, cy + 6); ctx.stroke();
+  } else if (target === "taberna" || target === "culina") {
+    // Brotlaib
+    ell(ctx, cx, cy + 1, 6, 4, "#e8bc78");
+  } else if (target === "thermae" || target === "balneum") {
+    // Wassertropfen
+    ctx.fillStyle = "#9ecbe0";
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - 6);
+    ctx.quadraticCurveTo(cx + 5, cy + 1, cx, cy + 5);
+    ctx.quadraticCurveTo(cx - 5, cy + 1, cx, cy - 6);
+    ctx.fill();
+  } else if (target === "domus_vicini" || target === "cellarium") {
+    // Amphore
+    ell(ctx, cx, cy + 1, 4, 5.4, "#c88058");
+  } else if (target === "theatrum" || target === "lucus") {
+    // Baum
+    rr(ctx, cx - 1.4, cy - 2, 2.8, 7, "#a88858", false, 1);
+    ell(ctx, cx, cy - 5, 5.4, 4.4, "#7ab468");
+  } else if (target === "templum" || target === "sacellum") {
+    // Tempelchen
+    rr(ctx, cx - 5, cy, 10, 5, "#e0d4b4", false, 1);
+    rr(ctx, cx - 3.4, cy - 3, 7, 3, "#e0d4b4", false, 1);
+  } else if (target === "vicus_nocturnus") {
+    // Stern
+    ctx.fillStyle = "#f0d858";
+    ctx.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const r = i % 2 ? 2 : 5.4;
+      const ang = -Math.PI / 2 + i * Math.PI / 5;
+      const px2 = cx + Math.cos(ang) * r, py2 = cy + Math.sin(ang) * r;
+      if (i === 0) ctx.moveTo(px2, py2); else ctx.lineTo(px2, py2);
+    }
+    ctx.closePath(); ctx.fill();
+  } else if (target === "atrium") {
+    // Haus
+    rr(ctx, cx - 5, cy - 1, 10, 7, "#d8bf8e", false, 1);
+    ctx.fillStyle = "#b89868";
+    ctx.beginPath(); ctx.moveTo(cx - 7, cy - 1); ctx.lineTo(cx, cy - 6); ctx.lineTo(cx + 7, cy - 1); ctx.closePath(); ctx.fill();
+  } else {
+    ell(ctx, cx, cy, 3.4, 3.4, "#e8d8a8");
+  }
+}
 function loop(t) {
   const sc = SCENES[G.scene];
   osCtx.clearRect(0, 0, 640, 360);
@@ -2546,59 +2688,57 @@ function loop(t) {
   watercolor(ctx2d, t || 0);
   // Schriftrollen-Animation beim Szenenwechsel
   scrollAnim(ctx2d, t || 0);
-  // Ausgangs-Schilder: dezent oben, alle sichtbar, leuchten bei Hover
-  sc.exits.forEach(ex => {
+  // Organische Wegweiser: Holzpfosten mit Tafel + Zielsymbol, in der Szene platziert
+  sc.exits.forEach((ex, i) => {
     const hovered = hoverSpot === ex;
-    const bw = Math.min(ex.w, 196), bx = ex.x + (ex.w - bw) / 2;
-    const by = ex.y + 3, bh = 24, rr2 = 12;
+    // Position: unten am Rand, verteilt nach Exit-Index, leicht versetzt organisch
+    const wx = 70 + ex.x + (i * 34) % 60;
+    const wy = 258 + (i % 2) * 26;
+    // Pfosten
+    rr(ctx2d, wx - 4, wy - 52, 8, 60, "#a88858", true, 3);
+    ctx2d.globalAlpha = 0.35;
+    ctx2d.strokeStyle = "#7a5c34"; ctx2d.lineWidth = 0.8;
+    ctx2d.beginPath(); ctx2d.moveTo(wx - 1, wy - 48); ctx2d.lineTo(wx - 1, wy - 2); ctx2d.stroke();
+    ctx2d.globalAlpha = 1;
+    // Tafel (haengend, leicht gedreht wirkt organisch)
+    const bw = 58, bh = 30, bx = wx - bw / 2, by = wy - 74;
+    ctx2d.save();
+    ctx2d.translate(wx, by + bh / 2);
+    ctx2d.rotate((i % 2 ? -0.05 : 0.06));
     ctx2d.beginPath();
-    ctx2d.moveTo(bx + rr2, by);
-    ctx2d.arcTo(bx + bw, by, bx + bw, by + bh, rr2);
-    ctx2d.arcTo(bx + bw, by + bh, bx, by + bh, rr2);
-    ctx2d.arcTo(bx, by + bh, bx, by, rr2);
-    ctx2d.arcTo(bx, by, bx + bw, by, rr2);
+    ctx2d.moveTo(bx + 5, -bh / 2);
+    ctx2d.arcTo(bx + bw, -bh / 2, bx + bw, bh / 2, 5);
+    ctx2d.arcTo(bx + bw, bh / 2, bx, bh / 2, 5);
+    ctx2d.arcTo(bx, bh / 2, bx, -bh / 2, 5);
+    ctx2d.arcTo(bx, -bh / 2, bx + bw, -bh / 2, 5);
     ctx2d.closePath();
-    if (hovered) {
-      ctx2d.fillStyle = "rgba(96,76,104,0.98)";
-      ctx2d.fill();
-      ctx2d.strokeStyle = "rgba(255,240,196,0.95)";
-    } else {
-      ctx2d.fillStyle = "rgba(52,42,58,0.82)";
-      ctx2d.fill();
-      ctx2d.strokeStyle = "rgba(200,186,204,0.55)";
-    }
-    ctx2d.lineWidth = 1.5;
+    ctx2d.fillStyle = hovered ? "#e8cfa0" : "#d8bf8e";
+    ctx2d.fill();
+    ctx2d.strokeStyle = hovered ? "#f8e8c0" : "#8a6a3c";
+    ctx2d.lineWidth = 1.4;
     ctx2d.stroke();
-    ctx2d.fillStyle = hovered ? "#fff4dc" : "rgba(238,228,240,0.92)";
-    ctx2d.font = "bold 12px Georgia";
-    ctx2d.textAlign = "center";
-    ctx2d.textBaseline = "middle";
-    const label = "\u00bb " + (SCENES[ex.target] ? SCENES[ex.target].name : ex.la);
-    ctx2d.fillText(label, bx + bw / 2, by + bh / 2 + 0.5);
-  });
-  // Hover: Objektumriss leuchtet pulsierend (ohne shadowBlur, Safari-sicher:
-  // mehrere Konturen mit abnehmender Deckkraft + sanfte Fuell-Tintung)
-  if (hoverSpot) {
-    const pulse = 0.5 + Math.sin((t || 0) / 300) * 0.3;
-    const hx = hoverSpot.x, hy = hoverSpot.y, hw = hoverSpot.w, hh = hoverSpot.h;
-    const rad = Math.min(10, hw / 3, hh / 3);
-
-    // 3 Konturen: breit+transparent -> schmal+deckend = Leuchtkante
-    for (let L = 3; L >= 1; L--) {
-      ctx2d.beginPath();
-      const pad = (L - 1) * 2.6;
-      const x2 = hx - pad, y2 = hy - pad, w2 = hw + pad * 2, h2 = hh + pad * 2;
-      const r2 = rad + pad;
-      ctx2d.moveTo(x2 + r2, y2);
-      ctx2d.arcTo(x2 + w2, y2, x2 + w2, y2 + h2, r2);
-      ctx2d.arcTo(x2 + w2, y2 + h2, x2, y2 + h2, r2);
-      ctx2d.arcTo(x2, y2 + h2, x2, y2, r2);
-      ctx2d.arcTo(x2, y2, x2 + w2, y2, r2);
-      ctx2d.closePath();
-      ctx2d.strokeStyle = "rgba(255,240,196," + ((0.16 + pulse * 0.14) / L).toFixed(3) + ")";
-      ctx2d.lineWidth = 1.2 + (3 - L) * 2.2;
-      ctx2d.stroke();
+    // Zielsymbol auf der Tafel (Icon je Ziel-Szene)
+    drawTargetIcon(ctx2d, ex.target, wx, by + bh / 2);
+    ctx2d.restore();
+    // hover: warmer Lichtpool um den Wegweiser
+    if (hovered) {
+      const pulse = 0.5 + Math.sin((t || 0) / 320) * 0.28;
+      ctx2d.save();
+      ctx2d.globalCompositeOperation = "lighter";
+      ctx2d.fillStyle = "rgba(120,90,40," + (0.06 + pulse * 0.07).toFixed(3) + ")";
+      ctx2d.fillRect(ex.x, ex.y, ex.w, ex.h);
+      ctx2d.restore();
     }
+  });
+  // Hover: sanfter Lichtpool ueber dem Objekt (kein Rahmen!)
+  // Objekt-Flaeche wird warm aufgehellt wie von einer Taschenlampe
+  if (hoverSpot) {
+    const pulse = 0.5 + Math.sin((t || 0) / 320) * 0.28;
+    ctx2d.save();
+    ctx2d.globalCompositeOperation = "lighter";
+    ctx2d.fillStyle = "rgba(120,90,40," + (0.05 + pulse * 0.06).toFixed(3) + ")";
+    ctx2d.fillRect(hoverSpot.x, hoverSpot.y, hoverSpot.w, hoverSpot.h);
+    ctx2d.restore();
   }
   requestAnimationFrame(loop);
 }
@@ -2733,8 +2873,15 @@ function renderInventory() {
       const info = ITEMS[item];
       const chip = document.createElement("span");
       chip.className = "bb-chip item-chip" + (G.selected === item ? " selected" : "");
-      chip.textContent = (G.selected === item ? "▸ " : "") + info.la;
       chip.title = info.de;
+      // Icon-Canvas statt Text
+      const ic = document.createElement("canvas");
+      ic.width = 80; ic.height = 80;
+      ic.style.width = "34px"; ic.style.height = "34px";
+      ic.style.verticalAlign = "middle";
+      const ictx = ic.getContext("2d");
+      if (ictx) { ictx.scale(2, 2); drawItemIcon(ictx, item); }
+      chip.appendChild(ic);
       chip.onclick = () => {
         if (G.selected === item) { G.selected = null; }
         else {
@@ -2828,6 +2975,7 @@ canvas.addEventListener("mousemove", e => {
 canvas.addEventListener("click", e => {
   ensureAudio();
   if (!dialogBox.hidden) return;
+  if (scrollState) return; // waehrend der Schriftrollen-Animation keine Szenenwechsel
   const { x, y } = stageCoords(e);
   const sc = SCENES[G.scene];
   const exit = spotAt(x, y, sc.exits);
