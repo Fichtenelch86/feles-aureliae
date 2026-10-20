@@ -156,8 +156,9 @@ body {
 </div>
 <div id="ui-top">
 <div id="location-bar"><span id="scene-name"></span></div>
-<div id="verba-counter">VERBA: <b id="verba-count">0</b></div>
+<div id="verba-counter">VERBA: <b id="verba-count">0</b></div><div id="version-tag" style="color:#7a6a84;font-size:.75em;padding:0 10px;">v8.2</div>
 </div>
+<div id="bottom-bar"><div class="bb-section"><div class="bb-label">SACCA</div><div class="bb-chips" id="bb-items"><span class="bb-empty">sacca vacua est</span></div></div><div class="bb-section"><div class="bb-label">VERBA COLLECTA · <span id="bb-verba-count">0</span></div><div class="bb-chips" id="bb-verba"><span class="bb-empty">nondum verba</span></div></div></div>
 <div id="dialog-box" hidden>
 <div id="speaker"></div>
 <div id="text"></div>
@@ -915,132 +916,118 @@ SCENES.hortus = {
 SCENES.macellum = {
   name: "Ager",
   draw(ctx, t) {
-    // ---- Markt: fern Staedte-Silhouetten + Dunst ----
+    // ---- AGER: Weizenfeld der Villa Rustica ----
     skyGradient(ctx, "#f0c860", "#f8dc90", "#f0b870");
     cloud(ctx, 100, 24, 1); cloud(ctx, 420, 14, 1);
     cloud(ctx, 250, 40, 0.7); cloud(ctx, 560, 32, 0.6);
+    // fern: Huegel + Hecken
     ctx.globalAlpha = 0.3;
-    for (let i = 0; i < 6; i++) {
-      const hx = 30 + i * 105;
-      rr(ctx, hx, 70, 40, 36, "#b09878", false, 3);
-      rr(ctx, hx + 12, 56, 14, 18, "#c0a888", false, 2);
-    }
-    ctx.globalAlpha = 0.18;
-    ctx.fillStyle = "#e8d8b8";
-    ctx.fillRect(0, 100, 640, 30);
+    ell(ctx, 140, 120, 220, 30, "#a8bd7a", false);
+    ell(ctx, 500, 122, 240, 32, "#98ad6c", false);
+    ctx.globalAlpha = 0.2;
+    for (let i = 0; i < 8; i++) ell(ctx, 20 + i * 80, 116, 30, 10, "#88a060", false);
     ctx.globalAlpha = 1;
-    stoneFloor(ctx, 260);
-    RN(ctx, 0, 260, 640, 4, "#d0b088");
-    // Bodenrefekte / Markierungen
-    ctx.globalAlpha = 0.25;
-    ctx.strokeStyle = "#a88c68"; ctx.lineWidth = 1;
-    for (let i = 0; i < 3; i++) {
+    // Feldboden mit Erde-Verlauf
+    const fg = ctx.createLinearGradient(0, 130, 0, 360);
+    fg.addColorStop(0, "#c8b06a"); fg.addColorStop(0.4, "#b89a58"); fg.addColorStop(1, "#a08848");
+    ctx.fillStyle = fg;
+    ctx.fillRect(0, 130, 640, 230);
+    // Pflug-Furchen (Perspektive)
+    ctx.globalAlpha = 0.22;
+    ctx.strokeStyle = "#7a6438"; ctx.lineWidth = 2;
+    for (let i = 0; i < 12; i++) {
       ctx.beginPath();
-      ctx.moveTo(80 + i * 200, 300);
-      ctx.quadraticCurveTo(110 + i * 200, 340, 80 + i * 200, 358);
+      ctx.moveTo(320 + (i - 6) * 22, 140);
+      ctx.lineTo(320 + (i - 6) * 85, 360);
       ctx.stroke();
     }
     ctx.globalAlpha = 1;
-    // ---- Marktstaende: 4 Stnde mit Markisen, Detailware ----
-    for (let i = 0; i < 4; i++) {
-      const sx = 10 + i * 160;
-      R(ctx, sx + 4, 140, 9, 92, "#7a5428"); R(ctx, sx + 117, 140, 9, 92, "#7a5428");
-      ctx.globalAlpha = 0.35;
-      ctx.strokeStyle = "#4e3618"; ctx.lineWidth = 0.8;
-      ctx.beginPath(); ctx.moveTo(sx + 8, 145); ctx.lineTo(sx + 8, 228); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(sx + 121, 145); ctx.lineTo(sx + 121, 228); ctx.stroke();
-      ctx.globalAlpha = 1;
-      for (let m = 0; m < 6; m++) R(ctx, sx + m * 22, 120, 22, 16, m % 2 ? "#f0e8d8" : "#e05858");
-      RN(ctx, sx, 134, 132, 6, "#c04848");
-      // Markisen-Wellen
-      ctx.globalAlpha = 0.25;
-      ctx.strokeStyle = "#a03838"; ctx.lineWidth = 0.8;
-      for (let m = 1; m < 6; m += 2) {
+    // Getreide-Reihen mit Aehren
+    const sd = strSeed("ager");
+    for (let row = 0; row < 7; row++) {
+      const ry = 190 + row * 26;
+      for (let i = 0; i < 20; i++) {
+        const gx2 = 20 + i * 31 + (row % 2) * 14;
+        const sway = Math.sin((t || 0) / 900 + i * 0.6 + row) * 2;
+        const hgt = 14 + hash01(sd, row * 20 + i) * 12;
+        ctx.strokeStyle = "#d8b858"; ctx.lineWidth = 1.2;
         ctx.beginPath();
-        ctx.moveTo(sx + m * 22 + 11, 132);
-        ctx.quadraticCurveTo(sx + m * 22 + 11, 138, sx + m * 22 + 11, 136);
+        ctx.moveTo(gx2, ry + 8);
+        ctx.quadraticCurveTo(gx2 + sway, ry - hgt / 2, gx2 + sway, ry - hgt);
         ctx.stroke();
-      }
-      ctx.globalAlpha = 1;
-      R(ctx, sx, 210, 132, 13, "#9a6a38"); // Theke
-      RN(ctx, sx + 5, 223, 122, 8, "#7a4c22");
-      RN(ctx, sx, 210, 132, 4, "#c89258");
-      if (i === 0) { // Fruechte: Pyramiden-Stacks mit Blättern
-        for (let f = 0; f < 5; f++) {
-          const frx = sx + 12 + f * 24;
-          ell(ctx, frx + 7, 196, 7, 7, f % 2 ? "#f08838" : "#e05828", true);
-          ell(ctx, frx + 7, 187, 6.5, 6.5, f % 2 ? "#f89848" : "#e86838", true);
-          ctx.globalAlpha = 0.7;
-          ell(ctx, frx + 4, 185, 2, 1.2, "#78a848", false);
-          ctx.globalAlpha = 1;
-        }
-      } else if (i === 1) { // Kaese: Raeder mit Lochern
-        ell(ctx, sx + 34, 198, 15, 11, "#f0d060", true);
-        ell(ctx, sx + 70, 202, 13, 10, "#e0c040", true);
-        ctx.globalAlpha = 0.6;
-        for (let k = 0; k < 4; k++) {
-          ell(ctx, sx + 28 + k * 4, 196 + (k % 2) * 4, 1.5, 1.2, "#c8a030", false);
-          ell(ctx, sx + 65 + k * 3, 200 + (k % 2) * 4, 1.4, 1.1, "#c09828", false);
-        }
-        ctx.globalAlpha = 1;
-        ell(ctx, sx + 105, 200, 9, 8, "#e8cc58", true);
-      } else if (i === 2) { // Toepfe: gestapelte Amphoren
-        ell(ctx, sx + 28, 198, 10, 11, "#b06040", true);
-        RN(ctx, sx + 23, 184, 10, 6, "#8a4828");
-        ell(ctx, sx + 55, 195, 8, 9, "#c07050", true);
-        ell(ctx, sx + 85, 199, 11, 10, "#a060c0", true);
-        RN(ctx, sx + 80, 186, 11, 6, "#78389c");
-        ell(ctx, sx + 112, 196, 8, 8, "#8848a8", true);
+        ell(ctx, gx2 + sway, ry - hgt - 2, 2.2, 3.4, "#e8cc70", false);
         ctx.globalAlpha = 0.5;
-        ell(ctx, sx + 26, 194, 2.5, 4, "#d88050", false);
-        ell(ctx, sx + 83, 195, 3, 4, "#c088e8", false);
+        ell(ctx, gx2 + sway - 2, ry - hgt, 1.4, 2.2, "#f4dc98", false);
+        ell(ctx, gx2 + sway + 2, ry - hgt + 1, 1.4, 2.2, "#f4dc98", false);
         ctx.globalAlpha = 1;
-      } else { // Koerner: Kegel-Haufen mit Ahren
-        ctx.beginPath();
-        ctx.moveTo(sx + 18, 208);
-        ctx.quadraticCurveTo(sx + 30, 178, sx + 42, 208);
-        ctx.closePath();
-        const gg = ctx.createLinearGradient(0, 178, 0, 208);
-        gg.addColorStop(0, "#f0dca0"); gg.addColorStop(1, "#c8a050");
-        ctx.fillStyle = gg; ctx.fill();
-        ctx.strokeStyle = INK; ctx.lineWidth = 1; ctx.stroke();
-        for (let a = 0; a < 3; a++) {
-          RN(ctx, sx + 26 + a * 5, 172 - a * 2, 1.6, 8, "#e8c858");
-          ell(ctx, sx + 26.5 + a * 5, 171 - a * 2, 2, 1.6, "#f8e0a0", false);
+        // Mohn zwischendurch
+        if (hash01(sd, row * 30 + i) > 0.86) {
+          ell(ctx, gx2 + 12, ry - 10, 2.6, 2.6, "#d05848", false);
         }
-        rr(ctx, sx + 72, 192, 24, 18, "#c8a050", true);
-        ctx.globalAlpha = 0.6;
-        for (let k2 = 0; k2 < 5; k2++) RN(ctx, sx + 75 + k2 * 4.5, 188 - (k2 % 2), 3, 5, "#f0dca0");
-        ctx.globalAlpha = 1;
       }
     }
-    // ---- Annona-Tafel mit Schnur + Zahlen ----
-    R(ctx, 300, 180, 62, 36, "#f0e0a8");
-    R(ctx, 296, 174, 70, 8, "#b09048");
-    ctx.strokeStyle = INK; ctx.lineWidth = 0.9;
-    ctx.beginPath(); ctx.moveTo(296, 178); ctx.lineTo(288, 168); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(366, 178); ctx.lineTo(374, 168); ctx.stroke();
+    // Feldrand: Zaun hinten
+    ctx.strokeStyle = "#9a7a4c"; ctx.lineWidth = 2;
+    for (let i = 0; i < 13; i++) {
+      const px2 = 10 + i * 50;
+      ctx.beginPath(); ctx.moveTo(px2, 128); ctx.lineTo(px2, 148); ctx.stroke();
+    }
+    ctx.beginPath(); ctx.moveTo(0, 134); ctx.lineTo(640, 134); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, 142); ctx.lineTo(640, 142); ctx.stroke();
+    // Vogelscheuche
+    rr(ctx, 430, 200, 6, 46, "#a88858");
+    ell(ctx, 433, 194, 9, 9, "#e8d8a8", true);
+    rr(ctx, 422, 186, 22, 8, "#c8a048", true);
+    ctx.globalAlpha = 0.7;
+    ctx.strokeStyle = "#c8a858"; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(424, 212); ctx.lineTo(408, 222); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(442, 212); ctx.lineTo(458, 222); ctx.stroke();
+    ctx.globalAlpha = 1;
+    // Getreidebuendel am Boden
+    for (let i = 0; i < 3; i++) {
+      const bx2 = 470 + i * 50, by2 = 300 + (i % 2) * 18;
+      rr(ctx, bx2, by2, 16, 22, "#dcb862", true);
+      RN(ctx, bx2 - 2, by2 - 6, 20, 8, "#c8a048");
+      ctx.strokeStyle = "#a88838"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(bx2 + 2, by2 - 2); ctx.lineTo(bx2 + 14, by2 + 18); ctx.stroke();
+    }
+    // Aehren-Korb
+    rr(ctx, 560, 280, 34, 22, "#c8a050", true);
+    ctx.globalAlpha = 0.5;
+    ctx.strokeStyle = "#8a6a28"; ctx.lineWidth = 0.8;
+    for (let w2 = 0; w2 < 3; w2++) { ctx.beginPath(); ctx.moveTo(564 + w2 * 10, 282); ctx.lineTo(564 + w2 * 10, 300); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+    ctx.globalAlpha = 0.8;
+    for (let a = 0; a < 5; a++) { RN(ctx, 563 + a * 6, 272, 1.6, 10, "#e8cc70"); ell(ctx, 563.5 + a * 6, 271, 2, 2, "#f4dc98", false); }
+    ctx.globalAlpha = 1;
+    // ---- Annona-Holzschild (Preistafel) ----
+    ctx.strokeStyle = INK; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(330, 216); ctx.lineTo(330, 174); ctx.stroke();
+    rr(ctx, 296, 174, 70, 32, "#d8bc90", true, 4);
     ctx.globalAlpha = 0.8;
     ctx.fillStyle = "#6a5838";
-    ctx.font = "7px Georgia";
-    ctx.fillText("X V III", 312, 196);
-    ctx.fillText("IIII", 320, 206);
+    ctx.font = "8px Georgia";
+    ctx.fillText("FRUMENTUM", 303, 190);
+    ctx.fillText("X V", 318, 200);
     ctx.globalAlpha = 1;
-    RN(ctx, 310, 210, 44, 3, "#6a5838");
-    // Markt-Details: Korb am Boden, Waage
-    rr(ctx, 470, 286, 22, 14, "#c8a050", true);
-    ctx.globalAlpha = 0.4;
-    ctx.strokeStyle = "#8a6a28"; ctx.lineWidth = 0.7;
-    for (let w2 = 0; w2 < 3; w2++) { ctx.beginPath(); ctx.moveTo(473 + w2 * 7, 288); ctx.lineTo(473 + w2 * 7, 299); ctx.stroke(); }
-    ctx.globalAlpha = 1;
-    ctx.beginPath(); ctx.moveTo(480, 286); ctx.quadraticCurveTo(481, 280, 480, 278); ctx.stroke();
+    RN(ctx, 310, 204, 44, 3, "#6a5838");
+    // ---- Figuren: Vilicus, Baerin, Feldarbeiter ----
     person(ctx, 170, 290, { skin: "#e0b080", hair: "#2a1a10", tunic: "#4aa858", trim: "#70c878", tunicDark: "#388c40", skirt: false }, t);
     person(ctx, 420, 280, { skin: "#f0c090", hair: "#e0b860", tunic: "#b050d0", trim: "#d078e8", tunicDark: "#8c38a8", skirt: true }, t);
-    // Kundin im Hintergrund
     ctx.globalAlpha = 0.8;
     person(ctx, 560, 232, { skin: "#e8c098", hair: "#7a5028", tunic: "#8a6848", trim: "#a88860", tunicDark: "#6a4c30", skirt: true }, t);
     ctx.globalAlpha = 1;
     cat(ctx, 590, 320, t);
+    // Schwalben am Himmel
+    ctx.strokeStyle = "rgba(110,84,60,0.5)"; ctx.lineWidth = 1;
+    for (let i = 0; i < 2; i++) {
+      const bx2 = ((t || 0) / 50 + i * 300) % 700 - 30;
+      const by2 = 46 + i * 22;
+      ctx.beginPath();
+      ctx.moveTo(bx2, by2); ctx.quadraticCurveTo(bx2 + 4, by2 - 4, bx2 + 8, by2);
+      ctx.moveTo(bx2 + 8, by2); ctx.quadraticCurveTo(bx2 + 12, by2 - 4, bx2 + 16, by2);
+      ctx.stroke();
+    }
   },
   hotspots: [
     { x: 172, y: 160, w: 90, h: 120, la: "mercator",
@@ -1484,94 +1471,99 @@ SCENES.domus_vicini = {
 SCENES.theatrum = {
   name: "Lucus",
   draw(ctx, t) {
-    // ---- Theatrum: Nachmittagsonne ----
-    skyGradient(ctx, "#f0a848", "#f8cc88", "#fce0a8");
-    cloud(ctx, 80, 18, 1); cloud(ctx, 400, 32, 1);
-    cloud(ctx, 200, 44, 0.7); cloud(ctx, 540, 24, 0.6);
-    // Fern: Hügel + Stadt
-    ctx.globalAlpha = 0.3;
-    ell(ctx, 120, 84, 180, 30, "#c8a888", false);
-    ell(ctx, 520, 80, 200, 34, "#b89878", false);
-    ctx.globalAlpha = 0.25;
-    for (let i = 0; i < 5; i++) rr(ctx, 60 + i * 110, 60, 26, 20, "#a08868", false, 2);
-    ctx.globalAlpha = 1;
-    // ---- Buehnenhaus ----
-    R(ctx, 60, 80, 520, 200, "#f0e0bc");
-    RN(ctx, 60, 80, 520, 10, "#c8a878");
-    // Saeulen mit Kapitell + Basis + Kanneluren
+    // ---- LUCUS: heiliger Hain der Villa ----
+    skyGradient(ctx, "#8ec8e8", "#a8d8e0", "#c8e0c8");
+    cloud(ctx, 90, 30, 1); cloud(ctx, 380, 20, 1);
+    cloud(ctx, 220, 56, 0.7); cloud(ctx, 540, 40, 0.6);
+    // Lichtflecken vom Blaetterdach (heilige Atmosphaere)
+    ctx.globalAlpha = 0.16;
     for (let i = 0; i < 6; i++) {
-      const cx2 = 90 + i * 90;
-      R(ctx, cx2, 100, 20, 170, "#e0d0a8");
-      RN(ctx, cx2 + 2, 100, 5, 170, "#f4ead0");
-      RN(ctx, cx2 + 13, 100, 5, 170, "#c0b088");
-      R(ctx, cx2 - 5, 90, 30, 11, "#d0c098");
-      R(ctx, cx2 - 5, 262, 30, 9, "#d0c098");
-      ctx.globalAlpha = 0.25;
-      ctx.strokeStyle = "#b8a880"; ctx.lineWidth = 0.7;
-      for (let k2 = 0; k2 < 3; k2++) {
-        ctx.beginPath(); ctx.moveTo(cx2 + 5 + k2 * 4, 102); ctx.lineTo(cx2 + 5 + k2 * 4, 268); ctx.stroke();
-      }
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = "#e8dcb8";
-      RN(ctx, cx2 + 2, 93, 16, 4, "#e8dcb8");
+      const lx = 40 + i * 105 + Math.sin(i * 2.3) * 20;
+      const lw2 = 30 + hash01(i, 7) * 40;
+      const lg = ctx.createRadialGradient(lx, 200, 4, lx, 200, lw2);
+      lg.addColorStop(0, "#fdf4d0");
+      lg.addColorStop(1, "rgba(253,244,208,0)");
+      ctx.fillStyle = lg;
+      ctx.fillRect(lx - lw2, 130, lw2 * 2, 160);
     }
-    // Giebel mit Zahnrad-Fries
-    for (let r = 0; r < 6; r++) R(ctx, 84 + r * 40, 80 - r * 13, 472 - r * 80, 13, r % 2 ? "#e0d8c0" : "#eae2cc");
-    ctx.globalAlpha = 0.4;
-    for (let i2 = 0; i2 < 24; i2++) RN(ctx, 120 + i2 * 18, 76, 6, 4, "#c8b890");
     ctx.globalAlpha = 1;
-    R(ctx, 100, 270, 440, 27, "#c8a070");
-    for (let i = 0; i < 11; i++) RN(ctx, 102 + i * 40, 270, 3, 27, "#a88050");
-    RN(ctx, 100, 270, 440, 4, "#e0c090");
-    // ---- Vorhang mit Faltenwurf + Quasten ----
-    R(ctx, 130, 120, 380, 150, "#c04040");
-    for (let i = 0; i < 9; i++) {
-      R(ctx, 140 + i * 42, 120, 11, 150, "#e05858");
-      ctx.globalAlpha = 0.3;
-      ctx.strokeStyle = "#a83030"; ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.moveTo(145 + i * 42, 124);
-      ctx.quadraticCurveTo(147 + i * 42, 195, 145 + i * 42, 266);
-      ctx.stroke();
+    // Wald-Boden
+    const wg = ctx.createLinearGradient(0, 240, 0, 360);
+    wg.addColorStop(0, "#7a9a5c"); wg.addColorStop(1, "#5e7c46");
+    ctx.fillStyle = wg;
+    ctx.fillRect(0, 240, 640, 120);
+    // Lichter Waldweg
+    ctx.globalAlpha = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(280, 360); ctx.quadraticCurveTo(300, 310, 260, 270);
+    ctx.quadraticCurveTo(240, 254, 228, 248); ctx.lineTo(252, 246);
+    ctx.quadraticCurveTo(272, 258, 296, 300); ctx.quadraticCurveTo(310, 330, 312, 360);
+    ctx.closePath();
+    ctx.fillStyle = "#c8b488"; ctx.fill();
+    ctx.globalAlpha = 0.3;
+    for (let i = 0; i < 10; i++) ell(ctx, 262 + (i % 3) * 14, 268 + i * 9, 4, 2.5, "#a89468", false);
+    ctx.globalAlpha = 1;
+    // Alte Eichen mit dicken Staemmen (heilige Baeume)
+    tree(ctx, 60, 260, 2.4);
+    tree(ctx, 250, 270, 1.4);
+    tree(ctx, 560, 258, 2.2);
+    tree(ctx, 420, 268, 1.5);
+    // Junge Baeume + Buesche
+    tree(ctx, 160, 292, 0.9);
+    bush(ctx, 330, 300, 1.2); bush(ctx, 480, 296, 1.1);
+    bush(ctx, 30, 316, 1); bush(ctx, 600, 310, 1.1);
+    // Pilze am Wegesrand (heiliger Ort)
+    for (let i = 0; i < 4; i++) {
+      const mx = 200 + i * 90, my = 336 - (i % 2) * 8;
+      ctx.strokeStyle = INK; ctx.lineWidth = 0.9;
+      rr(ctx, mx, my - 6, 3.5, 7, "#f0e0c0", false, 1);
+      ell(ctx, mx + 1.5, my - 6, 5, 3, "#d06848", true);
+      ctx.globalAlpha = 0.5;
+      ell(ctx, mx, my - 7, 1.2, 0.8, "#f8e0c8", false);
+      ell(ctx, mx + 3, my - 5.4, 1, 0.7, "#f8e0c8", false);
       ctx.globalAlpha = 1;
-      // Quasten
-      ell(ctx, 145 + i * 42, 272, 2.5, 3.5, "#d48838", true);
     }
-    RN(ctx, 130, 120, 380, 9, "#8a2828");
-    RN(ctx, 130, 266, 380, 5, "#8a2828");
-    // Maske ueber der Buehne
-    ell(ctx, 320, 112, 12, 9, "#f0ece0", true);
-    ctx.fillStyle = "#5a4630";
-    ctx.beginPath(); ctx.arc(316, 110, 1.6, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(324, 110, 1.6, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "#5a4630"; ctx.lineWidth = 1.2;
-    ctx.beginPath(); ctx.arc(320, 113, 4, 0.3, Math.PI - 0.3); ctx.stroke();
-    // ---- Publikum: 2 Reihen mit Koerpern + Kaegen ----
-    for (let r = 0; r < 2; r++) {
-      for (let i = 0; i < 10; i++) {
-        const px2 = 50 + i * 60 + (r % 2) * 30, py = 316 + r * 20;
-        ell(ctx, px2 + 9, py + 7, 9, 8, r ? "#f0c090" : "#e0b080", true);
-        ctx.fillStyle = "#3a2c20";
-        ctx.beginPath(); ctx.arc(px2 + 6, py + 6, 1.3, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(px2 + 12, py + 6, 1.3, 0, Math.PI * 2); ctx.fill();
-        rr(ctx, px2 - 2, py + 13, 22, 15, r ? "#5880e0" : "#e07090", true, 4);
-        ctx.globalAlpha = 0.4;
-        RN(ctx, px2, py + 13, 22, 3, r ? "#7898f0" : "#f090a8");
+    // ---- ZENTRAL: kleiner Circular-Tempel (Sacellum-Vorschau) mit Ceres-Altar ----
+    rr(ctx, 288, 216, 64, 12, "#d8ccb0", true, 3);  // Stufe
+    rr(ctx, 294, 182, 52, 36, "#e8dcc0", true, 4);  // Tempelchen
+    rr(ctx, 300, 190, 40, 28, "#d8c8a0", false, 3); // Innen
+    rr(ctx, 298, 174, 10, 10, "#e8dcc0", true, 2);  // Saeule
+    rr(ctx, 330, 174, 10, 10, "#e8dcc0", true, 2);  // Saeule
+    rr(ctx, 308, 166, 24, 10, "#d0c098", true, 2);  // Dach
+    // Ceres-Widmung: Aehren-Buendel am Altaer
+    rr(ctx, 314, 196, 12, 16, "#e8c858");
+    for (let a = 0; a < 3; a++) {
+      RN(ctx, 309 + a * 8, 190, 2, 10, "#e8c858");
+      ell(ctx, 309.5 + a * 8, 189, 2, 2, "#f8e0a0", false);
+    }
+    // Votiv-Kruenge am Altar
+    ell(ctx, 300, 214, 4, 5, "#c8a070", true);
+    RN(ctx, 297, 209, 6, 4, "#a07848");
+    ell(ctx, 336, 215, 3.5, 4.5, "#b89068", true);
+    // Zauberhaftes Gluehwuermchen (heiliger Ort)
+    for (let i = 0; i < 5; i++) {
+      const fx2 = 120 + i * 100 + Math.sin((t || 0) / 800 + i * 2) * 24;
+      const fy2 = 260 + Math.cos((t || 0) / 650 + i) * 30;
+      const tw2 = 0.4 + Math.sin((t || 0) / 260 + i * 1.7) * 0.35;
+      if (tw2 > 0.3) {
+        ctx.globalAlpha = tw2;
+        ell(ctx, fx2, fy2, 2, 2, "#f8e878", false);
+        ctx.globalAlpha = tw2 * 0.4;
+        ell(ctx, fx2, fy2, 4, 4, "#fcf0a0", false);
         ctx.globalAlpha = 1;
-        // Haar
-        ell(ctx, px2 + 9, py + 2, 7, 4, i % 3 ? "#4a3620" : "#8a6a38", false);
       }
     }
-    // Buehnenfiguren
-    person(ctx, 200, 266, { skin: "#f0c090", hair: "#2a1a10", tunic: "#e05848", trim: "#f88070", tunicDark: "#b83c30", skirt: false }, t);
-    R(ctx, 186, 236, 30, 8, "#f0ece0"); // Maske in Hand
-    ctx.globalAlpha = 0.6;
-    ctx.fillStyle = "#8a7858";
-    ctx.beginPath(); ctx.arc(196, 240, 1.4, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(206, 240, 1.4, 0, Math.PI * 2); ctx.fill();
+    // ---- Figuren: Feldarbeiterin, Knabe, Feles ----
+    person(ctx, 300, 240, { skin: "#f0c090", hair: "#6a3818", tunic: "#d04868", trim: "#e87090", tunicDark: "#a83450", skirt: true }, t);
+    ctx.globalAlpha = 0.85;
+    person(ctx, 180, 320, { skin: "#e8c098", hair: "#4a3018", tunic: "#a88848", trim: "#c8a868", tunicDark: "#886838", skirt: false }, t);
     ctx.globalAlpha = 1;
-    person(ctx, 430, 266, { skin: "#f0c090", hair: "#e0b860", tunic: "#5870e0", trim: "#8098f0", tunicDark: "#4058b8", skirt: true }, t);
-    cat(ctx, 570, 330, t);
+    cat(ctx, 480, 150, t);
+    // Vogelzwitschern: Vogel auf Ast
+    ell(ctx, 96, 176, 4, 4, "#d88858", true);
+    ell(ctx, 96, 171, 2.6, 2.4, "#e8a878", false);
+    ctx.fillStyle = "#e8b040";
+    ctx.beginPath(); ctx.moveTo(99, 171); ctx.lineTo(103, 172.5); ctx.lineTo(99, 174); ctx.fill();
   },
   hotspots: [
     { x: 160, y: 160, w: 100, h: 120, la: "histrio",
@@ -1751,122 +1743,110 @@ SCENES.templum = {
 SCENES.vicus_nocturnus = {
   name: "Lucus Nocturnus",
   draw(ctx, t) {
-    // ---- Vicus Nocturnus: mondenachtliche Gasse ----
+    // ---- LUCUS NOCTURNUS: naechtlicher heiliger Hain ----
     skyGradient(ctx, "#100c20", "#181428", "#282048");
     stars(ctx, t);
-    // Sterne zweiter Ordnung + Sternbild
     ctx.globalAlpha = 0.5;
     for (let i = 0; i < 20; i++) {
       const sx3 = (i * 97 + 41) % 640, sy3 = (i * 43) % 150;
       RN(ctx, sx3, sy3, 1, 1, "#d8d4e8");
     }
     ctx.globalAlpha = 1;
-    // Mond mit Kratern
+    // Mond mit Krantern + Glow
     ell(ctx, 519, 47, 19, 19, "#f8f0d0", true);
     ctx.globalAlpha = 0.25;
     ell(ctx, 513, 42, 4, 4, "#c8bca0", false);
     ell(ctx, 524, 50, 5, 4, "#c8bca0", false);
     ell(ctx, 517, 54, 3, 2.5, "#c8bca0", false);
     ctx.globalAlpha = 1;
-    // Mond-Glow
     const mg2 = ctx.createRadialGradient(519, 47, 12, 519, 47, 60);
     mg2.addColorStop(0, "rgba(248,240,208,0.25)");
     mg2.addColorStop(1, "rgba(248,240,208,0)");
     ctx.fillStyle = mg2;
     ctx.fillRect(460, 0, 120, 110);
-    // ---- Gasse mit Pflaster + Pfützen ----
-    RN(ctx, 0, 260, 640, 100, "#282030");
-    tiles(ctx, 0, 260, 640, 100, 34, 16, "#403850", "#38304a");
-    RN(ctx, 0, 260, 640, 4, "#484058");
-    // Pfütze mit Mond-Reflexion
-    ctx.globalAlpha = 0.5;
-    ell(ctx, 210, 310, 34, 9, "#283048", false);
-    ctx.globalAlpha = 0.35;
-    ell(ctx, 210, 310, 30, 7, "#384868", false);
-    ctx.globalAlpha = 0.6;
-    ell(ctx, 218, 309, 6, 2.5, "#d8d0b0", false);
-    ctx.globalAlpha = 1;
-    // ---- Hauser links mit Putz-Textur ----
-    R(ctx, 20, 90, 180, 180, "#383050");
-    roofTiles(ctx, 12, 74, 196, 18);
-    RN(ctx, 20, 90, 6, 180, "#443c5c");
-    ctx.globalAlpha = 0.25;
-    ctx.strokeStyle = "#584868"; ctx.lineWidth = 0.8;
-    for (let i2 = 0; i2 < 6; i2++) {
-      ctx.beginPath();
-      ctx.moveTo(30 + i2 * 28, 96);
-      ctx.quadraticCurveTo(38 + i2 * 28, 130, 30 + i2 * 28, 168);
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-    windowFrame(ctx, 40, 130, 36, 44, false);
-    windowFrame(ctx, 90, 180, 28, 36, true);
-    door(ctx, 60, 190, 44, 76);
-    RN(ctx, 54, 184, 54, 5, "#f8f0b0");
-    // Blumentopf am Fenster
-    ell(ctx, 128, 176, 5, 4, "#a86048", true);
-    ctx.globalAlpha = 0.8;
-    ell(ctx, 128, 172, 3, 3, "#4a7840", false);
-    ctx.globalAlpha = 1;
-    // ---- Hauser rechts ----
-    R(ctx, 400, 80, 200, 190, "#383050");
-    roofTiles(ctx, 392, 62, 216, 20);
-    RN(ctx, 594, 80, 6, 190, "#2c2438");
-    ctx.globalAlpha = 0.25;
-    ctx.strokeStyle = "#2c2444"; ctx.lineWidth = 0.8;
-    for (let i2 = 0; i2 < 7; i2++) {
-      ctx.beginPath();
-      ctx.moveTo(410 + i2 * 26, 86);
-      ctx.quadraticCurveTo(418 + i2 * 26, 120, 410 + i2 * 26, 160);
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-    windowFrame(ctx, 430, 130, 36, 44, false);
-    windowFrame(ctx, 500, 130, 36, 44, true);
-    // Wascheleine zwischen Hausern
-    ctx.strokeStyle = "rgba(200,190,170,0.5)"; ctx.lineWidth = 0.8;
+    // Boden: dunkles Waldboden-Grün
+    const ng = ctx.createLinearGradient(0, 250, 0, 360);
+    ng.addColorStop(0, "#2c3830"); ng.addColorStop(1, "#1e2820");
+    ctx.fillStyle = ng;
+    ctx.fillRect(0, 250, 640, 110);
+    // Mondlicht-Silberstreifen auf dem Weg
+    ctx.globalAlpha = 0.2;
     ctx.beginPath();
-    ctx.moveTo(200, 100);
-    ctx.quadraticCurveTo(300, 118, 400, 96);
-    ctx.stroke();
+    ctx.moveTo(500, 360); ctx.lineTo(540, 250); ctx.lineTo(560, 250); ctx.lineTo(556, 360);
+    ctx.closePath();
+    ctx.fillStyle = "#c8d0c8"; ctx.fill();
+    ctx.globalAlpha = 1;
+    // Pfuetze mit Mond-Reflexion
+    ctx.globalAlpha = 0.5;
+    ell(ctx, 210, 320, 34, 9, "#283048", false);
+    ctx.globalAlpha = 0.6;
+    ell(ctx, 218, 319, 6, 2.5, "#d8d0b0", false);
+    ctx.globalAlpha = 1;
+    // Dunkle Baum-Silhouetten
+    ctx.globalAlpha = 0.9;
+    tree(ctx, 50, 268, 2.6);
+    tree(ctx, 590, 264, 2.4);
+    tree(ctx, 170, 280, 1.6);
+    tree(ctx, 440, 276, 1.3);
+    ctx.globalAlpha = 1;
+    bush(ctx, 330, 316, 1.3);
+    // ---- Steinerner Altar im Hain (Zentrum der Handlung) ----
+    rr(ctx, 276, 296, 88, 22, "#8a8478", true, 4);
+    rr(ctx, 270, 290, 100, 10, "#9a948a", true, 3);
+    // Runen/Zierritzung
+    ctx.globalAlpha = 0.5;
+    ctx.strokeStyle = "#5a5448"; ctx.lineWidth = 1;
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath();
+      ctx.moveTo(292 + i * 28, 300);
+      ctx.lineTo(300 + i * 28, 312);
+      ctx.moveTo(300 + i * 28, 300);
+      ctx.lineTo(292 + i * 28, 312);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // Opferflamme auf dem Altar (blaeulich-geisterhaft)
+    const gf = ctx.createRadialGradient(320, 288, 2, 320, 288, 34);
+    gf.addColorStop(0, "rgba(160,180,220,0.35)");
+    gf.addColorStop(1, "rgba(160,180,220,0)");
+    ctx.fillStyle = gf;
+    ctx.fillRect(286, 254, 68, 68);
+    const fl2 = Math.sin((t || 0) / 130) * 2;
+    ell(ctx, 320, 282 + fl2, 5, 9, "#9ab4d8");
     ctx.globalAlpha = 0.7;
-    rr(ctx, 240, 102, 16, 20, "#b8c0c8", false, 1);
-    rr(ctx, 290, 107, 14, 18, "#c8a898", false, 1);
-    rr(ctx, 340, 103, 16, 20, "#a8b8a0", false, 1);
+    ell(ctx, 320, 284 + fl2, 2.6, 5, "#d0e0f4", false);
     ctx.globalAlpha = 1;
-    torch(ctx, 380, 158, t);
-    // ---- Laterne mit warmem Lichtkegel ----
-    const lg = ctx.createRadialGradient(613, 152, 4, 613, 152, 44);
-    lg.addColorStop(0, "rgba(248,224,96,0.4)");
-    lg.addColorStop(1, "rgba(248,224,96,0)");
-    ctx.fillStyle = lg;
-    ctx.fillRect(570, 110, 90, 90);
-    R(ctx, 610, 150, 8, 62, "#443c50");
-    R(ctx, 600, 138, 26, 20, "#443c50");
-    R(ctx, 604, 142, 18, 15, "#f8e060");
-    ctx.globalAlpha = 0.35;
-    RN(ctx, 607, 145, 12, 9, "#fcf0a0");
-    ctx.globalAlpha = 1;
-    RN(ctx, 594, 158, 38, 42, "rgba(248,224,96,0.14)");
+    // Gluehwuermchen im Dunkeln (mehr als am Tag)
+    for (let i = 0; i < 10; i++) {
+      const fx2 = 60 + i * 58 + Math.sin((t || 0) / 700 + i * 2.2) * 26;
+      const fy2 = 250 + Math.cos((t || 0) / 550 + i * 1.4) * 40;
+      const tw2 = 0.35 + Math.sin((t || 0) / 240 + i * 1.9) * 0.4;
+      if (tw2 > 0.25) {
+        ctx.globalAlpha = tw2;
+        ell(ctx, fx2, fy2, 2, 2, "#a8d878", false);
+        ctx.globalAlpha = tw2 * 0.35;
+        ell(ctx, fx2, fy2, 4.5, 4.5, "#c8e898", false);
+        ctx.globalAlpha = 1;
+      }
+    }
     // ---- Senex mit Stab + Bodenlaterne ----
     person(ctx, 260, 300, { skin: "#e0b088", hair: "#d8d0c0", tunic: "#2c3850", trim: "#3c4860", tunicDark: "#1e2840", skirt: false }, t);
     R(ctx, 300, 238, 7, 62, "#6a5438");
     R(ctx, 294, 230, 15, 10, "#7a6448");
-    R(ctx, 320, 288, 16, 14, "#443c50");
-    // Bodenlaterne mit Glow
-    const bg2 = ctx.createRadialGradient(328, 295, 2, 328, 295, 26);
+    // Bodenlaterne mit warmem Glow
+    const bg2 = ctx.createRadialGradient(328, 295, 2, 328, 295, 30);
     bg2.addColorStop(0, "rgba(248,224,96,0.5)");
     bg2.addColorStop(1, "rgba(248,224,96,0)");
     ctx.fillStyle = bg2;
-    ctx.fillRect(302, 270, 52, 50);
+    ctx.fillRect(298, 266, 60, 58);
+    R(ctx, 320, 288, 16, 14, "#443c50");
     RN(ctx, 323, 291, 9, 9, "#f8e060");
-    // Katze mit leuchtenden Augen
     cat(ctx, 180, 330, t);
     ctx.globalAlpha = 0.5;
     ell(ctx, 206, 326, 2, 2, "#a8f0b0", false);
     ell(ctx, 214, 326, 2, 2, "#a8f0b0", false);
     ctx.globalAlpha = 1;
-    // Nacht-Fledermaus
+    // Fledermaus
     const bat = Math.sin((t || 0) / 500);
     ctx.strokeStyle = "rgba(40,32,48,0.9)"; ctx.lineWidth = 1.4;
     ctx.beginPath();
@@ -2581,8 +2561,6 @@ function loop(t) {
     if (hovered) {
       ctx2d.fillStyle = "rgba(96,76,104,0.98)";
       ctx2d.fill();
-      ctx2d.fillStyle = "rgba(255,238,190,0.14)";
-      ctx2d.fill();
       ctx2d.strokeStyle = "rgba(255,240,196,0.95)";
     } else {
       ctx2d.fillStyle = "rgba(52,42,58,0.82)";
@@ -2604,16 +2582,7 @@ function loop(t) {
     const pulse = 0.5 + Math.sin((t || 0) / 300) * 0.3;
     const hx = hoverSpot.x, hy = hoverSpot.y, hw = hoverSpot.w, hh = hoverSpot.h;
     const rad = Math.min(10, hw / 3, hh / 3);
-    // weiche Fuellung: warmes Leuchten der Flaeche
-    ctx2d.beginPath();
-    ctx2d.moveTo(hx + rad, hy);
-    ctx2d.arcTo(hx + hw, hy, hx + hw, hy + hh, rad);
-    ctx2d.arcTo(hx + hw, hy + hh, hx, hy + hh, rad);
-    ctx2d.arcTo(hx, hy + hh, hx, hy, rad);
-    ctx2d.arcTo(hx, hy, hx + hw, hy, rad);
-    ctx2d.closePath();
-    ctx2d.fillStyle = "rgba(255,238,190," + (0.10 + pulse * 0.12).toFixed(3) + ")";
-    ctx2d.fill();
+
     // 3 Konturen: breit+transparent -> schmal+deckend = Leuchtkante
     for (let L = 3; L >= 1; L--) {
       ctx2d.beginPath();
