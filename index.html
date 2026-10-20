@@ -7,8 +7,8 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  background: #1a1410;
-  color: #e8dcc8;
+  background: #2e2833;
+  color: #f4ecf4;
   font-family: Georgia, 'Times New Roman', serif;
   min-height: 100vh;
   display: flex;
@@ -27,14 +27,14 @@ body {
   text-shadow: 2px 2px 0 #4a3316;
 }
 .subtitle { font-style: italic; color: #b8a284; margin: 8px 0 40px; }
-.char-select p { font-size: 1.3em; margin-bottom: 14px; color: #e8dcc8; }
+.char-select p { font-size: 1.3em; margin-bottom: 14px; color: #f4ecf4; }
 .char-cards { display: flex; gap: 24px; justify-content: center; }
 .char-card {
-  background: #2b2216;
-  border: 2px solid #6b532e;
+  background: #3e3644;
+  border: 2px solid #8a7890;
   padding: 18px 22px;
   cursor: pointer;
-  color: #e8dcc8;
+  color: #f4ecf4;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,12 +49,12 @@ body {
 
 #game { position: relative; width: 1000px; max-width: 96vw; }
 #stage-wrap { position: relative; width: 100%; }
-#stage { width: 100%; display: block; border: 3px solid #a8895c; border-radius: 6px; }
+#stage { width: 100%; display: block; border: 3px solid #9a88a0; border-radius: 6px; }
 #overlay { position: absolute; inset: 0; pointer-events: none; }
 
 #ui-top {
   display: flex; justify-content: space-between; align-items: center;
-  background: #241b10; border: 2px solid #4a3a22; border-top: none;
+  background: #38303c; border: 2px solid #6e6070; border-top: none;
   padding: 6px 14px; font-size: .95em;
 }
 #scene-name { color: #d4a545; letter-spacing: .08em; }
@@ -62,8 +62,8 @@ body {
 
 #ui-side {
   position: absolute; top: 8px; right: 8px;
-  background: rgba(26, 20, 14, .92);
-  border: 2px solid #4a3a22;
+  background: rgba(46, 40, 51, .92);
+  border: 2px solid #6e6070;
   padding: 10px 12px;
   width: 190px;
   font-size: .85em;
@@ -72,15 +72,15 @@ body {
 #inventory { list-style: none; min-height: 30px; }
 #inventory li {
   padding: 3px 6px; margin-bottom: 3px;
-  background: #32271a; cursor: pointer; border: 1px solid #4a3a22;
+  background: #4a404e; cursor: pointer; border: 1px solid #4a3a22;
 }
-#inventory li.selected { border-color: #d4a545; background: #4a3a1c; }
+#inventory li.selected { border-color: #d4a545; background: #5c505e; }
 #inventory li:hover { border-color: #9b7d3f; }
 #combine-hint { color: #9b8465; font-size: .85em; font-style: italic; }
 
 #dialog-box {
   position: absolute; left: 4%; right: 4%; bottom: 4%;
-  background: rgba(20, 15, 10, .95);
+  background: rgba(42, 36, 47, .95);
   border: 2px solid #d4a545;
   padding: 14px 40px 14px 16px;
   min-height: 90px;
@@ -89,11 +89,11 @@ body {
 #text { line-height: 1.45; }
 #choices { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
 #choices button {
-  background: #32271a; color: #e8dcc8; border: 1px solid #9b7d3f;
+  background: #4a404e; color: #f4ecf4; border: 1px solid #9b7d3f;
   padding: 6px 10px; cursor: pointer; text-align: left; font-family: inherit;
   font-size: .95em;
 }
-#choices button:hover { background: #4a3a1c; border-color: #d4a545; }
+#choices button:hover { background: #5c505e; border-color: #d4a545; }
 #dialog-next {
   position: absolute; right: 10px; bottom: 8px;
   color: #d4a545; cursor: pointer; animation: bounce 1s infinite;
@@ -103,7 +103,7 @@ body {
 #feles-box {
   position: absolute; top: 8px; left: 8px;
   max-width: 300px;
-  background: rgba(26, 20, 14, .95);
+  background: rgba(46, 40, 51, .95);
   border: 2px solid #c98a4b;
   padding: 10px 34px 10px 12px;
 }
@@ -239,16 +239,16 @@ const VERBA_MAP = {};
 
 const SCENES = {};
 
-// ---------- Vintage-Storybook-Zeichen-Helfer v6 (hochdetailliert) ----------
-// Stil: "Gentle Vintage Storybook Nostalgia" (PromptDeck: vintage-golden-age-storybook)
-// Detail-Upgrade: prozedurale Texturen (Holz, Stein, Stoff, Laub), mehrschichtige
-// Aquarell-Washes, High-Detail-Schattierung/Glanzlichter, subtile Per-Objekt-Variation.
-// Alle Signaturen identisch zu v5 - Hotspots/Spiellogik unveraendert.
+// ---------- Flat-Cartoon-Zeichen-Helfer (Rebecca-Sugar-Style) ----------
+// Stil: "soft, rounded flat-cartoon" (PromptDeck: rebecca-sugar-flat-cartoon)
+// Flache Pastell-Fuellungen, minimale Schattierung (nur weicher Kontaktschatten),
+// runde geometrische Formen, uebergrosse expressive Augen, keine Texturen.
+// Alle Signaturen identisch - Hotspots/Spiellogik unveraendert.
 
-const INK = "rgba(84,62,42,0.62)";
-const INK_SOFT = "rgba(84,62,42,0.35)";
+const INK = "rgba(120,90,110,0.35)";
+const INK_SOFT = "rgba(120,90,110,0.2)";
 
-// Deterministischer Hash-RNG: gleiche Eingabe = gleiche Textur (kein Flackern)
+// Deterministischer Hash-RNG (stabile Texturen, kein Flackern)
 function hash01(seed, i) {
   let h = (seed | 0) * 374761393 + (i | 0) * 668265263;
   h = (h ^ (h >>> 13)) * 1274126177;
@@ -256,28 +256,30 @@ function hash01(seed, i) {
   return ((h >>> 0) % 10000) / 10000;
 }
 function strSeed(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return h; }
-let objCounter = 0;
-
-// Hex-Farb-Helfer: aufhellen/abdunkeln + Vintage-Daempfung (muted restraint)
+// Flat-Pastell: Farbe sanft entsaettigen und aufhellen (pastel-adjacent restraint)
 function shade(hex, amt) {
   if (!hex || hex[0] !== "#") return hex;
   const h = hex.replace("#", "");
   const n = parseInt(h.length === 3 ? h.split("").map(c => c + c).join("") : h, 16);
   if (isNaN(n)) return hex;
   let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
-  if (amt > 0) { r += (255 - r) * amt; g += (255 - g) * amt; b += (255 - b) * amt; }
-  else { r *= (1 + amt); g *= (1 + amt); b *= (1 + amt); }
   const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-  r = Math.min(255, r * 0.58 + lum * 0.22 + 24);
-  g = Math.min(255, g * 0.58 + lum * 0.22 + 16);
-  b = Math.min(255, b * 0.58 + lum * 0.22 + 6);
+  // Richtung Pastell: zur Luminanz mischen + rosa-warmen Stich
+  r = r * 0.35 + lum * 0.5 + 68;
+  g = g * 0.35 + lum * 0.5 + 58;
+  b = b * 0.35 + lum * 0.5 + 70;
+  if (amt > 0) { r += (255 - r) * amt; g += (255 - g) * amt; b += (255 - b) * amt; }
+  else if (amt < 0) { r *= (1 + amt); g *= (1 + amt); b *= (1 + amt); }
+  r = Math.min(255, r); g = Math.min(255, g); b = Math.min(255, b);
   return "rgb(" + (r | 0) + "," + (g | 0) + "," + (b | 0) + ")";
 }
+// Dunklere Variante fuer weiche Konturen (kein Schwarz!)
+function edgeCol(col) { return shade(col, -0.3); }
 
-// Abgerundetes Rechteck: Aquarell-Wash + Hochlicht-Kante + Boden-Schattenfuge
+// Abgerundetes Rechteck: FLACHE Farbe, weiche runde Kontur in Tonal-Abstufung
 function rr(ctx, x, y, w, h, col, line, radius) {
   x = Math.round(x); y = Math.round(y); w = Math.round(w); h = Math.round(h);
-  const rad = Math.min(radius === undefined ? 2.5 : radius, w / 2, h / 2);
+  const rad = Math.min(radius === undefined ? 5 : radius, w / 2, h / 2);
   ctx.beginPath();
   ctx.moveTo(x + rad, y);
   ctx.arcTo(x + w, y, x + w, y + h, rad);
@@ -285,585 +287,334 @@ function rr(ctx, x, y, w, h, col, line, radius) {
   ctx.arcTo(x, y + h, x, y, rad);
   ctx.arcTo(x, y, x + w, y, rad);
   ctx.closePath();
-  const gr = ctx.createLinearGradient(0, y, 0, y + h);
-  gr.addColorStop(0, shade(col, 0.16));
-  gr.addColorStop(0.55, shade(col, 0.02));
-  gr.addColorStop(1, shade(col, -0.16));
-  ctx.fillStyle = gr;
+  ctx.fillStyle = shade(col, 0);
   ctx.fill();
   if (line !== false) {
-    ctx.strokeStyle = INK;
-    ctx.lineWidth = 1.1;
+    ctx.strokeStyle = edgeCol(col);
+    ctx.lineWidth = 1.4;
     ctx.stroke();
   }
-  // Hochlicht oben links (Handgemalt-Gefuehl)
-  ctx.globalAlpha = 0.30;
-  ctx.fillStyle = "#fff8e4";
-  ctx.fillRect(x + 2, y + 1.5, Math.max(2, w - 4), 1.4);
-  ctx.globalAlpha = 0.16;
-  ctx.fillStyle = "#3a2a18";
-  ctx.fillRect(x + 1.5, y + h - 2, Math.max(2, w - 3), 1.4);
-  ctx.globalAlpha = 1;
 }
-function R(ctx, x, y, w, h, col, line) { rr(ctx, x, y, w, h, col, line, 2.5); }
+function R(ctx, x, y, w, h, col, line) { rr(ctx, x, y, w, h, col, line, 5); }
 function RN(ctx, x, y, w, h, col) {
   ctx.fillStyle = col;
   ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
 }
-// Ellipse: Aquarell-Wash + Glanz-Hochlicht
+// Ellipse: flach mit weicher Kontur
 function ell(ctx, cx, cy, rx, ry, col, line) {
   ctx.beginPath();
-  ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
-  const gr = ctx.createLinearGradient(0, cy - ry, 0, cy + ry);
-  gr.addColorStop(0, shade(col, 0.18));
-  gr.addColorStop(1, shade(col, -0.14));
-  ctx.fillStyle = gr;
+  ctx.ellipse(cx, cy, Math.max(0.5, rx), Math.max(0.5, ry), 0, 0, Math.PI * 2);
+  ctx.fillStyle = shade(col, 0);
   ctx.fill();
-  if (line !== false) { ctx.strokeStyle = INK; ctx.lineWidth = 1.1; ctx.stroke(); }
-  ctx.globalAlpha = 0.28;
-  ctx.fillStyle = "#fff8e4";
-  ctx.beginPath();
-  ctx.ellipse(cx - rx * 0.25, cy - ry * 0.35, rx * 0.5, ry * 0.3, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.globalAlpha = 1;
+  if (line !== false) { ctx.strokeStyle = edgeCol(col); ctx.lineWidth = 1.4; ctx.stroke(); }
 }
-// Fliesen: pro Kachel Variation + Fugen + Lichtkante
+// Fliesen: flache Pastell-Kacheln, weiche Fugen, keine Schattierung
 function tiles(ctx, x, y, w, h, tw, th, c1, c2) {
-  const baseSeed = strSeed(c1 + c2);
-  let k = 0;
   for (let ty = y; ty < y + h; ty += th) {
     for (let tx = x; tx < x + w; tx += tw) {
       const alt = ((tx / tw + ty / th) | 0) % 2 === 0;
-      const v = (hash01(baseSeed, k++) - 0.5) * 0.16;
-      const col = shade(alt ? c1 : c2, v);
-      rr(ctx, tx, ty, tw - 2, th - 2, col, false, 1.5);
-      ctx.globalAlpha = 0.28;
-      RN(ctx, tx + 1, ty + 1, tw - 4, 1.4, "rgba(255,246,228,0.5)");
-      ctx.globalAlpha = 0.2;
-      RN(ctx, tx + 1, ty + th - 3, tw - 4, 1.2, "rgba(58,42,24,0.5)");
-      ctx.globalAlpha = 1;
+      rr(ctx, tx, ty, tw - 2, th - 2, alt ? c1 : c2, false, 3);
     }
   }
 }
-// Himmel: vierschichtiger Aquarell-Wash mit horizontaler Variation
+// Himmel: sanfter zweistufiger Flat-Wash (Pastell)
 function skyGradient(ctx, top, mid, bot) {
   const gr = ctx.createLinearGradient(0, 0, 0, 360);
-  gr.addColorStop(0, shade(top, 0.1));
-  gr.addColorStop(0.35, shade(mid, 0.1));
-  gr.addColorStop(0.65, shade(mid, 0.05));
-  gr.addColorStop(1, shade(bot, 0.05));
+  gr.addColorStop(0, shade(top, 0.12));
+  gr.addColorStop(1, shade(bot, 0.08));
   ctx.fillStyle = gr;
   ctx.fillRect(0, 0, 640, 360);
-  // sanfte horizontale Wolkenbaender im Wash ( atmosphaerische Tiefe)
-  ctx.globalAlpha = 0.05;
-  for (let i = 0; i < 5; i++) {
-    const yy = 20 + i * 38 + Math.sin(i * 2.7) * 9;
-    const col = i % 2 ? "#fff8e4" : shade(bot, 0.2);
-    const bg = ctx.createLinearGradient(0, yy, 0, yy + 26);
-    bg.addColorStop(0, "rgba(255,250,235,0)");
-    bg.addColorStop(0.5, col);
-    bg.addColorStop(1, "rgba(255,250,235,0)");
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, yy, 640, 26);
-  }
+  ctx.fillStyle = shade(mid, 0.15);
+  ctx.fillRect(0, 0, 640, 130);
+  ctx.globalAlpha = 0.4;
+  ctx.fillStyle = shade(mid, 0);
+  ctx.fillRect(0, 0, 640, 130);
   ctx.globalAlpha = 1;
 }
-// Wolke: mehrschichtige weiche Blobs mit Unter-Schatten
+// Wolke: flache weiche Blobs
 function cloud(ctx, x, y, s) {
   s = s || 1;
-  ctx.globalAlpha = 0.55;
-  ell(ctx, x + 15 * s, y + 11 * s, 16 * s, 8 * s, "#e8ddc8", false);
-  ctx.globalAlpha = 1;
-  ell(ctx, x + 15 * s, y + 8 * s, 15 * s, 8 * s, "#f6f1e6", false);
-  ell(ctx, x + 9 * s, y + 4 * s, 9 * s, 7 * s, "#faf6ec", false);
-  ell(ctx, x + 22 * s, y + 5 * s, 8 * s, 6 * s, "#f2ecdd", false);
-  ell(ctx, x + 27 * s, y + 8 * s, 6 * s, 4 * s, "#f2ecdd", false);
-  ctx.globalAlpha = 0.5;
-  ell(ctx, x + 10 * s, y + 2 * s, 4 * s, 2.5 * s, "#ffffff", false);
-  ctx.globalAlpha = 1;
+  ell(ctx, x + 15 * s, y + 8 * s, 16 * s, 9 * s, "#fdfbf4", false);
+  ell(ctx, x + 9 * s, y + 5 * s, 10 * s, 8 * s, "#fdfbf4", false);
+  ell(ctx, x + 23 * s, y + 6 * s, 8 * s, 6 * s, "#f8f5ea", false);
 }
-// Baum: geschwungener Stamm mit Rindentextur + vielschichtige Krone mit Blatt-Dabs
+// Baum: runde Kuschel-Krone, dicker kurzer Stamm
 function tree(ctx, x, y, s) {
   s = s || 1;
-  const sd = strSeed("tree" + (x | 0) + (y | 0));
-  // Stamm: geschwungen, Rinde als vertikale Striche
-  ctx.strokeStyle = INK; ctx.lineWidth = 1.2;
-  ctx.beginPath();
-  ctx.moveTo(x + 10 * s, y + 34 * s);
-  ctx.quadraticCurveTo(x + 7 * s, y + 18 * s, x + 11 * s, y);
-  ctx.lineTo(x + 15 * s, y);
-  ctx.quadraticCurveTo(x + 17 * s, y + 18 * s, x + 16 * s, y + 34 * s);
-  ctx.closePath();
-  const tg = ctx.createLinearGradient(0, y, 0, y + 34 * s);
-  tg.addColorStop(0, shade("#7a4c22", 0.14)); tg.addColorStop(1, shade("#7a4c22", -0.14));
-  ctx.fillStyle = tg; ctx.fill(); ctx.stroke();
-  // Rindentextur
-  ctx.globalAlpha = 0.4;
-  ctx.strokeStyle = "#4e3018"; ctx.lineWidth = 0.7;
-  for (let i = 0; i < 5; i++) {
-    const rx = x + 10 * s + i * 1.4 * s;
-    ctx.beginPath();
-    ctx.moveTo(rx, y + 30 * s);
-    ctx.quadraticCurveTo(rx + 1.5 * s * (hash01(sd, i) - 0.5) * 4, y + 17 * s, rx + 0.5 * s, y + 3 * s);
-    ctx.stroke();
-  }
+  rr(ctx, x + 8 * s, y, 10 * s, 36 * s, "#a8785a");
+  ell(ctx, x + 13 * s, y - 18 * s, 26 * s, 20 * s, "#8fcf8a", false);
+  ell(ctx, x + 2 * s, y - 10 * s, 15 * s, 12 * s, "#9ad894", false);
+  ell(ctx, x + 24 * s, y - 12 * s, 14 * s, 11 * s, "#a4de9d", false);
+  ctx.globalAlpha = 0.5;
+  ell(ctx, x + 6 * s, y - 26 * s, 9 * s, 6 * s, "#c4e8bd", false);
   ctx.globalAlpha = 1;
-  // Ast-Stuecke in die Krone
-  ctx.strokeStyle = INK_SOFT; ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(x + 12 * s, y + 2 * s); ctx.lineTo(x + 6 * s, y - 14 * s);
-  ctx.moveTo(x + 13 * s, y + 2 * s); ctx.lineTo(x + 20 * s, y - 18 * s);
-  ctx.stroke();
-  // Wurzeln
-  ell(ctx, x + 5 * s, y + 33 * s, 5 * s, 2.5 * s, "#6b4120");
-  ell(ctx, x + 20 * s, y + 33 * s, 5 * s, 2.5 * s, "#5e3a18");
-  // Krone: 4 Schichten (dunkel -> hell) + Blatt-Dabs
-  ell(ctx, x + 12 * s, y - 14 * s, 27 * s, 17 * s, "#5f8a4e", false);
-  ell(ctx, x + 2 * s, y - 21 * s, 15 * s, 11 * s, "#7ea86a", false);
-  ell(ctx, x + 22 * s, y - 23 * s, 13 * s, 10 * s, "#8db477", false);
-  ell(ctx, x + 12 * s, y - 28 * s, 10 * s, 8 * s, "#98bd82", false);
-  ctx.strokeStyle = INK; ctx.lineWidth = 1.1;
-  ctx.beginPath(); ctx.ellipse(x + 12 * s, y - 17 * s, 27 * s, 18 * s, 0, 0, Math.PI * 2); ctx.stroke();
-  // Blatt-Dabs: kleine Ellipsen mit Per-Position-Variation
-  for (let i = 0; i < 14; i++) {
-    const a = hash01(sd, i * 3) * Math.PI * 2, rr2 = 0.4 + hash01(sd, i * 3 + 1) * 0.85;
-    const lx = x + 12 * s + Math.cos(a) * 24 * s * rr2;
-    const ly = y - 20 * s + Math.sin(a) * 12 * s * rr2;
-    const lt = hash01(sd, i * 3 + 2) > 0.5;
-    ctx.globalAlpha = 0.5 + hash01(sd, i * 7) * 0.3;
-    ell(ctx, lx, ly, 2.6 * s, 1.7 * s, lt ? "#b3d49e" : "#6a9a58", false);
-    ctx.globalAlpha = 1;
-  }
-  // Bodenschatten unter der Krone
-  RN(ctx, x - 10 * s, y - 4 * s, 46 * s, 5 * s, "rgba(74,104,58,0.28)");
+  ell(ctx, x + 4 * s, y + 34 * s, 6 * s, 3 * s, "#8a684c", false);
+  ell(ctx, x + 22 * s, y + 34 * s, 6 * s, 3 * s, "#8a684c", false);
 }
-// Busch: 4 Schichten + Blatt-Dabs
+// Busch: flache runde Blobs
 function bush(ctx, x, y, s) {
   s = s || 1;
-  const sd = strSeed("bush" + (x | 0) + (y | 0));
-  ell(ctx, x + 13 * s, y + 8 * s, 15 * s, 9 * s, "#6a9456", false);
-  ell(ctx, x + 13 * s, y + 6 * s, 13 * s, 8 * s, "#7ea86a", false);
-  ell(ctx, x + 8 * s, y + 3 * s, 8 * s, 6 * s, "#8db477", false);
-  ell(ctx, x + 19 * s, y + 4 * s, 7 * s, 5 * s, "#98bd82", false);
-  for (let i = 0; i < 7; i++) {
-    const lx = x + (3 + hash01(sd, i) * 22) * s, ly = y + (1 + hash01(sd, i + 20) * 10) * s;
-    ctx.globalAlpha = 0.55;
-    ell(ctx, lx, ly, 2 * s, 1.4 * s, hash01(sd, i + 40) > 0.5 ? "#b3d49e" : "#5f8a4e", false);
-    ctx.globalAlpha = 1;
-  }
+  ell(ctx, x + 13 * s, y + 8 * s, 15 * s, 10 * s, "#8fcf8a", false);
+  ell(ctx, x + 8 * s, y + 4 * s, 9 * s, 8 * s, "#9ad894", false);
+  ell(ctx, x + 19 * s, y + 5 * s, 8 * s, 7 * s, "#a4de9d", false);
+  ctx.globalAlpha = 0.5;
+  ell(ctx, x + 8 * s, y + 2 * s, 4 * s, 3 * s, "#c4e8bd", false);
+  ctx.globalAlpha = 1;
 }
-// Wasser: mehrschichtiges Becken + animierte Wellen + Glitzer
+// Wasser: flache Pastell-Flaeche mit simplen Wellenlinien
 function water(ctx, x, y, w, h, t) {
-  rr(ctx, x - 2, y - 2, w + 4, h + 4, "#5e86a8", false, 3);
-  const gr = ctx.createLinearGradient(0, y, 0, y + h);
-  gr.addColorStop(0, "#9cc4dc");
-  gr.addColorStop(0.5, "#7aa8c8");
-  gr.addColorStop(1, "#55809f");
-  ctx.fillStyle = gr;
+  rr(ctx, x - 2, y - 2, w + 4, h + 4, "#a8cfe8", false, 8);
+  ctx.fillStyle = shade("#9cc8e8", 0);
   ctx.fillRect(x, y, w, h);
   const ph = (t || 0) / 500;
-  // Zwei Wellenlagen
-  ctx.strokeStyle = "rgba(226,238,242,0.5)"; ctx.lineWidth = 1.2;
-  for (let i = 0; i < w; i += 22) {
+  ctx.strokeStyle = "rgba(255,255,255,0.55)";
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
+  for (let i = 0; i < w; i += 26) {
     ctx.beginPath();
-    const yy = y + 10 + Math.sin(ph + i * 0.2) * 3;
-    ctx.moveTo(x + i, yy);
-    ctx.quadraticCurveTo(x + i + 6, yy - 3, x + i + 12, yy);
+    const yy = y + 12 + Math.sin(ph + i * 0.2) * 3;
+    ctx.moveTo(x + i + 4, yy);
+    ctx.quadraticCurveTo(x + i + 10, yy - 3, x + i + 16, yy);
     ctx.stroke();
   }
-  ctx.strokeStyle = "rgba(210,228,238,0.4)";
-  for (let i = 6; i < w; i += 26) {
-    ctx.beginPath();
-    const y2 = y + 24 + Math.cos(ph * 1.3 + i * 0.15) * 3;
-    ctx.moveTo(x + i, y2);
-    ctx.quadraticCurveTo(x + i + 7, y2 - 3, x + i + 14, y2);
-    ctx.stroke();
-  }
-  // Glitzerpunkte
-  ctx.fillStyle = "rgba(250,252,252,0.65)";
-  for (let i = 0; i < w; i += 34) {
-    const gx = x + i + 8, gy = y + 18 + Math.sin(ph * 2 + i) * 6;
-    if (Math.sin((t || 0) / 300 + i) > 0.2) RN(ctx, gx, gy, 2, 1.4, "rgba(250,252,252,0.65)");
-  }
-  RN(ctx, x, y, w, 3, "rgba(242,248,250,0.4)");
+  ctx.lineCap = "butt";
 }
-// ---- Storybook-Figuren: hochdetailliert ----
+// ---- Flat-Cartoon-Figuren: Rebecca-Sugar-Look ----
+// Grosser runder Kopf, uebergrosse Glanz-Augen, winziger Mund, Pastell-Toga
 function person(ctx, x, y, o, t) {
   const bob = Math.sin((t || 0) / 600) * 1.5;
-  const skin = o.skin || "#f0c090", dark = o.skinDark || "#d09868";
-  const sd = strSeed("p" + (x | 0) + (y | 0));
-  RN(ctx, x - 15, y + 1, 30, 5, "rgba(74,58,40,0.22)");
-  // Beine + Schuhe
+  const skin = o.skin || "#f5cfae", dark = o.skinDark || "#e8b28e";
+  // weicher Kontaktschatten (einzige Schattierung)
+  ctx.globalAlpha = 0.18;
+  ell(ctx, x, y + 1, 20, 5, "#9a8494", false);
+  ctx.globalAlpha = 1;
+  // Beine + Schuhe: runde Stummel
   if (!o.skirt) {
-    rr(ctx, x - 9, y - 16, 7, 14, "#6a5838"); rr(ctx, x + 2, y - 16, 7, 14, "#6a5838");
-    rr(ctx, x - 11, y - 5, 10, 6, "#3a2c20"); rr(ctx, x + 1, y - 5, 10, 6, "#3a2c20");
+    rr(ctx, x - 9, y - 16, 8, 15, "#a89078"); rr(ctx, x + 1, y - 16, 8, 15, "#a89078");
   } else {
-    ctx.strokeStyle = INK; ctx.lineWidth = 1.1;
+    // Pastell-Kleid: Trapez mit weicher Rundung
     ctx.beginPath();
-    ctx.moveTo(x - 9, y - 18); ctx.lineTo(x + 9, y - 18);
-    ctx.lineTo(x + 15, y); ctx.lineTo(x - 15, y);
+    ctx.moveTo(x - 10, y - 20); ctx.lineTo(x + 10, y - 20);
+    ctx.lineTo(x + 17, y); ctx.lineTo(x - 17, y);
     ctx.closePath();
-    const dg = ctx.createLinearGradient(0, y - 18, 0, y);
-    dg.addColorStop(0, shade(o.tunic, 0.14)); dg.addColorStop(1, shade(o.tunic, -0.16));
-    ctx.fillStyle = dg; ctx.fill(); ctx.stroke();
-    // Faltenwurf im Kleid
-    ctx.globalAlpha = 0.35;
-    ctx.strokeStyle = shade(o.tunic, -0.25); ctx.lineWidth = 0.8;
-    for (let i = 0; i < 4; i++) {
-      const fx = x - 8 + i * 5.5;
-      ctx.beginPath();
-      ctx.moveTo(fx, y - 16);
-      ctx.quadraticCurveTo(fx + 2, y - 8, fx + (i % 2 ? 3 : -3), y - 1);
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-    rr(ctx, x - 10, y - 5, 7, 6, "#3a2c20"); rr(ctx, x + 3, y - 5, 7, 6, "#3a2c20");
+    ctx.fillStyle = shade(o.tunic, 0); ctx.fill();
+    ctx.strokeStyle = edgeCol(o.tunic); ctx.lineWidth = 1.4; ctx.stroke();
   }
-  // Torso: Wash + Falten + Toga-Bausch
-  rr(ctx, x - 14, y - 40, 28, 26, o.tunic);
-  RN(ctx, x - 14, y - 40, 28, 4, shade(o.trim || o.tunic, 0.18));
-  ctx.globalAlpha = 0.4;
-  RN(ctx, x - 7, y - 35, 3, 20, o.tunicDark || "rgba(84,62,42,0.3)");
-  RN(ctx, x + 5, y - 33, 3, 18, o.tunicDark || "rgba(84,62,42,0.3)");
-  ctx.globalAlpha = 1;
-  ell(ctx, x - 13, y - 32, 6, 9, o.trim || o.tunic);
-  // Arme + Haende
-  rr(ctx, x - 19, y - 38, 6, 20, o.tunic); rr(ctx, x + 13, y - 38, 6, 20, o.tunic);
-  ell(ctx, x - 16, y - 17, 4, 4, skin); ell(ctx, x + 16, y - 17, 4, 4, skin);
-  // Kopf: rund mit Schattierung
-  ell(ctx, x, y - 53 + bob, 15, 14, skin);
-  ctx.globalAlpha = 0.25;
-  ell(ctx, x + 4, y - 48 + bob, 10, 8, dark, false);
-  ctx.globalAlpha = 1;
-  RN(ctx, x - 13, y - 44 + bob, 26, 3, "rgba(180,140,100,0.3)");
-  // Haar: Kappe mit Fransen + Struktur-Striche
-  ctx.strokeStyle = INK; ctx.lineWidth = 1.1;
+  rr(ctx, x - 12, y - 5, 11, 6, shade(o.tunic, -0.15)); rr(ctx, x + 1, y - 5, 11, 6, shade(o.tunic, -0.15));
+  // Torso: kleine runde Form
+  rr(ctx, x - 14, y - 40, 28, 24, o.tunic);
+  rr(ctx, x - 14, y - 41, 28, 6, o.trim || o.tunic, false);
+  // Toga-Bausch: runde Schulter
+  ell(ctx, x - 13, y - 32, 7, 10, o.trim || o.tunic);
+  // Arme: runde Stummel + Kugel-Haende
+  rr(ctx, x - 20, y - 38, 7, 19, o.tunic); rr(ctx, x + 13, y - 38, 7, 19, o.tunic);
+  ell(ctx, x - 16, y - 18, 4.5, 4.5, skin); ell(ctx, x + 16, y - 18, 4.5, 4.5, skin);
+  // ---- GROSSER runder Kopf ----
+  ell(ctx, x, y - 55 + bob, 16.5, 15.5, skin);
+  // Haar: runde Kappe mit Kuhl
   ctx.beginPath();
-  ctx.ellipse(x, y - 63 + bob, 16, 10, 0, Math.PI, 0);
-  ctx.fillStyle = o.hair; ctx.fill(); ctx.stroke();
-  ell(ctx, x - 14, y - 57 + bob, 4, 7, o.hair, false);
-  ell(ctx, x + 14, y - 57 + bob, 4, 7, o.hair, false);
+  ctx.ellipse(x, y - 64 + bob, 17, 11, 0, Math.PI, 0);
+  ctx.fillStyle = shade(o.hair, 0); ctx.fill();
+  ctx.strokeStyle = edgeCol(o.hair); ctx.lineWidth = 1.4; ctx.stroke();
+  ell(ctx, x - 15, y - 59 + bob, 4.5, 7, o.hair, false);
+  ell(ctx, x + 15, y - 59 + bob, 4.5, 7, o.hair, false);
   ctx.globalAlpha = 0.5;
-  ctx.strokeStyle = shade(o.hair, -0.25); ctx.lineWidth = 0.7;
-  for (let i = 0; i < 5; i++) {
-    const hx = x - 12 + i * 6;
-    ctx.beginPath();
-    ctx.moveTo(hx, y - 64 + bob);
-    ctx.quadraticCurveTo(hx + 1.5, y - 70 + bob, hx + 0.5, y - 73 + bob);
-    ctx.stroke();
-  }
+  ell(ctx, x - 8, y - 68 + bob, 6, 3.5, shade(o.hair, 0.3), false);
+  ctx.globalAlpha = 1;
+  // Ohren: kleine Kugeln
+  ell(ctx, x - 16, y - 55 + bob, 3, 4, skin); ell(ctx, x + 16, y - 55 + bob, 3, 4, skin);
+  // ---- UEBERGROSSE Augen: glänzende Pastell-Augen ----
+  const eye = "#ffffff";
+  ell(ctx, x - 6.5, y - 55 + bob, 5, 5.5, eye, false);
+  ell(ctx, x + 6.5, y - 55 + bob, 5, 5.5, eye, false);
+  ctx.fillStyle = "#5a4a5e";
+  ctx.beginPath(); ctx.arc(x - 6.5, y - 55 + bob, 2.8, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x + 6.5, y - 55 + bob, 2.8, 0, Math.PI * 2); ctx.fill();
+  // Doppel-Glanz (Cartoon-Traeume)
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath(); ctx.arc(x - 7.6, y - 56.4 + bob, 1.2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x + 5.4, y - 56.4 + bob, 1.2, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = 0.7;
+  ctx.beginPath(); ctx.arc(x - 5.6, y - 53.6 + bob, 0.7, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x + 7.4, y - 53.6 + bob, 0.7, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = 1;
+  // Braeue: feine Boegen
+  ctx.strokeStyle = edgeCol(o.hair); ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.moveTo(x - 10, y - 62 + bob); ctx.quadraticCurveTo(x - 6.5, y - 64 + bob, x - 3, y - 62 + bob); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x + 3, y - 62 + bob); ctx.quadraticCurveTo(x + 6.5, y - 64 + bob, x + 10, y - 62 + bob); ctx.stroke();
+  // winziger Wangen-Nasen-Punkt
+  ctx.globalAlpha = 0.5;
+  ell(ctx, x, y - 50 + bob, 1.5, 1.2, dark, false);
+  ctx.globalAlpha = 1;
+  // kleiner laechelnder Mund: herzhafter Boegen
+  ctx.strokeStyle = "#c47888"; ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.arc(x, y - 47.5 + bob, 4, 0.3, Math.PI - 0.3); ctx.stroke();
+  // rosa Wangen (emotional warmth)
   ctx.globalAlpha = 0.4;
-  RN(ctx, x - 12, y - 66 + bob, 24, 2, "rgba(255,244,220,0.5)");
-  ctx.globalAlpha = 1;
-  // Ohren
-  ell(ctx, x - 15, y - 54 + bob, 3, 4, skin); ell(ctx, x + 15, y - 54 + bob, 3, 4, skin);
-  // Augen: gross, rund, mit Doppel-Glanz
-  ell(ctx, x - 6, y - 54 + bob, 4, 4.5, "#fffdf6", false);
-  ell(ctx, x + 6, y - 54 + bob, 4, 4.5, "#fffdf6", false);
-  ctx.fillStyle = "#4a3a2c";
-  ctx.beginPath(); ctx.arc(x - 6, y - 54 + bob, 2, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x + 6, y - 54 + bob, 2, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = "#fffdf6";
-  ctx.beginPath(); ctx.arc(x - 7, y - 55 + bob, 0.8, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x + 5, y - 55 + bob, 0.8, 0, Math.PI * 2); ctx.fill();
-  ctx.globalAlpha = 0.8;
-  ctx.beginPath(); ctx.arc(x - 5.2, y - 53.2 + bob, 0.5, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x + 6.8, y - 53.2 + bob, 0.5, 0, Math.PI * 2); ctx.fill();
-  ctx.globalAlpha = 1;
-  // Brauen
-  ctx.strokeStyle = shade(o.hair, -0.15); ctx.lineWidth = 1.4;
-  ctx.beginPath(); ctx.moveTo(x - 9, y - 60 + bob); ctx.quadraticCurveTo(x - 6, y - 61.5 + bob, x - 3, y - 60 + bob); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x + 3, y - 60 + bob); ctx.quadraticCurveTo(x + 6, y - 61.5 + bob, x + 9, y - 60 + bob); ctx.stroke();
-  // Nase + Mund
-  ctx.strokeStyle = dark; ctx.lineWidth = 1.2;
-  ctx.beginPath(); ctx.moveTo(x, y - 52 + bob); ctx.quadraticCurveTo(x + 1.5, y - 50 + bob, x, y - 48.5 + bob); ctx.stroke();
-  ctx.strokeStyle = "#a05848"; ctx.lineWidth = 1.5;
-  ctx.beginPath(); ctx.arc(x, y - 47 + bob, 5, 0.25, Math.PI - 0.25); ctx.stroke();
-  // Wangen-Rosete
-  ctx.globalAlpha = 0.35;
-  ell(ctx, x - 10, y - 49 + bob, 3, 2, "#e89a80", false);
-  ell(ctx, x + 10, y - 49 + bob, 3, 2, "#e89a80", false);
+  ell(ctx, x - 11, y - 49 + bob, 3.2, 2.2, "#f8a8b8", false);
+  ell(ctx, x + 11, y - 49 + bob, 3.2, 2.2, "#f8a8b8", false);
   ctx.globalAlpha = 1;
 }
-// Murmillo: gerundeter Helm mit Kamm-Textur + rundes Schild mit Ziernieten
+// Murmillo: runder Helm-Knauf + Pastell-Schild
 function murmilloSprite(ctx, x, y, t) {
-  person(ctx, x, y, { skin: "#f0c090", hair: "#5a4a38", tunic: "#c8c8d8", trim: "#a0a0b4", tunicDark: "#9898ac" }, t);
-  ell(ctx, x, y - 79, 16, 8, "#e8e8f0");
-  rr(ctx, x - 6, y - 94, 12, 14, "#dcdce8");
-  ctx.globalAlpha = 0.5;
-  RN(ctx, x - 13, y - 81, 26, 2, "#ffffff");
-  ctx.globalAlpha = 0.35;
-  ctx.strokeStyle = "#a0a0b4"; ctx.lineWidth = 0.7;
-  for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(x - 5, y - 92 + i * 4); ctx.lineTo(x + 5, y - 92 + i * 4); ctx.stroke(); }
-  ctx.globalAlpha = 1;
-  ell(ctx, x - 15, y - 72, 3, 6, "#c0c0d4");
-  ell(ctx, x + 15, y - 72, 3, 6, "#c0c0d4");
-  ell(ctx, x + 21, y - 30, 8, 12, "#b07838");
-  ell(ctx, x + 21, y - 30, 5.5, 8, "#e0b058", false);
-  ctx.fillStyle = "#8a5a28";
-  ctx.beginPath(); ctx.arc(x + 21, y - 38, 1, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x + 21, y - 30, 1, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x + 21, y - 22, 1, 0, Math.PI * 2); ctx.fill();
+  person(ctx, x, y, { skin: "#f5cfae", hair: "#7a685e", tunic: "#c8c4d8", trim: "#b0acc4", tunicDark: "#a8a4bc" }, t);
+  ell(ctx, x, y - 78, 17, 9, "#dcd8e8");
+  rr(ctx, x - 7, y - 92, 14, 15, "#d0cce0");
+  ell(ctx, x, y - 95, 7, 5, "#c8c4d8", false);
+  ell(ctx, x - 16, y - 72, 3.5, 6, "#c8c4d8");
+  ell(ctx, x + 16, y - 72, 3.5, 6, "#c8c4d8");
+  ell(ctx, x + 21, y - 30, 8.5, 12.5, "#c89878");
+  ell(ctx, x + 21, y - 30, 4.5, 5.5, "#e8b890", false);
 }
-// Feles: hochdetailliert - Fell-Struktur, geschwungener Schweif, grosser Kopf
+// Feles: Kuschel-Katze - grosse Augen, runde Formen
 function cat(ctx, x, y, t) {
   const bob = Math.sin((t || 0) / 300) * 2;
-  const fur = "#e0a840", dark = "#b8842a", cream = "#f8e8c8";
-  const sd = strSeed("cat" + (x | 0) + (y | 0));
-  RN(ctx, x - 3, y + 24, 42, 4, "rgba(74,58,40,0.2)");
-  // Schweif: geschwungen mit Spitze
+  const fur = "#f0b878", dark = "#d89858", cream = "#fdeed4";
+  ctx.globalAlpha = 0.16;
+  ell(ctx, x + 18, y + 24, 22, 5, "#9a8494", false);
+  ctx.globalAlpha = 1;
+  // Schweif: dicke runde Kurve
   const tw = Math.sin((t || 0) / 400) * 6;
   ctx.lineCap = "round";
-  ctx.strokeStyle = INK; ctx.lineWidth = 5.5;
+  ctx.strokeStyle = fur; ctx.lineWidth = 6;
   ctx.beginPath();
-  ctx.moveTo(x + 4, y + 14 + bob);
+  ctx.moveTo(x + 6, y + 14 + bob);
   ctx.quadraticCurveTo(x - 10, y + 16 + bob, x - 12, y + 2 + bob + tw);
-  ctx.strokeStyle = fur;
   ctx.stroke();
-  ctx.lineWidth = 3.6;
-  ctx.strokeStyle = dark;
+  ctx.strokeStyle = dark; ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.moveTo(x + 2, y + 14 + bob);
-  ctx.quadraticCurveTo(x - 10, y + 16 + bob, x - 12, y + 3 + bob + tw);
+  ctx.moveTo(x + 2, y + 15 + bob);
+  ctx.quadraticCurveTo(x - 10, y + 17 + bob, x - 12, y + 4 + bob + tw);
   ctx.stroke();
-  ctx.lineWidth = 1;
-  // Schweifspitze hell
-  ctx.globalAlpha = 0.7;
-  ell(ctx, x - 12, y + 3 + bob + tw, 1.6, 1.6, cream, false);
-  ctx.globalAlpha = 1;
   ctx.lineCap = "butt";
-  // Koerper: Ellipse + Fell-Striche
-  ell(ctx, x + 16, y + 12 + bob, 16, 8, fur);
-  ctx.globalAlpha = 0.4;
-  ctx.strokeStyle = dark; ctx.lineWidth = 0.6;
-  for (let i = 0; i < 6; i++) {
-    const fx = x + 5 + i * 3.6;
-    ctx.beginPath();
-    ctx.moveTo(fx, y + 6 + bob + hash01(sd, i) * 2);
-    ctx.quadraticCurveTo(fx + 1, y + 10 + bob, fx + 0.5, y + 15 + bob);
-    ctx.stroke();
-  }
+  // Koerper: runde Liegeform
+  ell(ctx, x + 16, y + 12 + bob, 17, 9, fur);
+  ell(ctx, x + 14, y + 16 + bob, 12, 5, cream, false);
+  // Beine: Stummel
+  rr(ctx, x + 5, y + 17, 6, 7, fur); rr(ctx, x + 24, y + 17, 6, 7, fur);
+  // Kopf: gross und rund
+  ell(ctx, x + 30, y - 1 + bob, 12, 10.5, fur);
+  ell(ctx, x + 22, y + 1 + bob, 5.5, 5.5, cream, false);
+  // Ohren: runde Dreiecks-Knaeule
+  ell(ctx, x + 22, y - 10 + bob, 5, 5.5, fur);
+  ell(ctx, x + 38, y - 10 + bob, 5, 5.5, fur);
   ctx.globalAlpha = 0.6;
-  RN(ctx, x + 7, y + 8 + bob, 4, 3, dark);
-  RN(ctx, x + 15, y + 7 + bob, 4, 3, dark);
-  RN(ctx, x + 23, y + 8 + bob, 4, 3, dark);
+  ell(ctx, x + 22, y - 9 + bob, 2.5, 3, "#d89478", false);
+  ell(ctx, x + 38, y - 9 + bob, 2.5, 3, "#d89478", false);
   ctx.globalAlpha = 1;
-  // Beine + Pfoten
-  rr(ctx, x + 5, y + 17, 5, 7, fur); rr(ctx, x + 24, y + 17, 5, 7, fur);
-  ctx.globalAlpha = 0.5;
-  RN(ctx, x + 4, y + 22, 7, 1.5, dark);
-  RN(ctx, x + 23, y + 22, 7, 1.5, dark);
+  // UEBERGROSSE Augen: rund und glaenzend
+  ell(ctx, x + 26, y - 2 + bob, 4.2, 4.6, "#ffffff", false);
+  ell(ctx, x + 34, y - 2 + bob, 4.2, 4.6, "#ffffff", false);
+  ctx.fillStyle = "#58a86a";
+  ctx.beginPath(); ctx.arc(x + 26, y - 2 + bob, 2.2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x + 34, y - 2 + bob, 2.2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath(); ctx.arc(x + 26.8, y - 3 + bob, 0.9, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x + 34.8, y - 3 + bob, 0.9, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = 0.7;
+  ctx.beginPath(); ctx.arc(x + 25.2, y - 1 + bob, 0.5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x + 33.2, y - 1 + bob, 0.5, 0, Math.PI * 2); ctx.fill();
   ctx.globalAlpha = 1;
-  // Kopf + Backchen
-  ell(ctx, x + 30, y - 1 + bob, 11, 9.5, fur);
-  ell(ctx, x + 21, y + 1 + bob, 5, 5, cream, false);
-  // Stirn-Streifen
-  ctx.globalAlpha = 0.4;
-  RN(ctx, x + 27, y - 9 + bob, 2, 3, dark);
-  RN(ctx, x + 31, y - 9.5 + bob, 2, 3, dark);
-  ctx.globalAlpha = 1;
-  // Ohren: runde Dreiecke mit Innenohr
-  ctx.strokeStyle = INK; ctx.lineWidth = 1.1;
+  // Nase + Herzchen-Mund
+  ctx.fillStyle = "#e88898";
+  ctx.beginPath(); ctx.arc(x + 30, y + 2 + bob, 1.6, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = "#c47888"; ctx.lineWidth = 1.2;
   ctx.beginPath();
-  ctx.moveTo(x + 21, y - 8 + bob); ctx.quadraticCurveTo(x + 20, y - 15 + bob, x + 26, y - 12 + bob);
-  ctx.quadraticCurveTo(x + 25, y - 7 + bob, x + 21, y - 8 + bob);
-  ctx.closePath();
-  ctx.fillStyle = fur; ctx.fill(); ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x + 39, y - 8 + bob); ctx.quadraticCurveTo(x + 40, y - 15 + bob, x + 34, y - 12 + bob);
-  ctx.quadraticCurveTo(x + 35, y - 7 + bob, x + 39, y - 8 + bob);
-  ctx.closePath();
-  ctx.fill(); ctx.stroke();
-  ctx.globalAlpha = 0.6;
-  RN(ctx, x + 23, y - 12 + bob, 3, 4, "#8a5a20");
-  RN(ctx, x + 34, y - 12 + bob, 3, 4, "#8a5a20");
-  ctx.globalAlpha = 1;
-  // Augen: gross mit Doppelglanz
-  ell(ctx, x + 26, y - 2 + bob, 3.5, 4, "#fffdf6", false);
-  ell(ctx, x + 34, y - 2 + bob, 3.5, 4, "#fffdf6", false);
-  ctx.fillStyle = "#3a8a4a";
-  ctx.beginPath(); ctx.arc(x + 26, y - 2 + bob, 1.8, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x + 34, y - 2 + bob, 1.8, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = "#e8f4e0";
-  ctx.beginPath(); ctx.arc(x + 26.7, y - 2.8 + bob, 0.6, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x + 34.7, y - 2.8 + bob, 0.6, 0, Math.PI * 2); ctx.fill();
-  // Nase + Katten-Y-Mund
-  ctx.fillStyle = "#d05868";
-  ctx.beginPath(); ctx.arc(x + 30, y + 2 + bob, 1.5, 0, Math.PI * 2); ctx.fill();
-  ctx.strokeStyle = "#8a5a20"; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(x + 30, y + 3.5 + bob); ctx.lineTo(x + 30, y + 5 + bob);
-  ctx.moveTo(x + 30, y + 5 + bob); ctx.quadraticCurveTo(x + 27.5, y + 7 + bob, x + 26, y + 5.5 + bob);
-  ctx.moveTo(x + 30, y + 5 + bob); ctx.quadraticCurveTo(x + 32.5, y + 7 + bob, x + 34, y + 5.5 + bob);
+  ctx.moveTo(x + 30, y + 3.6 + bob);
+  ctx.quadraticCurveTo(x + 27.5, y + 6.5 + bob, x + 25.5, y + 4.5 + bob);
+  ctx.moveTo(x + 30, y + 3.6 + bob);
+  ctx.quadraticCurveTo(x + 32.5, y + 6.5 + bob, x + 34.5, y + 4.5 + bob);
   ctx.stroke();
-  // Schnurrhaare (laenger, feiner)
-  ctx.strokeStyle = "rgba(84,62,42,0.45)"; ctx.lineWidth = 0.8;
-  ctx.beginPath();
-  ctx.moveTo(x + 40, y + 1 + bob); ctx.quadraticCurveTo(x + 45, y + 0.5 + bob, x + 48, y - 0.5 + bob);
-  ctx.moveTo(x + 40, y + 4 + bob); ctx.quadraticCurveTo(x + 45, y + 4.5 + bob, x + 47, y + 5.5 + bob);
-  ctx.moveTo(x + 20, y + 3 + bob); ctx.quadraticCurveTo(x + 15, y + 2.5 + bob, x + 12, y + 1.5 + bob);
-  ctx.stroke();
+  // Wangen-Rosete
+  ctx.globalAlpha = 0.35;
+  ell(ctx, x + 22, y + 2 + bob, 2.5, 1.8, "#f8a8b8", false);
+  ell(ctx, x + 39, y + 2 + bob, 2.5, 1.8, "#f8a8b8", false);
+  ctx.globalAlpha = 1;
 }
-// Sterne: funkeln mit vierstrahligem Glanz
+// Sterne: runde Funkel-Punkte
 function stars(ctx, t) {
   for (let i = 0; i < 36; i++) {
     const x = (i * 89 + 13) % 640, y = (i * 53) % 200;
     const tw2 = Math.sin((t || 0) / 500 + i * 1.3);
     if (tw2 > -0.2) {
-      ctx.globalAlpha = 0.25 + Math.max(0, tw2) * 0.3;
-      ell(ctx, x + 1, y + 1, 3, 3, "#f8f0c8", false);
-      ctx.globalAlpha = 0.9;
-      RN(ctx, x, y, 2.5, 2.5, "#f8f4d8");
-      if (i % 4 === 0 && tw2 > 0.5) {
-        ctx.globalAlpha = 0.5;
-        RN(ctx, x - 2, y + 0.5, 7, 1, "#f8f4d8");
-        RN(ctx, x + 0.5, y - 2, 1, 7, "#f8f4d8");
-      }
+      ctx.globalAlpha = 0.3 + Math.max(0, tw2) * 0.3;
+      ell(ctx, x + 1, y + 1, 3, 3, "#e8d8f0", false);
+      ctx.globalAlpha = Math.min(1, 0.5 + tw2 * 0.3);
+      ell(ctx, x + 1, y + 1, 1.8, 1.8, "#fdf8ff", false);
       ctx.globalAlpha = 1;
     }
   }
 }
-// Steinboden: warme gedaempfte Töne mit Variation
+// Boden: Pastell-Tiles
 function stoneFloor(ctx, y) {
-  tiles(ctx, 0, y, 640, 360 - y, 40, 20, "#c4b294", "#b5a284");
+  tiles(ctx, 0, y, 640, 360 - y, 40, 20, "#dcc8a8", "#d0bc98");
 }
-// Ziegelmauer: pro Ziegel Farbvariation + Versetzungstextur
+// Mauer: sanfte Pastell-Ziegel
 function brickWall(ctx, x, y, w, h) {
-  tiles(ctx, x, y, w, h, 28, 14, "#cf9f76", "#c08d63");
+  tiles(ctx, x, y, w, h, 28, 14, "#e0b094", "#d4a084");
 }
-// Dach: rote Ziegel mit Verlauf
+// Dach: Pastell-Rot
 function roofTiles(ctx, x, y, w, h) {
-  tiles(ctx, x, y, w, h, 24, 12, "#cc6a56", "#b95846");
+  tiles(ctx, x, y, w, h, 24, 12, "#e09890", "#d48880");
 }
-// Tuer: Maserung + Eisenbaender + Klinke mit Glanz
+// Tuer: flache Pastell-Tuer mit rundem Knauf
 function door(ctx, x, y, w, h) {
-  rr(ctx, x - 3, y - 3, w + 6, h + 6, "#6b5138");
-  rr(ctx, x, y, w, h, "#a06a38");
-  ctx.globalAlpha = 0.5;
-  ctx.strokeStyle = "#7a5028"; ctx.lineWidth = 0.9;
-  for (let i = 0; i < 4; i++) {
-    ctx.beginPath();
-    ctx.moveTo(x + 4 + i * (w - 8) / 4, y + 3);
-    ctx.quadraticCurveTo(x + 6 + i * (w - 8) / 4, y + h / 2, x + 4 + i * (w - 8) / 4, y + h - 3);
-    ctx.stroke();
-  }
-  ctx.globalAlpha = 0.35;
-  ctx.strokeStyle = "#5e3a1c"; ctx.lineWidth = 0.6;
-  for (let i = 0; i < 3; i++) {
-    ctx.beginPath();
-    ctx.moveTo(x + 3, y + 10 + i * (h / 3));
-    ctx.lineTo(x + w - 3, y + 14 + i * (h / 3));
-    ctx.stroke();
-  }
-  ctx.globalAlpha = 1;
-  RN(ctx, x + w / 2 - 1, y, 2, h, "rgba(107,81,56,0.5)");
-  rr(ctx, x + 5, y + h / 3, w - 10, 4, "#5c422e");
-  rr(ctx, x + 5, y + h * 2 / 3, w - 10, 4, "#5c422e");
-  ell(ctx, x + w - 10, y + h / 2, 4, 4, "#e8c040");
-  ctx.globalAlpha = 0.7;
-  ell(ctx, x + w - 11, y + h / 2 - 1, 1.6, 1.6, "#f8e8a0", false);
+  rr(ctx, x - 3, y - 3, w + 6, h + 6, "#b89878");
+  rr(ctx, x, y, w, h, "#c89878");
+  rr(ctx, x + w / 2 - 3, y + 2, 6, h - 4, shade("#c89878", -0.12), false);
+  rr(ctx, x + 5, y + h / 3, w - 10, 5, "#a87858", false);
+  rr(ctx, x + 5, y + h * 2 / 3, w - 10, 5, "#a87858", false);
+  ell(ctx, x + w - 11, y + h / 2, 4.5, 4.5, "#f0d888");
+  ctx.globalAlpha = 0.6;
+  ell(ctx, x + w - 12, y + h / 2 - 1.5, 1.8, 1.8, "#fdf4c8", false);
   ctx.globalAlpha = 1;
 }
-// Fenster: doppelte Rahmen-Ebene, ggf. erleuchtet mit Glow und Kreuzsprossen
+// Fenster: Pastell-Rahmen, warm erleuchtet
 function windowFrame(ctx, x, y, w, h, lit) {
-  rr(ctx, x - 3, y - 3, w + 6, h + 6, "#6b5138");
+  rr(ctx, x - 3, y - 3, w + 6, h + 6, "#b89878");
   if (lit) {
-    const gr = ctx.createRadialGradient(x + w / 2, y + h / 2, 2, x + w / 2, y + h / 2, w);
-    gr.addColorStop(0, "#f8e8a0"); gr.addColorStop(1, "#e8b968");
-    ctx.fillStyle = gr;
-    ctx.fillRect(x, y, w, h);
-    ctx.globalAlpha = 0.25;
-    ell(ctx, x + w / 2, y + h / 2, w * 0.9, h * 0.9, "#f8d878", false);
+    rr(ctx, x, y, w, h, "#f8e0a0", false);
+    ctx.globalAlpha = 0.35;
+    ell(ctx, x + w / 2, y + h / 2, w * 0.8, h * 0.8, "#f8d888", false);
     ctx.globalAlpha = 1;
   } else {
-    rr(ctx, x, y, w, h, "#9ec2d4");
-    ctx.globalAlpha = 0.4;
-    RN(ctx, x + 2, y + 2, w - 4, 3, "#e8f2f8");
-    ctx.globalAlpha = 0.25;
-    ctx.strokeStyle = "#7aa0b8"; ctx.lineWidth = 0.8;
-    for (let i = 0; i < 3; i++) {
-      ctx.beginPath(); ctx.moveTo(x + 3, y + 8 + i * 8); ctx.lineTo(x + w - 3, y + 10 + i * 8); ctx.stroke();
-    }
+    rr(ctx, x, y, w, h, "#a8cce0", false);
+    ctx.globalAlpha = 0.5;
+    rr(ctx, x + 2, y + 2, w - 4, 4, "#d0e4f0", false);
     ctx.globalAlpha = 1;
   }
-  rr(ctx, x + w / 2 - 1.5, y - 1, 3, h + 2, "#6b5138");
-  rr(ctx, x - 1, y + h / 2 - 1.5, w + 2, 3, "#6b5138");
+  rr(ctx, x + w / 2 - 2, y - 1, 4, h + 2, "#b89878", false);
+  rr(ctx, x - 1, y + h / 2 - 2, w + 2, 4, "#b89878", false);
 }
-// Fackel: Glow + mehrschichtige Flamme mit Funken
+// Fackel: flache runde Flamme + weicher Glow
 function torch(ctx, x, y, t) {
   const fl = Math.sin((t || 0) / 90) * 2;
-  const gr = ctx.createRadialGradient(x, y - 8 + fl, 2, x, y - 8, 34);
-  gr.addColorStop(0, "rgba(248,200,80,0.35)");
-  gr.addColorStop(1, "rgba(248,200,80,0)");
+  const gr = ctx.createRadialGradient(x, y - 8 + fl, 2, x, y - 8, 32);
+  gr.addColorStop(0, "rgba(248,200,120,0.3)");
+  gr.addColorStop(1, "rgba(248,200,120,0)");
   ctx.fillStyle = gr;
-  ctx.fillRect(x - 34, y - 42, 68, 76);
-  rr(ctx, x - 2.5, y, 5, 16, "#6a4c2c");
-  ctx.globalAlpha = 0.4;
-  ctx.strokeStyle = "#4e3018"; ctx.lineWidth = 0.7;
-  ctx.beginPath(); ctx.moveTo(x - 1, y + 3); ctx.lineTo(x - 1, y + 14); ctx.stroke();
+  ctx.fillRect(x - 32, y - 40, 64, 72);
+  rr(ctx, x - 3, y, 6, 16, "#a8845c");
+  ell(ctx, x, y - 8 + fl, 5, 8, "#f8a860");
+  ell(ctx, x, y - 10 + fl, 2.8, 4.5, "#fcd890", false);
+  ctx.globalAlpha = 0.8;
+  ell(ctx, x, y - 12 + fl, 1.4, 2.2, "#fdf0c0", false);
   ctx.globalAlpha = 1;
-  ell(ctx, x, y - 2, 5, 3.5, "#4a3828");
-  ctx.strokeStyle = INK; ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(x, y - 16 + fl);
-  ctx.quadraticCurveTo(x + 5, y - 9 + fl, x, y - 4 + fl);
-  ctx.quadraticCurveTo(x - 5, y - 9 + fl, x, y - 16 + fl);
-  ctx.closePath();
-  const fg = ctx.createLinearGradient(0, y - 16 + fl, 0, y - 4 + fl);
-  fg.addColorStop(0, "#f8d868"); fg.addColorStop(0.6, "#f0a040"); fg.addColorStop(1, "#e07830");
-  ctx.fillStyle = fg; ctx.fill();
-  ctx.globalAlpha = 0.6;
-  ell(ctx, x, y - 9 + fl, 1.8, 3, "#fdf0b0", false);
-  ctx.globalAlpha = 1;
-  // aufwirbelnde Funken
-  for (let i = 0; i < 3; i++) {
-    const st = ((t || 0) / 400 + i * 0.4) % 1;
-    const sx = x + Math.sin((t || 0) / 200 + i * 2) * 4;
-    ctx.globalAlpha = 0.5 * (1 - st);
-    RN(ctx, sx, y - 18 - st * 14 + fl, 1.5, 1.5, "#f8e0a0");
-    ctx.globalAlpha = 1;
-  }
 }
-// Altarfeuer: Glow + grosse geschichtete Flamme + Funken + Glut
+// Altarfeuer: runde Flammen-Blobs
 function altarFire(ctx, x, y, t, big) {
   const s = big ? 2 : 1, fl = Math.sin((t || 0) / 80) * 3;
-  const gr = ctx.createRadialGradient(x, y - 6, 2, x, y - 6, 30 * s);
-  gr.addColorStop(0, "rgba(248,180,70,0.32)");
-  gr.addColorStop(1, "rgba(248,180,70,0)");
+  const gr = ctx.createRadialGradient(x, y - 6, 2, x, y - 6, 28 * s);
+  gr.addColorStop(0, "rgba(248,180,100,0.28)");
+  gr.addColorStop(1, "rgba(248,180,100,0)");
   ctx.fillStyle = gr;
-  ctx.fillRect(x - 30 * s, y - 36 * s, 60 * s, 46 * s);
-  rr(ctx, x - 12 * s, y, 24 * s, 8 * s, "#c4ac80");
-  rr(ctx, x - 14 * s, y + 6 * s, 28 * s, 4 * s, "#a89268");
-  ell(ctx, x - 3 * s, y - 1, 7 * s, 2.5 * s, "#7a5428");
-  const fx = x, fy = y - 4 * s - fl;
-  ctx.strokeStyle = INK; ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(fx, fy - 14 * s);
-  ctx.quadraticCurveTo(fx + 7 * s, fy - 6 * s, fx, fy);
-  ctx.quadraticCurveTo(fx - 7 * s, fy - 6 * s, fx, fy - 14 * s);
-  ctx.closePath();
-  const fgr = ctx.createLinearGradient(0, fy - 14 * s, 0, fy);
-  fgr.addColorStop(0, "#f8d868"); fgr.addColorStop(0.5, "#f0a040"); fgr.addColorStop(1, "#e07830");
-  ctx.fillStyle = fgr; ctx.fill();
-  // Innere Flamme
-  ctx.globalAlpha = 0.7;
-  ctx.beginPath();
-  ctx.moveTo(fx, fy - 10 * s);
-  ctx.quadraticCurveTo(fx + 4 * s, fy - 4 * s, fx, fy - 1 * s);
-  ctx.quadraticCurveTo(fx - 4 * s, fy - 4 * s, fx, fy - 10 * s);
-  ctx.closePath();
-  ctx.fillStyle = "#fdf0b0"; ctx.fill();
-  ctx.globalAlpha = 1;
-  // Funken
-  for (let i = 0; i < (big ? 5 : 3); i++) {
-    const st = ((t || 0) / 500 + i * 0.33) % 1;
-    const sx = x + Math.sin((t || 0) / 180 + i * 2.5) * 6 * s;
-    ctx.globalAlpha = 0.55 * (1 - st);
-    RN(ctx, sx, fy - 12 * s - st * 20 * s, 1.5, 1.5, "#f8e0a0");
-    ctx.globalAlpha = 1;
-  }
-  // Glut am Holz
-  ctx.globalAlpha = 0.6;
-  ell(ctx, x - 3 * s, y - 2, 3 * s, 1.4 * s, "#e05830", false);
+  ctx.fillRect(x - 28 * s, y - 34 * s, 56 * s, 44 * s);
+  rr(ctx, x - 12 * s, y, 24 * s, 8 * s, "#d4bc94");
+  ell(ctx, x - 4 * s, y - 2, 7 * s, 3 * s, "#b09468");
+  ell(ctx, x, y - 9 * s - fl, 6.5 * s, 8.5 * s, "#f8a860");
+  ell(ctx, x, y - 12 * s - fl, 3.5 * s, 5 * s, "#fcd890", false);
+  ctx.globalAlpha = 0.8;
+  ell(ctx, x, y - 14 * s - fl, 1.8 * s, 2.5 * s, "#fdf0c0", false);
   ctx.globalAlpha = 1;
 }
 
@@ -2487,43 +2238,16 @@ function sceneSpots(sceneId) {
   return spots;
 }
 function watercolor(ctx, t) {
+  // Flat-Cartoon: nur hauchzartes Papierkorn + ganz weiche Vignette
   initTextures(ctx);
-  // 1) Granulation: Pigmentklumpen multiplikativ andunkeln
   ctx.save();
-  ctx.globalCompositeOperation = "multiply";
-  ctx.globalAlpha = 0.16;
-  ctx.fillStyle = grainPattern;
-  ctx.fillRect(0, 0, 640, 360);
-  ctx.restore();
-  // 2) Ausblühen: leicht versetzte Kopien = weiche, verlaufene Farbkanten (nass-in-nass)
-  ctx.save();
-  ctx.globalAlpha = 0.07;
-  ctx.drawImage(osCanvas, -1.6, -1.1, 640, 360);
-  ctx.drawImage(osCanvas, 1.6, 1.1, 640, 360);
-  ctx.globalAlpha = 0.045;
-  ctx.drawImage(osCanvas, -3, 0.5, 640, 360);
-  ctx.restore();
-  // 3) Wasserflecken: helle unregelmäßige Blooms wie trocknendes Wasser
-  ctx.save();
-  ctx.globalCompositeOperation = "soft-light";
-  for (const s of sceneSpots(G.scene)) {
-    ctx.globalAlpha = s.a;
-    ctx.fillStyle = "#fff8e8";
-    ctx.beginPath();
-    ctx.ellipse(s.x, s.y, s.r, s.r * 0.7, 0, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.restore();
-  // 4) Papierkorn
-  ctx.save();
-  ctx.globalAlpha = 0.14;
+  ctx.globalAlpha = 0.05;
   ctx.fillStyle = paperPattern;
   ctx.fillRect(0, 0, 640, 360);
   ctx.restore();
-  // 5) Vignette: weicher warmer Rand (timeworn tenderness)
-  const vg = ctx.createRadialGradient(320, 180, 150, 320, 180, 400);
-  vg.addColorStop(0, "rgba(90,66,40,0)");
-  vg.addColorStop(1, "rgba(90,66,40,0.22)");
+  const vg = ctx.createRadialGradient(320, 180, 180, 320, 180, 400);
+  vg.addColorStop(0, "rgba(150,120,140,0)");
+  vg.addColorStop(1, "rgba(150,120,140,0.13)");
   ctx.fillStyle = vg;
   ctx.fillRect(0, 0, 640, 360);
 }
