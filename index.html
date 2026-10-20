@@ -162,7 +162,7 @@ body {
 </div>
 <div id="ui-top">
 <div id="location-bar"><span id="scene-name"></span></div>
-<div id="verba-counter">VERBA: <b id="verba-count">0</b></div><div id="version-tag" style="color:#7a6a84;font-size:.75em;padding:0 10px;">v8.5</div>
+<div id="verba-counter">VERBA: <b id="verba-count">0</b></div><div id="version-tag" style="color:#7a6a84;font-size:.75em;padding:0 10px;">v8.6</div>
 </div>
 <div id="bottom-bar"><div class="bb-section"><div class="bb-label">SACCA</div><div class="bb-chips" id="bb-items"><span class="bb-empty">sacca vacua est</span></div></div><div class="bb-section"><div class="bb-label">VERBA COLLECTA · <span id="bb-verba-count">0</span></div><div class="bb-chips" id="bb-verba"><span class="bb-empty">nondum verba</span></div></div></div>
 <div id="feles-box" hidden>
@@ -763,9 +763,9 @@ SCENES.atrium = {
       onUse(s, G) { G.verbaAdd("aqua"); return { type: "text", la: "Aqua in impluvio splendet." }; } }
   ],
   exits: [
-    { x: 104, y: 148, w: 66, h: 118, la: "hortus", target: "hortus", kind: "door" },
-    { x: 28, y: 150, w: 68, h: 118, la: "ager", target: "macellum", kind: "gate" },
-    { x: 542, y: 150, w: 68, h: 118, la: "culina", target: "taberna", kind: "door" }
+    { x: 64, y: 96, w: 62, h: 136, la: "hortus", target: "hortus", kind: "door" },
+    { x: 226, y: 96, w: 62, h: 136, la: "ager", target: "macellum", kind: "arch" },
+    { x: 448, y: 96, w: 62, h: 136, la: "culina", target: "taberna", kind: "door" }
   ]
 };
 
@@ -1198,7 +1198,7 @@ SCENES.taberna = {
       onUse(s, G) { return { type: "feles", text: "Miau! Do = ich gebe. Vinum dat, sagittam accipit!" }; } }
   ],
   exits: [
-    { x: 330, y: 185, w: 70, h: 130, la: "atrium", target: "atrium", kind: "door" },
+    { x: 316, y: 108, w: 64, h: 132, la: "atrium", target: "atrium", kind: "door" },
     { x: 50, y: 285, w: 100, h: 70, la: "cellarium", target: "domus_vicini", kind: "cellar" }
   ]
 };
@@ -1337,8 +1337,8 @@ SCENES.thermae = {
       onUse(s, G) { return { type: "feles", text: "Miau! Thermae = das Bad. Aqua calida Felem non placet!" }; } }
   ],
   exits: [
-    { x: 30, y: 18, w: 62, h: 82, la: "atrium", target: "atrium", kind: "door" },
-    { x: 548, y: 18, w: 62, h: 82, la: "hortus", target: "hortus", kind: "door" }
+    { x: 60, y: 268, w: 66, h: 92, la: "atrium", target: "atrium", kind: "arch" },
+    { x: 516, y: 268, w: 66, h: 92, la: "hortus", target: "hortus", kind: "arch" }
   ]
 };
 
@@ -1469,7 +1469,7 @@ SCENES.domus_vicini = {
   ],
   exits: [
     { x: 278, y: 138, w: 84, h: 114, la: "atrium", target: "atrium", kind: "hidden" },
-    { x: 40, y: 150, w: 65, h: 125, la: "culina", target: "taberna", kind: "door" }
+    { x: 128, y: 132, w: 64, h: 148, la: "culina", target: "taberna", kind: "door" }
   ]
 };
 
@@ -2730,6 +2730,24 @@ function drawExitArt(ctx, t) {
       cg.addColorStop(1, "rgba(30,24,18,0.75)");
       ctx.fillStyle = cg;
       ctx.fillRect(ex.x, ex.y, ex.w, ex.h);
+    } else if (ex.kind === "arch") {
+      // Bogennische in der Mauer: Steinrahmen + Durchgang ins Naechste
+      rr(ctx, ex.x - 6, ex.y - 6, ex.w + 12, ex.h + 12, "#c8b48c", true, 6);
+      // Bogen-Oeffnung
+      ctx.beginPath();
+      ctx.moveTo(ex.x, ex.y + ex.h);
+      ctx.lineTo(ex.x, ex.y + ex.w / 2);
+      ctx.arc(ex.x + ex.w / 2, ex.y + ex.w / 2, ex.w / 2, Math.PI, 0);
+      ctx.lineTo(ex.x + ex.w, ex.y + ex.h);
+      ctx.closePath();
+      const ag = ctx.createLinearGradient(0, ex.y, 0, ex.y + ex.h);
+      ag.addColorStop(0, "#4a3a2c"); ag.addColorStop(1, "#2e241a");
+      ctx.fillStyle = ag; ctx.fill();
+      ctx.strokeStyle = "#8a7a58"; ctx.lineWidth = 1.6; ctx.stroke();
+      // Lichtfall von drueben unten
+      ctx.globalAlpha = 0.25;
+      ell(ctx, cx, ex.y + ex.h - 8, ex.w / 2.6, 8, "#f8e8b0", false);
+      ctx.globalAlpha = 1;
     } else if (ex.kind === "bath") {
       // Kleines Badehaus im Garten: Gebaeude mit Rundbogen-Fenster, Dampf steigt auf
       rr(ctx, ex.x, ex.y + 34, ex.w, ex.h - 34, "#e0d0b0", true, 4);
