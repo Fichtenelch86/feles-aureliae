@@ -162,7 +162,7 @@ body {
 </div>
 <div id="ui-top">
 <div id="location-bar"><span id="scene-name"></span></div>
-<div id="verba-counter">VERBA: <b id="verba-count">0</b></div><div id="version-tag" style="color:#7a6a84;font-size:.75em;padding:0 10px;">v8.7</div>
+<div id="verba-counter">VERBA: <b id="verba-count">0</b></div><div id="version-tag" style="color:#7a6a84;font-size:.75em;padding:0 10px;">v8.8</div>
 </div>
 <div id="bottom-bar"><div class="bb-section"><div class="bb-label">SACCA</div><div class="bb-chips" id="bb-items"><span class="bb-empty">sacca vacua est</span></div></div><div class="bb-section"><div class="bb-label">VERBA COLLECTA · <span id="bb-verba-count">0</span></div><div class="bb-chips" id="bb-verba"><span class="bb-empty">nondum verba</span></div></div></div>
 <div id="feles-box" hidden>
@@ -725,8 +725,8 @@ SCENES.atrium = {
     ctx.globalAlpha = 1;
     // 7) Tablinum: Vorhang + Podest hinter dem Pater
     ctx.beginPath();
-    ctx.moveTo(150, 46); ctx.lineTo(268, 46);
-    ctx.lineTo(268, 210); ctx.quadraticCurveTo(210, 218, 150, 206);
+    ctx.moveTo(100, 46); ctx.lineTo(218, 46);
+    ctx.lineTo(218, 210); ctx.quadraticCurveTo(160, 218, 100, 206);
     ctx.closePath();
     const tg2 = ctx.createLinearGradient(0, 46, 0, 210);
     tg2.addColorStop(0, "#a84848"); tg2.addColorStop(1, "#883838");
@@ -737,20 +737,20 @@ SCENES.atrium = {
     ctx.strokeStyle = "#c86868"; ctx.lineWidth = 1;
     for (let i = 0; i < 5; i++) {
       ctx.beginPath();
-      ctx.moveTo(158 + i * 22, 48);
-      ctx.quadraticCurveTo(161 + i * 22, 130, 158 + i * 22, 208);
+      ctx.moveTo(108 + i * 22, 48);
+      ctx.quadraticCurveTo(111 + i * 22, 130, 108 + i * 22, 208);
       ctx.stroke();
     }
     ctx.globalAlpha = 1;
     // Stange
-    RN(ctx, 148, 44, 122, 4, "#8a6a3c");
+    RN(ctx, 98, 44, 122, 4, "#8a6a3c");
     // Podest
-    rr(ctx, 158, 214, 106, 8, "#c8b890", true, 2);
+    rr(ctx, 108, 214, 106, 8, "#c8b890", true, 2);
     // Schreibtisch mit Wachstafeln
-    R(ctx, 168, 226, 60, 7, "#9a6a38");
-    R(ctx, 172, 233, 8, 20, "#7a4c22"); R(ctx, 216, 233, 8, 20, "#7a4c22");
-    rr(ctx, 176, 219, 16, 7, "#d8c8a0", true, 1);
-    rr(ctx, 196, 221, 14, 5, "#c8b890", true, 1);
+    R(ctx, 118, 226, 60, 7, "#9a6a38");
+    R(ctx, 122, 233, 8, 20, "#7a4c22"); R(ctx, 166, 233, 8, 20, "#7a4c22");
+    rr(ctx, 126, 219, 16, 7, "#d8c8a0", true, 1);
+    rr(ctx, 146, 221, 14, 5, "#c8b890", true, 1);
     // 8) Lararium: Wandnische mit Ceres-Statuette + Votivkerzen
     rr(ctx, 556, 60, 66, 92, "#d8ccb0", true, 6);
     RN(ctx, 562, 66, 54, 80, "#c0b090");
@@ -821,13 +821,13 @@ SCENES.atrium = {
     ctx.strokeStyle = INK; ctx.lineWidth = 1.6;
     ctx.beginPath(); ctx.arc(158, 140, 6, 0.6, Math.PI - 0.6); ctx.stroke();
     // 11) Figuren: Pater im Tablinum, Familienmitglied, Feles
-    person(ctx, 210, 214, { skin: "#f0c090", hair: "#4a3018", tunic: "#c03838", trim: "#e05858", tunicDark: "#9c2828", skirt: false }, t);
+    person(ctx, 158, 214, { skin: "#f0c090", hair: "#4a3018", tunic: "#c03838", trim: "#e05858", tunicDark: "#9c2828", skirt: false }, t);
     person(ctx, 440, 300, { skin: "#e0b080", hair: "#8a5a20", tunic: "#3860c0", trim: "#5880e0", tunicDark: "#28489c", skirt: false }, t);
     cat(ctx, 500, 330, t);
   },
   hotspots: [
     { x: 80, y: 160, w: 160, h: 120, la: "ianua", target: "hortus", verbum: "ianua" },
-    { x: 176, y: 146, w: 72, h: 96, la: "pater",
+    { x: 124, y: 146, w: 72, h: 96, la: "pater",
       onUse(s, G) {
         if (!G.has("pecunia") && !G.flag("pecuniaGiven")) {
           G.setFlag("pecuniaGiven");
@@ -856,7 +856,7 @@ SCENES.atrium = {
   exits: [
     { x: 64, y: 96, w: 62, h: 136, la: "hortus", target: "hortus", kind: "door" },
     { x: 226, y: 96, w: 62, h: 136, la: "ager", target: "macellum", kind: "arch" },
-    { x: 448, y: 96, w: 62, h: 136, la: "culina", target: "taberna", kind: "door" }
+    { x: 402, y: 96, w: 62, h: 136, la: "culina", target: "taberna", kind: "door" }
   ]
 };
 
@@ -960,8 +960,8 @@ SCENES.hortus = {
     ell(ctx, 380, 220 + bf, 2.4, 1.8, "#e8a838", false);
     ell(ctx, 384.5, 219 + bf, 2.4, 1.8, "#d88828", false);
     ctx.globalAlpha = 1;
-    person(ctx, 300, 240, { skin: "#f0c090", hair: "#6a3818", tunic: "#d04868", trim: "#e87090", tunicDark: "#a83450", skirt: true }, t);
-    cat(ctx, 560, 330, t);
+    person(ctx, 360, 332, { skin: "#f0c090", hair: "#6a3818", tunic: "#d04868", trim: "#e87090", tunicDark: "#a83450", skirt: true }, t);
+    cat(ctx, 430, 320, t);
     // Vogel am Himmel
     ctx.strokeStyle = "rgba(84,62,42,0.5)"; ctx.lineWidth = 1;
     const bx = ((t || 0) / 60) % 700 - 30;
@@ -976,12 +976,13 @@ SCENES.hortus = {
       onUse(s, G) {
         if (!G.has("flores")) {
           G.verbaAdd("flos");
-          if (G.char === "aurelia") {
-            return { type: "dialog", lines: [
-              ["Feles", "Miau! Aurelia viam latentem videt: flores pulcherrimi crescunt!" ]
-            ], give: "flores" };
-          }
-          return { type: "take", item: "flores" };
+          startMinigame("flowers", () => {
+            G.addItem("flores");
+            renderInventory();
+            showText("Lucius", "Flores pulcherrimos carpo!");
+            sound("take");
+          });
+          return null;
         }
         return { type: "text", la: "Flores iam in saccā sunt." };
       } },
@@ -993,7 +994,7 @@ SCENES.hortus = {
           ["Mater", "Flores in horto carpito et coronam in theatro parate!"]
         ] };
       } },
-    { x: 540, y: 288, w: 80, h: 72, la: "feles",
+    { x: 402, y: 282, w: 84, h: 70, la: "feles",
       onUse(s, G) { return { type: "feles", text: "Miau! In horto via aurea est – Aurelia vias latentes amat!" }; } },
     { x: 50, y: 180, w: 90, h: 90, la: "arbor",
       onUse(s, G) { return { type: "text", la: "Arbor magna in horto stat." }; } }
@@ -1105,10 +1106,10 @@ SCENES.macellum = {
     ctx.globalAlpha = 1;
     RN(ctx, 310, 204, 44, 3, "#6a5838");
     // ---- Figuren: Vilicus, Baerin, Feldarbeiter ----
-    person(ctx, 170, 290, { skin: "#e0b080", hair: "#2a1a10", tunic: "#4aa858", trim: "#70c878", tunicDark: "#388c40", skirt: false }, t);
+    person(ctx, 215, 315, { skin: "#e0b080", hair: "#2a1a10", tunic: "#4aa858", trim: "#70c878", tunicDark: "#388c40", skirt: false }, t);
     person(ctx, 420, 280, { skin: "#f0c090", hair: "#e0b860", tunic: "#b050d0", trim: "#d078e8", tunicDark: "#8c38a8", skirt: true }, t);
     ctx.globalAlpha = 0.8;
-    person(ctx, 560, 232, { skin: "#e8c098", hair: "#7a5028", tunic: "#8a6848", trim: "#a88860", tunicDark: "#6a4c30", skirt: true }, t);
+    person(ctx, 460, 255, { skin: "#e8c098", hair: "#7a5028", tunic: "#8a6848", trim: "#a88860", tunicDark: "#6a4c30", skirt: true }, t);
     ctx.globalAlpha = 1;
     cat(ctx, 590, 320, t);
     // Schwalben am Himmel
@@ -1124,7 +1125,7 @@ SCENES.macellum = {
   drawExitArt(ctx, t);
   },
   hotspots: [
-    { x: 138, y: 204, w: 78, h: 112, la: "mercator",
+    { x: 181, y: 229, w: 76, h: 110, la: "mercator",
       onUse(s, G) {
         if (G.has("frumentum")) return { type: "text", la: "Mercator: Frumentum iam habes!" };
         if (G.has("pecunia")) {
@@ -1238,7 +1239,7 @@ SCENES.taberna = {
     }
     ctx.globalAlpha = 1;
     // ---- Coquus + Murmillo-Ecke ----
-    person(ctx, 130, 310, { skin: "#f0c090", hair: "#2a1a10", tunic: "#c06028", trim: "#e08040", tunicDark: "#984818", skirt: false }, t);
+    person(ctx, 180, 328, { skin: "#f0c090", hair: "#2a1a10", tunic: "#c06028", trim: "#e08040", tunicDark: "#984818", skirt: false }, t);
     R(ctx, 112, 152, 36, 12, "#f8f8f0");
     RN(ctx, 116, 147, 28, 6, "#e0e0d0");
     // Kochlöffel
@@ -1261,7 +1262,7 @@ SCENES.taberna = {
   drawExitArt(ctx, t);
   },
   hotspots: [
-    { x: 98, y: 228, w: 70, h: 105, la: "coquus",
+    { x: 146, y: 246, w: 72, h: 104, la: "coquus",
       onUse(s, G) {
         if (G.has("vinum")) return { type: "text", la: "Coquus: Vinum iam habes!" };
         if (G.has("panis")) {
@@ -1366,7 +1367,7 @@ SCENES.thermae = {
       ctx.globalAlpha = 1;
     }
     // ---- Badender + Tuch + Schlüssel-Motiv ----
-    person(ctx, 140, 340, { skin: "#e0b080", hair: "#2a1a10", tunic: "#50b0b8", trim: "#78d0d8", tunicDark: "#388c94", skirt: false }, t);
+    person(ctx, 190, 348, { skin: "#e0b080", hair: "#2a1a10", tunic: "#50b0b8", trim: "#78d0d8", tunicDark: "#388c94", skirt: false }, t);
     R(ctx, 106, 218, 14, 24, "#f0ece0"); // Tuch
     ctx.globalAlpha = 0.3;
     ctx.strokeStyle = "#c8c0a8"; ctx.lineWidth = 0.8;
@@ -1392,9 +1393,9 @@ SCENES.thermae = {
     }
     // Zweiter Badender im Hintergrund
     ctx.globalAlpha = 0.75;
-    person(ctx, 500, 340, { skin: "#e8c0a0", hair: "#5a4a38", tunic: "#70a8c0", trim: "#98c8d8", tunicDark: "#588898", skirt: true }, t);
+    person(ctx, 460, 348, { skin: "#e8c0a0", hair: "#5a4a38", tunic: "#70a8c0", trim: "#98c8d8", tunicDark: "#588898", skirt: true }, t);
     ctx.globalAlpha = 1;
-    cat(ctx, 560, 320, t);
+    cat(ctx, 240, 335, t);
     torch(ctx, 40, 58, t); torch(ctx, 600, 58, t);
   drawExitArt(ctx, t);
   },
@@ -1403,6 +1404,16 @@ SCENES.thermae = {
       onUse(s, G) {
         if (G.has("clavis")) return { type: "text", la: "Clavis iam in saccā est." };
         if (G.has("sagitta")) {
+          startMinigame("fishing", () => {
+            G.verbaAdd("clavis"); G.verbaAdd("thermae"); G.removeItem("sagitta");
+            G.addItem("clavis");
+            renderInventory();
+            showText("Lucius", "Sagittam in aquam mitto - clavis exit!");
+            sound("take");
+          });
+          return null;
+        }
+        if (false) {
           G.verbaAdd("clavis"); G.verbaAdd("thermae"); G.removeItem("sagitta");
           if (G.char === "lucius") {
             return { type: "dialog", lines: [
@@ -1538,11 +1549,14 @@ SCENES.domus_vicini = {
           return { type: "text", la: "Cista vacua est." };
         }
         if (G.has("clavis")) {
-          G.verbaAdd("cista"); G.verbaAdd("stella");
-          return { type: "dialog", lines: [
-            ["Feles", "Miau! Clavis ianuam aperit – cistam aperit!"],
-            ["Lucius", "Cistam aperio: corona rudis et stella!"]
-          ], give: "corona_rohling", give2: "stella" };
+          startMinigame("pattern", () => {
+            G.verbaAdd("cista"); G.verbaAdd("stella");
+            G.addItem("corona_rohling"); G.addItem("stella");
+            renderInventory();
+            showText("Lucius", "Cistam aperio: corona rudis et stella!");
+            sound("take");
+          });
+          return null;
         }
         return { type: "text", la: "Cista clausa est. Clavem quaere!" };
       } },
@@ -1653,7 +1667,7 @@ SCENES.theatrum = {
     // ---- Figuren: Feldarbeiterin, Knabe, Feles ----
     person(ctx, 300, 240, { skin: "#f0c090", hair: "#6a3818", tunic: "#d04868", trim: "#e87090", tunicDark: "#a83450", skirt: true }, t);
     ctx.globalAlpha = 0.85;
-    person(ctx, 180, 320, { skin: "#e8c098", hair: "#4a3018", tunic: "#a88848", trim: "#c8a868", tunicDark: "#886838", skirt: false }, t);
+    person(ctx, 225, 338, { skin: "#e8c098", hair: "#4a3018", tunic: "#a88848", trim: "#c8a868", tunicDark: "#886838", skirt: false }, t);
     ctx.globalAlpha = 1;
     cat(ctx, 480, 150, t);
     // Vogelzwitschern: Vogel auf Ast
@@ -1792,7 +1806,7 @@ SCENES.templum = {
     ell(ctx, 426, 276, 2.5, 5, "#d88050", false);
     ctx.globalAlpha = 1;
     // ---- Priesterin + Katze + Blumenvasen ----
-    person(ctx, 520, 300, { skin: "#f0c090", hair: "#4a3018", tunic: "#faf4e4", trim: "#e8c040", tunicDark: "#d8d0b0", skirt: true }, t);
+    person(ctx, 540, 330, { skin: "#f0c090", hair: "#4a3018", tunic: "#faf4e4", trim: "#e8c040", tunicDark: "#d8d0b0", skirt: true }, t);
     // Blumenstand
     ell(ctx, 170, 300, 5, 6, "#a85868", true);
     ell(ctx, 170, 293, 3, 3, "#e87888", false);
@@ -2125,8 +2139,8 @@ SCENES.festum = {
     person(ctx, 500, 320, { skin: "#e0b080", hair: "#4a3018", tunic: "#4aa858", trim: "#70c878", tunicDark: "#388c40", skirt: false }, t);
     person(ctx, 440, 260, { skin: "#f0c090", hair: "#4a3018", tunic: "#faf4e4", trim: "#e8c040", tunicDark: "#d8d0b0", skirt: true }, t);
     // tanzendes Kind
-    person(ctx, 380, 310, { skin: "#f0c090", hair: "#8a5a20", tunic: "#d88848", trim: "#f0a868", tunicDark: "#b06838", skirt: true }, t);
-    cat(ctx, 250, 340, t);
+    person(ctx, 430, 334, { skin: "#f0c090", hair: "#8a5a20", tunic: "#d88848", trim: "#f0a868", tunicDark: "#b06838", skirt: true }, t);
+    cat(ctx, 195, 348, t);
     // Konfetti mit Drehung
     for (let i = 0; i < 20; i++) {
       const fx = (i * 73 + (t || 0) / 50) % 640;
@@ -2945,6 +2959,7 @@ function loop(t) {
   watercolor(ctx2d, t || 0);
   // Schriftrollen-Animation beim Szenenwechsel
   scrollAnim(ctx2d, t || 0);
+  drawMinigame(ctx2d, t || 0);
   // Neuer Hover-Indikator: Maus-Funkel (Gluehwuermchen) statt Flachen-Markierung
   if (hoverSpot && mousePos.x >= 0) {
     const pulse = 0.5 + Math.sin((t || 0) / 180) * 0.5;
@@ -3148,6 +3163,153 @@ function tryCombine(a, b) {
   }
 }
 
+// ---------- Mini-Spiele ----------
+// Overlay-Minigames auf der Buehne; nach Erfolg wird das Item vergeben.
+let minigame = null; // { kind, onWin }
+const MG_W = 300, MG_H = 200;
+function startMinigame(kind, onWin) {
+  minigame = { kind, t0: performance.now(), state: {}, onWin, done: false };
+  sound("click");
+}
+function minigameActive() { return !!minigame; }
+function endMinigame(won) {
+  const mg = minigame;
+  minigame = null;
+  if (won && mg && mg.onWin) mg.onWin();
+  else if (!won) sound("error");
+}
+// Zeichnen + Eingaben (Canvas-Klicks gehen an das Minigame, solange aktiv)
+function drawMinigame(ctx, t) {
+  if (!minigame) return;
+  const mg = minigame;
+  const mx = 320 - MG_W / 2, my = 180 - MG_H / 2;
+  // Rahmen
+  ctx.fillStyle = "rgba(42,36,47,0.94)";
+  ctx.beginPath();
+  const r = 10;
+  ctx.moveTo(mx + r, my); ctx.arcTo(mx + MG_W, my, mx + MG_W, my + MG_H, r);
+  ctx.arcTo(mx + MG_W, my + MG_H, mx, my + MG_H, r);
+  ctx.arcTo(mx, my + MG_H, mx, my, r); ctx.arcTo(mx, my, mx + MG_W, my, r);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = "#d4a545"; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = "#f4ecf4"; ctx.font = "bold 11px Georgia"; ctx.textAlign = "center";
+  ctx.fillText(mg.kind === "flowers" ? "Flores carpere! (Klick die bluehenden)" :
+    mg.kind === "fishing" ? "Clavis! (Klick, wenn der Ring klein ist)" :
+    "Cista! (Merke die Reihenfolge)", 320, my + 16);
+
+  if (mg.kind === "flowers") {
+    // 4x4 Blumenfeld, 6 bluehen zufaellig; alle Bluehenden treffen
+    if (!mg.state.grid) {
+      mg.state.grid = [];
+      for (let i = 0; i < 16; i++) mg.state.grid.push({ bloom: hash01(i, 77) > 0.62, hit: false });
+    }
+    const gx0 = mx + 18, gy0 = my + 26, cs = 66;
+    let allHit = true;
+    mg.state.grid.forEach((cell, i) => {
+      const cx2 = gx0 + (i % 4) * cs + cs / 2, cy2 = gy0 + ((i / 4) | 0) * cs + cs / 2;
+      if (cell.bloom && !cell.hit) allHit = false;
+      const sway = Math.sin(t / 400 + i) * 2;
+      // Stengel
+      ctx.strokeStyle = "#4a8a40"; ctx.lineWidth = 1.6;
+      ctx.beginPath(); ctx.moveTo(cx2, cy2 + 14); ctx.quadraticCurveTo(cx2 + sway * 0.5, cy2 + 6, cx2 + sway, cy2); ctx.stroke();
+      // Bluete oder Knospe
+      if (cell.bloom) {
+        const col = cell.hit ? "#7ab468" : "#e87888";
+        for (let p2 = 0; p2 < 5; p2++) {
+          const ang = p2 / 5 * Math.PI * 2;
+          ell(ctx, cx2 + Math.cos(ang) * 6, cy2 + Math.sin(ang) * 6, 4, 4, col, false);
+        }
+        ell(ctx, cx2, cy2, 3.4, 3.4, cell.hit ? "#c8e0b0" : "#f0c040", false);
+      } else {
+        ell(ctx, cx2, cy2, 4, 5, "#8aa878", false);
+      }
+    });
+    if (allHit && !mg.done) { mg.done = true; endMinigame(true); }
+  } else if (mg.kind === "fishing") {
+    // Schluessel am Faden: Ring pulsiert, Klick wenn Ring den Schluessel umrahmt
+    if (!mg.state.size) mg.state.size = 1;
+    const phase = (t - mg.t0) / 900;
+    const ringR = 46 - (Math.abs(Math.sin(phase)) * 40); // zieht zusammen
+    const cx2 = mx + MG_W / 2, cy2 = my + MG_H / 2 + 12;
+    // Wasser
+    ctx.fillStyle = "#9cc8e8";
+    ctx.fillRect(mx + 20, cy2 + 24, MG_W - 40, 34);
+    // Schluessel
+    ell(ctx, cx2, cy2, 9, 9, "#f0d888", false);
+    ctx.strokeStyle = "#f0d888"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(cx2 + 7, cy2 + 6); ctx.lineTo(cx2 + 18, cy2 + 18); ctx.stroke();
+    // Ring
+    ctx.strokeStyle = ringR < 14 ? "#f8e8a0" : "#e8b060";
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(cx2, cy2, ringR, 0, Math.PI * 2); ctx.stroke();
+    mg.state.ringR = ringR;
+    mg.state.cx = cx2; mg.state.cy = cy2;
+    // Faden
+    ctx.strokeStyle = "rgba(230,220,200,0.5)"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(cx2, my + 22); ctx.lineTo(cx2, cy2 - ringR); ctx.stroke();
+  } else if (mg.kind === "pattern") {
+    // Cista-Schloss: 4 Symbole leuchten nacheinander, dann nachklicken
+    const syms = ["#e87888", "#f0c040", "#78c878", "#88a8e0"];
+    if (!mg.state.seq) {
+      mg.state.seq = [];
+      for (let i = 0; i < 4; i++) mg.state.seq.push((hash01(i, 99 + Math.floor(Math.random() * 50)) * 4) | 0);
+      mg.state.show = 0; mg.state.input = []; mg.state.lastFlash = 0;
+    }
+    const seq = mg.state.seq;
+    const showPhase = ((t - mg.t0) / 700) | 0;
+    const inShow = showPhase < seq.length;
+    // 4 Knopfe im Quadrat
+    for (let i = 0; i < 4; i++) {
+      const bx2 = mx + 70 + (i % 2) * 120, by2 = my + 48 + ((i / 2) | 0) * 64;
+      const flash = inShow && showPhase === i ? 0.9 : (mg.state.input && mg.state.input.length && mg.state.input[mg.state.input.length - 1] === i ? 0.5 : 0.15);
+      ctx.globalAlpha = 0.3 + flash;
+      rr(ctx, bx2, by2, 40, 40, syms[i], true, 8);
+      ctx.globalAlpha = 1;
+      // Hitbox merken
+      if (!mg.state.buttons) mg.state.buttons = [];
+      mg.state.buttons[i] = { x: bx2, y: by2, w: 40, h: 40 };
+    }
+    mg.state.inShow = inShow;
+    if (!inShow && mg.state.input && mg.state.input.length >= seq.length && !mg.done) {
+      const won = mg.state.input.every((v, i2) => v === seq[i2]);
+      mg.done = true;
+      endMinigame(won);
+    }
+  }
+}
+// Minigame-Klickverarbeitung (in stageCoords-Aufloesung)
+function minigameClick(x, y) {
+  if (!minigame) return false;
+  const mg = minigame;
+  const mx = 320 - MG_W / 2, my = 180 - MG_H / 2;
+  if (mg.kind === "flowers") {
+    const gx0 = mx + 18, gy0 = my + 26, cs = 66;
+    const col = ((x - gx0) / cs) | 0, row = ((y - gy0) / cs) | 0;
+    if (col >= 0 && col < 4 && row >= 0 && row < 4) {
+      const cell = mg.state.grid[row * 4 + col];
+      if (cell && cell.bloom) { cell.hit = true; sound("collect"); return true; }
+      // Fehlklick auf Knospe: kurzer Fehler, kein Abbruch
+      sound("error");
+      return true;
+    }
+  } else if (mg.kind === "fishing") {
+    if (mg.state.ringR < 16) { endMinigame(true); }
+    else { endMinigame(false); }
+    return true;
+  } else if (mg.kind === "pattern") {
+    if (mg.state.inShow) return true; // erst nach der Vorgabe klicken
+    for (let i = 0; i < 4; i++) {
+      const b = mg.state.buttons[i];
+      if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) {
+        mg.state.input.push(i);
+        sound("click");
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 // ---------- Hotspot-Handling ----------
 function applyResult(res) {
   if (!res) return;
@@ -3202,6 +3364,7 @@ canvas.addEventListener("click", e => {
   if (!dialogBox.hidden) return;
   if (scrollState) return; // waehrend der Schriftrollen-Animation keine Szenenwechsel
   const { x, y } = stageCoords(e);
+  if (minigameClick(x, y)) return;
   const sc = SCENES[G.scene];
   const exit = spotAt(x, y, sc.exits);
   if (exit) {
