@@ -60,15 +60,26 @@ body {
 #scene-name { color: #d4a545; letter-spacing: .08em; }
 #verba-counter { color: #8fc98f; }
 
-#ui-side {
-  position: absolute; top: 8px; right: 8px;
-  background: rgba(46, 40, 51, .92);
-  border: 2px solid #6e6070;
-  padding: 10px 12px;
-  width: 190px;
-  font-size: .85em;
+#bottom-bar {
+  display: flex; gap: 14px; align-items: stretch;
+  background: #38303c; border: 2px solid #6e6070; border-top: none;
+  padding: 8px 12px; min-height: 58px;
+  overflow-x: auto;
 }
-#ui-side h3 { color: #d4a545; letter-spacing: .15em; margin-bottom: 8px; }
+.bb-section { display: flex; flex-direction: column; }
+.bb-label { font-size: .68em; letter-spacing: .12em; color: #b8a8c4; margin-bottom: 4px; }
+.bb-chips { display: flex; gap: 6px; flex-wrap: nowrap; align-items: center; min-height: 30px; }
+.bb-chip {
+  background: #4a404e; border: 1.5px solid #8a7890; border-radius: 12px;
+  color: #f4ecf4; padding: 3px 10px; font-size: .85em; cursor: pointer;
+  white-space: nowrap; transition: border-color .15s, background .15s;
+}
+.bb-chip:hover { border-color: #d4a545; background: #5c505e; }
+.bb-chip.item-chip.selected { border-color: #d4a545; background: #5c505e; }
+.bb-chip.verba-chip { cursor: default; border-color: #6e9068; background: #3e4a3e; color: #c8e0c0; }
+.bb-empty { color: #8a7a94; font-style: italic; font-size: .8em; padding: 4px 2px; }
+
+
 #inventory { list-style: none; min-height: 30px; }
 #inventory li {
   padding: 3px 6px; margin-bottom: 3px;
@@ -146,11 +157,6 @@ body {
 <div id="ui-top">
 <div id="location-bar"><span id="scene-name"></span></div>
 <div id="verba-counter">VERBA: <b id="verba-count">0</b></div>
-</div>
-<div id="ui-side">
-<h3>SACCA</h3>
-<ul id="inventory"></ul>
-<div id="combine-hint">Duo lecta = combina!</div>
 </div>
 <div id="dialog-box" hidden>
 <div id="speaker"></div>
@@ -2136,6 +2142,7 @@ const G = {
     if (VERBA_MAP[la] && !this.verba.has(la)) {
       this.verba.add(la);
       updateVerbaCount();
+      renderVerbaChips();
       sound("collect");
     }
   }
@@ -2572,15 +2579,11 @@ function loop(t) {
     ctx2d.arcTo(bx, by, bx + bw, by, rr2);
     ctx2d.closePath();
     if (hovered) {
-      ctx2d.save();
-      ctx2d.shadowColor = "rgba(255,236,180,0.9)";
-      ctx2d.shadowBlur = 14;
-      ctx2d.fillStyle = "rgba(72,56,80,0.95)";
-      ctx2d.fill();
-      ctx2d.restore();
       ctx2d.fillStyle = "rgba(96,76,104,0.98)";
       ctx2d.fill();
-      ctx2d.strokeStyle = "rgba(255,236,180,0.95)";
+      ctx2d.fillStyle = "rgba(255,238,190,0.14)";
+      ctx2d.fill();
+      ctx2d.strokeStyle = "rgba(255,240,196,0.95)";
     } else {
       ctx2d.fillStyle = "rgba(52,42,58,0.82)";
       ctx2d.fill();
@@ -2595,16 +2598,13 @@ function loop(t) {
     const label = "\u00bb " + (SCENES[ex.target] ? SCENES[ex.target].name : ex.la);
     ctx2d.fillText(label, bx + bw / 2, by + bh / 2 + 0.5);
   });
-  // Hover: Objektumriss leuchtet sanft (pulsierend) statt gelbem Kasten
+  // Hover: Objektumriss leuchtet pulsierend (ohne shadowBlur, Safari-sicher:
+  // mehrere Konturen mit abnehmender Deckkraft + sanfte Fuell-Tintung)
   if (hoverSpot) {
-    const pulse = 0.55 + Math.sin((t || 0) / 300) * 0.25;
-    ctx2d.save();
-    ctx2d.shadowColor = "rgba(255,236,180," + (0.55 + pulse * 0.4).toFixed(2) + ")";
-    ctx2d.shadowBlur = 16;
-    ctx2d.strokeStyle = "rgba(255,244,214," + (0.5 + pulse * 0.45).toFixed(2) + ")";
-    ctx2d.lineWidth = 2.4;
+    const pulse = 0.5 + Math.sin((t || 0) / 300) * 0.3;
     const hx = hoverSpot.x, hy = hoverSpot.y, hw = hoverSpot.w, hh = hoverSpot.h;
     const rad = Math.min(10, hw / 3, hh / 3);
+    // weiche Fuellung: warmes Leuchten der Flaeche
     ctx2d.beginPath();
     ctx2d.moveTo(hx + rad, hy);
     ctx2d.arcTo(hx + hw, hy, hx + hw, hy + hh, rad);
@@ -2612,8 +2612,24 @@ function loop(t) {
     ctx2d.arcTo(hx, hy + hh, hx, hy, rad);
     ctx2d.arcTo(hx, hy, hx + hw, hy, rad);
     ctx2d.closePath();
-    ctx2d.stroke();
-    ctx2d.restore();
+    ctx2d.fillStyle = "rgba(255,238,190," + (0.10 + pulse * 0.12).toFixed(3) + ")";
+    ctx2d.fill();
+    // 3 Konturen: breit+transparent -> schmal+deckend = Leuchtkante
+    for (let L = 3; L >= 1; L--) {
+      ctx2d.beginPath();
+      const pad = (L - 1) * 2.6;
+      const x2 = hx - pad, y2 = hy - pad, w2 = hw + pad * 2, h2 = hh + pad * 2;
+      const r2 = rad + pad;
+      ctx2d.moveTo(x2 + r2, y2);
+      ctx2d.arcTo(x2 + w2, y2, x2 + w2, y2 + h2, r2);
+      ctx2d.arcTo(x2 + w2, y2 + h2, x2, y2 + h2, r2);
+      ctx2d.arcTo(x2, y2 + h2, x2, y2, r2);
+      ctx2d.arcTo(x2, y2, x2 + w2, y2, r2);
+      ctx2d.closePath();
+      ctx2d.strokeStyle = "rgba(255,240,196," + ((0.16 + pulse * 0.14) / L).toFixed(3) + ")";
+      ctx2d.lineWidth = 1.2 + (3 - L) * 2.2;
+      ctx2d.stroke();
+    }
   }
   requestAnimationFrame(loop);
 }
@@ -2715,10 +2731,54 @@ document.getElementById("verba-counter").addEventListener("click", () => {
 });
 
 // ---------- Inventar ----------
-const invEl = document.getElementById("inventory");
+const invEl = document.getElementById("inventory"); // kann null sein (UI in bottom-bar)
+const bbItems = document.getElementById("bb-items");
+const bbVerba = document.getElementById("bb-verba");
+const bbVerbaCount = document.getElementById("bb-verba-count");
+function renderVerbaChips() {
+  if (!bbVerba) return;
+  bbVerba.innerHTML = "";
+  const words = [...G.verba];
+  bbVerbaCount.textContent = words.length;
+  if (!words.length) {
+    bbVerba.innerHTML = '<span class="bb-empty">nondum verba</span>';
+    return;
+  }
+  for (const la of words) {
+    const chip = document.createElement("span");
+    chip.className = "bb-chip verba-chip";
+    const v = VERBA_MAP[la];
+    chip.textContent = la;
+    chip.title = v ? (la + " – " + v.de + (v.tipp ? "\n★ " + v.tipp : "")) : la;
+    bbVerba.appendChild(chip);
+  }
+}
 function renderInventory() {
-  invEl.innerHTML = "";
+  if (invEl) invEl.innerHTML = "";
+  if (bbItems) {
+    bbItems.innerHTML = "";
+    if (!G.inventory.length) {
+      bbItems.innerHTML = '<span class="bb-empty">sacca vacua est</span>';
+    }
+    G.inventory.forEach(item => {
+      const info = ITEMS[item];
+      const chip = document.createElement("span");
+      chip.className = "bb-chip item-chip" + (G.selected === item ? " selected" : "");
+      chip.textContent = (G.selected === item ? "▸ " : "") + info.la;
+      chip.title = info.de;
+      chip.onclick = () => {
+        if (G.selected === item) { G.selected = null; }
+        else {
+          if (G.selected) tryCombine(G.selected, item);
+          else { G.selected = item; sound("click"); }
+        }
+        renderInventory();
+      };
+      bbItems.appendChild(chip);
+    });
+  }
   G.inventory.forEach(item => {
+    if (!invEl) return;
     const li = document.createElement("li");
     const info = ITEMS[item];
     li.textContent = (G.selected === item ? "▸ " : "") + info.la;
