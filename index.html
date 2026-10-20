@@ -1490,8 +1490,16 @@ ctx2d.scale(2, 2);
 let hoverSpot = null;
 
 // Papier-Textur (Aquarellkorn) + Vignette: Golden-Age-Storybook-Look
-let paperPattern = null;
-function paperOverlay(ctx) {
+// ---------- Aquarell-Postprocessing ----------
+// Echte Wasser-Effekte: Ausblühen der Kanten (nass-in-nass), Pigment-Granulation,
+// Papierkorn und zufällige Wasserflecken - gerendert über Offscreen-Canvas.
+const osCanvas = document.createElement("canvas");
+osCanvas.width = 1280; osCanvas.height = 720;
+const osCtx = osCanvas.getContext("2d");
+osCtx.scale(2, 2);
+
+let paperPattern = null, grainPattern = null;
+function initTextures(ctx) {
   if (!paperPattern) {
     const pc = document.createElement("canvas");
     pc.width = 128; pc.height = 128;
@@ -1509,23 +1517,151 @@ function paperOverlay(ctx) {
     }
     paperPattern = ctx.createPattern(pc, "repeat");
   }
+  if (!grainPattern) {
+    // Pigment-Granulation: Klumpige dunkle Punkte wie abgelagerte Pigmente
+    const gc = document.createElement("canvas");
+    gc.width = 160; gc.height = 160;
+    const gx = gc.getContext("2d");
+    gx.fillStyle = "#ffffff";
+    gx.fillRect(0, 0, 160, 160);
+    for (let i = 0; i < 500; i++) {
+      const a = 0.05 + Math.random() * 0.18;
+      gx.fillStyle = "rgba(60,44,28," + a.toFixed(3) + ")";
+      const s = 1 + Math.random() * 2;
+      gx.fillRect(Math.random() * 160, Math.random() * 160, s, s);
+    }
+    grainPattern = ctx.createPattern(gc, "repeat");
+  }
+}
+// Stabile Wasserflecken pro Szene (immer gleiche, sonst flackert es)
+function sceneSpots(sceneId) {
+  let h = 0;
+  for (let i = 0; i < sceneId.length; i++) h = (h * 31 + sceneId.charCodeAt(i)) | 0;
+  const spots = [];
+  for (let i = 0; i < 7; i++) {
+    h = (h * 1103515245 + 12345) | 0;
+    const x = ((h >>> 8) % 640);
+    h = (h * 1103515245 + 12345) | 0;
+    const y = ((h >>> 8) % 360);
+    h = (h * 1103515245 + 12345) | 0;
+    spots.push({ x, y, r: 18 + ((h >>> 8) % 42), a: 0.05 + (((h >>> 12) % 10) / 100) });
+  }
+  return spots;
+}
+function watercolor(ctx, t) {
+  initTextures(ctx);
+  // 1) Granulation: Pigmentklumpen multiplikativ andunkeln
+  ctx.save();
+  ctx.globalCompositeOperation = "multiply";
+  ctx.globalAlpha = 0.16;
+  ctx.fillStyle = grainPattern;
+  ctx.fillRect(0, 0, 640, 360);
+  ctx.restore();
+  // 2) Ausblühen: leicht versetzte Kopien = weiche, verlaufene Farbkanten (nass-in-nass)
+  ctx.save();
+  ctx.globalAlpha = 0.07;
+  ctx.drawImage(osCanvas, -1.6, -1.1, 640, 360);
+  ctx.drawImage(osCanvas, 1.6, 1.1, 640, 360);
+  ctx.globalAlpha = 0.045;
+  ctx.drawImage(osCanvas, -3, 0.5, 640, 360);
+  ctx.restore();
+  // 3) Wasserflecken: helle unregelmäßige Blooms wie trocknendes Wasser
+  ctx.save();
+  ctx.globalCompositeOperation = "soft-light";
+  for (const s of sceneSpots(G.scene)) {
+    ctx.globalAlpha = s.a;
+    ctx.fillStyle = "#fff8e8";
+    ctx.beginPath();
+    ctx.ellipse(s.x, s.y, s.r, s.r * 0.7, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+  // 4) Papierkorn
   ctx.save();
   ctx.globalAlpha = 0.14;
   ctx.fillStyle = paperPattern;
   ctx.fillRect(0, 0, 640, 360);
   ctx.restore();
-  // Vignette: weicher warmer Rand (timeworn tenderness)
+  // 5) Vignette: weicher warmer Rand (timeworn tenderness)
   const vg = ctx.createRadialGradient(320, 180, 150, 320, 180, 400);
   vg.addColorStop(0, "rgba(90,66,40,0)");
   vg.addColorStop(1, "rgba(90,66,40,0.22)");
   ctx.fillStyle = vg;
   ctx.fillRect(0, 0, 640, 360);
 }
+// ---------- Schriftrollen-Szenenwechsel ----------
+// Rollt sich von beiden Seiten zusammen (Pergament-Stangen) und wieder auseinander.
+let scrollState = null; // { start, from, to }
+function startScroll(target) {
+  scrollState = { start: performance.now(), from: G.scene, to: target };
+}
+function scrollAnim(ctx, t) {
+  if (!scrollState) return;
+  const DUR = 700; // ms pro Phase
+  const el = t - scrollState.start;
+  if (el >= DUR * 2) {
+    // Animation fertig
+    scrollState = null;
+    return;
+  }
+  const phase1 = Math.min(1, el / DUR);          // zusammenrollen
+  const phase2 = Math.max(0, (el - DUR) / DUR); // aufrollen
+  // Szenenwechsel genau in der Mitte (Rolle komplett geschlossen)
+  if (phase1 >= 1 && G.scene !== scrollState.to) {
+    G.scene = scrollState.to;
+    updateSceneName();
+  }
+  // Deckel: linkes und rechtes Bildende (waehrend phase1) bzw. neue Szene (phase2)
+  if (phase1 < 1) {
+    // Szene "from" ist noch G.scene; sie wird von beiden Seiten zugewalzt
+    const cover = easeInOut(phase1) * 320; // bis Mitte (320)
+    drawScrollShade(ctx, 0, cover, false);
+    drawScrollShade(ctx, 640 - cover, cover, true);
+  } else {
+    // Neue Szene sichtbar machen (G.scene wurde beim Uebergang gesetzt)
+    const open = easeInOut(phase2) * 320;
+    drawScrollShade(ctx, open, 320 - open, false);
+    drawScrollShade(ctx, 320 + open, 320 - open, true);
+  }
+}
+function easeInOut(p) { return p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; }
+function drawScrollShade(ctx, x, w, fromRight) {
+  if (w <= 0) return;
+  // Pergamentrolle: gewelltes Papier + Stange + Schatten
+  const g = ctx.createLinearGradient(x, 0, x + w, 0);
+  g.addColorStop(0, "rgba(58,42,24,0.88)");
+  g.addColorStop(0.15, "rgba(94,68,38,0.82)");
+  g.addColorStop(0.5, "rgba(136,100,58,0.75)");
+  g.addColorStop(0.85, "rgba(94,68,38,0.82)");
+  g.addColorStop(1, "rgba(58,42,24,0.88)");
+  ctx.fillStyle = g;
+  ctx.fillRect(x, 0, w, 360);
+  // Holz-Stange am Vordergrund-Rand
+  const barX = fromRight ? x : x + w - 7;
+  const bg = ctx.createLinearGradient(barX, 0, barX + 7, 0);
+  bg.addColorStop(0, "#7a5428"); bg.addColorStop(0.5, "#b48a4c"); bg.addColorStop(1, "#6a4828");
+  ctx.fillStyle = bg;
+  ctx.fillRect(barX, -4, 7, 368);
+  ctx.fillStyle = "rgba(58,42,24,0.5)";
+  ctx.fillRect(barX, -4, 1, 368);
+  // Schlagschatten auf die Szene
+  const shadowX = fromRight ? x - 14 : x + w;
+  const sg = ctx.createLinearGradient(shadowX, 0, shadowX + (fromRight ? 14 : -14), 0);
+  sg.addColorStop(0, "rgba(30,22,12,0.4)");
+  sg.addColorStop(1, "rgba(30,22,12,0)");
+  ctx.fillStyle = sg;
+  ctx.fillRect(fromRight ? x - 14 : x + w, 0, 14, 360);
+}
 function loop(t) {
   const sc = SCENES[G.scene];
-  ctx2d.clearRect(0, 0, 640, 360); // nach ctx.scale(2,2) deckt dies die volle 1280x720 ab
-  sc.draw(ctx2d, t || 0);
-  paperOverlay(ctx2d);
+  osCtx.clearRect(0, 0, 640, 360);
+  sc.draw(osCtx, t || 0);
+  // Basisbild mit Aquarell-Effekten
+  ctx2d.clearRect(0, 0, 640, 360);
+  ctx2d.drawImage(osCanvas, 0, 0, 640, 360);
+  watercolor(ctx2d, t || 0);
+  // Schriftrollen-Animation beim Szenenwechsel
+  scrollAnim(ctx2d, t || 0);
   // Dauerhaft sichtbare Ausgangs-Buttons (Schilder mit Richtungspfeil + Ziel)
   sc.exits.forEach(ex => {
     const hovered = hoverSpot === ex;
@@ -1719,7 +1855,7 @@ function applyResult(res) {
   }
   if (res.type === "feles") showFeles(res.text);
   if (res.type === "choice") showChoice(res.choice);
-  if (res.type === "goto") { G.scene = res.target; updateSceneName(); sound("click"); }
+  if (res.type === "goto") { startScroll(res.target); sound("click"); }
 }
 function updateSceneName() {
   document.getElementById("scene-name").textContent = "» " + SCENES[G.scene].name;
@@ -1752,8 +1888,7 @@ canvas.addEventListener("click", e => {
   const exit = spotAt(x, y, sc.exits);
   if (exit) {
     sound("click");
-    G.scene = exit.target;
-    updateSceneName();
+    startScroll(exit.target);
     return;
   }
   const sp = spotAt(x, y, sc.hotspots);
@@ -1762,7 +1897,7 @@ canvas.addEventListener("click", e => {
     G.verbaAdd(sp.la);
     const res = sp.onUse ? sp.onUse(sc, G) : null;
     if (!res && sp.target) {
-      G.scene = sp.target; updateSceneName(); return;
+      startScroll(sp.target); return;
     }
     applyResult(res);
   }
