@@ -211,6 +211,12 @@ const VOCAB = {
     { la: "murmillo", de: "der Gladiator (mit Fischhelm)", tipp: "Murmillo in arena pugnat!" },
     { la: "thermae", de: "die Thermen, das Bad", tipp: "In thermis aqua calida est." },
     { la: "macellum", de: "der Markt", tipp: "In macello omnia emuntur." },
+    { la: "ager", de: "das Feld", tipp: "In agro frumentum crescit." },
+    { la: "culina", de: "die Kueche", tipp: "In culina panis coquitur." },
+    { la: "balneum", de: "das Bad", tipp: "In balneo aqua calida est." },
+    { la: "cellarium", de: "der Vorratskeller, Speicher", tipp: "In cellario vinum servatur." },
+    { la: "lucus", de: "der (heilige) Hain", tipp: "In luco arbores sacrae sunt." },
+    { la: "sacellum", de: "das kleine Heiligtum, Kapelle", tipp: "In sacello Ceres colitur." },
     { la: "taberna", de: "die Schenke, der Laden", tipp: "In taberna vinum bibitur!" },
     { la: "theatrum", de: "das Theater", tipp: "In theatro fabula agitur." },
     { la: "fabula", de: "die Geschichte", tipp: "Fabula narranda est!" },
@@ -715,7 +721,7 @@ SCENES.atrium = {
     ell(ctx, 49, 296, 2, 4, "#d88050", false);
     ctx.globalAlpha = 1;
     // ---- Figuren ----
-    person(ctx, 150, 140, { skin: "#f0c090", hair: "#4a3018", tunic: "#c03838", trim: "#e05858", tunicDark: "#9c2828", skirt: false }, t);
+    person(ctx, 210, 200, { skin: "#f0c090", hair: "#4a3018", tunic: "#c03838", trim: "#e05858", tunicDark: "#9c2828", skirt: false }, t);
     person(ctx, 440, 210, { skin: "#e0b080", hair: "#8a5a20", tunic: "#3860c0", trim: "#5880e0", tunicDark: "#28489c", skirt: false }, t);
     cat(ctx, 500, 300, t);
     torch(ctx, 90, 88, t);
@@ -749,7 +755,9 @@ SCENES.atrium = {
       onUse(s, G) { G.verbaAdd("aqua"); return { type: "text", la: "Aqua in impluvio splendet." }; } }
   ],
   exits: [
-    { x: 0, y: 0, w: 640, h: 30, la: "via", target: "macellum" }
+    { x: 0, y: 0, w: 213, h: 30, la: "hortus", target: "hortus" },
+    { x: 213, y: 0, w: 214, h: 30, la: "ager", target: "macellum" },
+    { x: 427, y: 0, w: 213, h: 30, la: "culina", target: "taberna" }
   ]
 };
 
@@ -854,7 +862,7 @@ SCENES.hortus = {
     ell(ctx, 384.5, 219 + bf, 2.4, 1.8, "#d88828", false);
     ctx.globalAlpha = 1;
     person(ctx, 300, 240, { skin: "#f0c090", hair: "#6a3818", tunic: "#d04868", trim: "#e87090", tunicDark: "#a83450", skirt: true }, t);
-    cat(ctx, 480, 150, t);
+    cat(ctx, 560, 330, t);
     // Vogel am Himmel
     ctx.strokeStyle = "rgba(84,62,42,0.5)"; ctx.lineWidth = 1;
     const bx = ((t || 0) / 60) % 700 - 30;
@@ -891,13 +899,15 @@ SCENES.hortus = {
       onUse(s, G) { return { type: "text", la: "Arbor magna in horto stat." }; } }
   ],
   exits: [
-    { x: 0, y: 0, w: 640, h: 30, la: "domus", target: "atrium" }
+    { x: 0, y: 0, w: 213, h: 30, la: "atrium", target: "atrium" },
+    { x: 213, y: 0, w: 214, h: 30, la: "lucus", target: "theatrum" },
+    { x: 427, y: 0, w: 213, h: 30, la: "balneum", target: "thermae" }
   ]
 };
 
 // ---------- SZENE 3: Macellum ----------
 SCENES.macellum = {
-  name: "Macellum",
+  name: "Ager",
   draw(ctx, t) {
     // ---- Markt: fern Staedte-Silhouetten + Dunst ----
     skyGradient(ctx, "#f0c860", "#f8dc90", "#f0b870");
@@ -1018,7 +1028,7 @@ SCENES.macellum = {
     for (let w2 = 0; w2 < 3; w2++) { ctx.beginPath(); ctx.moveTo(473 + w2 * 7, 288); ctx.lineTo(473 + w2 * 7, 299); ctx.stroke(); }
     ctx.globalAlpha = 1;
     ctx.beginPath(); ctx.moveTo(480, 286); ctx.quadraticCurveTo(481, 280, 480, 278); ctx.stroke();
-    person(ctx, 170, 210, { skin: "#e0b080", hair: "#2a1a10", tunic: "#4aa858", trim: "#70c878", tunicDark: "#388c40", skirt: false }, t);
+    person(ctx, 170, 290, { skin: "#e0b080", hair: "#2a1a10", tunic: "#4aa858", trim: "#70c878", tunicDark: "#388c40", skirt: false }, t);
     person(ctx, 420, 280, { skin: "#f0c090", hair: "#e0b860", tunic: "#b050d0", trim: "#d078e8", tunicDark: "#8c38a8", skirt: true }, t);
     // Kundin im Hintergrund
     ctx.globalAlpha = 0.8;
@@ -1047,14 +1057,14 @@ SCENES.macellum = {
       onUse(s, G) { return { type: "feles", text: "Miau! Emo = ich kaufe. Pecunia dat, frumentum accipit!" }; } }
   ],
   exits: [
-    { x: 0, y: 0, w: 320, h: 30, la: "domus", target: "atrium" },
-    { x: 320, y: 0, w: 320, h: 30, la: "taberna", target: "taberna" }
+    { x: 0, y: 0, w: 320, h: 30, la: "atrium", target: "atrium" },
+    { x: 320, y: 0, w: 320, h: 30, la: "lucus", target: "theatrum" }
   ]
 };
 
 // ---------- SZENE 4: Taberna ----------
 SCENES.taberna = {
-  name: "Taberna",
+  name: "Culina",
   draw(ctx, t) {
     // ---- Taberna: warmes Innenlicht ----
     const tg = ctx.createLinearGradient(0, 0, 0, 360);
@@ -1141,7 +1151,7 @@ SCENES.taberna = {
     }
     ctx.globalAlpha = 1;
     // ---- Coquus + Murmillo-Ecke ----
-    person(ctx, 130, 180, { skin: "#f0c090", hair: "#2a1a10", tunic: "#c06028", trim: "#e08040", tunicDark: "#984818", skirt: false }, t);
+    person(ctx, 130, 310, { skin: "#f0c090", hair: "#2a1a10", tunic: "#c06028", trim: "#e08040", tunicDark: "#984818", skirt: false }, t);
     R(ctx, 112, 152, 36, 12, "#f8f8f0");
     RN(ctx, 116, 147, 28, 6, "#e0e0d0");
     // Kochlöffel
@@ -1155,7 +1165,7 @@ SCENES.taberna = {
     ctx.globalAlpha = 0.7;
     ell(ctx, 431, 232, 6, 2, "#a03848", false);
     ctx.globalAlpha = 1;
-    murmilloSprite(ctx, 460, 250, t);
+    murmilloSprite(ctx, 560, 300, t);
     // Karten-Spiel-Miniatur auf dem Tisch
     RN(ctx, 415, 244, 7, 10, "#f0ece0");
     RN(ctx, 446, 246, 7, 10, "#f0ece0");
@@ -1191,14 +1201,14 @@ SCENES.taberna = {
       onUse(s, G) { return { type: "feles", text: "Miau! Do = ich gebe. Vinum dat, sagittam accipit!" }; } }
   ],
   exits: [
-    { x: 0, y: 0, w: 320, h: 30, la: "macellum", target: "macellum" },
-    { x: 320, y: 0, w: 320, h: 30, la: "thermae", target: "thermae" }
+    { x: 0, y: 0, w: 320, h: 30, la: "atrium", target: "atrium" },
+    { x: 320, y: 0, w: 320, h: 30, la: "cellarium", target: "domus_vicini" }
   ]
 };
 
 // ---------- SZENE 5: Thermae ----------
 SCENES.thermae = {
-  name: "Thermae",
+  name: "Balneum",
   draw(ctx, t) {
     // ---- Thermen: Dampfende Halle ----
     const hg = ctx.createLinearGradient(0, 0, 0, 360);
@@ -1268,7 +1278,7 @@ SCENES.thermae = {
       ctx.globalAlpha = 1;
     }
     // ---- Badender + Tuch + Schlüssel-Motiv ----
-    person(ctx, 140, 250, { skin: "#e0b080", hair: "#2a1a10", tunic: "#50b0b8", trim: "#78d0d8", tunicDark: "#388c94", skirt: false }, t);
+    person(ctx, 140, 340, { skin: "#e0b080", hair: "#2a1a10", tunic: "#50b0b8", trim: "#78d0d8", tunicDark: "#388c94", skirt: false }, t);
     R(ctx, 106, 218, 14, 24, "#f0ece0"); // Tuch
     ctx.globalAlpha = 0.3;
     ctx.strokeStyle = "#c8c0a8"; ctx.lineWidth = 0.8;
@@ -1294,7 +1304,7 @@ SCENES.thermae = {
     }
     // Zweiter Badender im Hintergrund
     ctx.globalAlpha = 0.75;
-    person(ctx, 480, 240, { skin: "#e8c0a0", hair: "#5a4a38", tunic: "#70a8c0", trim: "#98c8d8", tunicDark: "#588898", skirt: true }, t);
+    person(ctx, 500, 340, { skin: "#e8c0a0", hair: "#5a4a38", tunic: "#70a8c0", trim: "#98c8d8", tunicDark: "#588898", skirt: true }, t);
     ctx.globalAlpha = 1;
     cat(ctx, 560, 320, t);
     torch(ctx, 40, 58, t); torch(ctx, 600, 58, t);
@@ -1329,14 +1339,14 @@ SCENES.thermae = {
       onUse(s, G) { return { type: "feles", text: "Miau! Thermae = das Bad. Aqua calida Felem non placet!" }; } }
   ],
   exits: [
-    { x: 0, y: 0, w: 320, h: 30, la: "taberna", target: "taberna" },
-    { x: 320, y: 0, w: 320, h: 30, la: "domus vicini", target: "domus_vicini" }
+    { x: 0, y: 0, w: 320, h: 30, la: "atrium", target: "atrium" },
+    { x: 320, y: 0, w: 320, h: 30, la: "hortus", target: "hortus" }
   ]
 };
 
 // ---------- SZENE 6: Domus Vicini ----------
 SCENES.domus_vicini = {
-  name: "Domus Vicini",
+  name: "Cellarium",
   draw(ctx, t) {
     // ---- Domus Vicini: gemuetliche Stube ----
     const dg = ctx.createLinearGradient(0, 0, 0, 360);
@@ -1459,14 +1469,14 @@ SCENES.domus_vicini = {
       onUse(s, G) { return { type: "text", la: "Ianua ad vicum nocturnum ducit." }; } }
   ],
   exits: [
-    { x: 0, y: 0, w: 320, h: 30, la: "thermae", target: "thermae" },
-    { x: 320, y: 0, w: 320, h: 30, la: "theatrum", target: "theatrum" }
+    { x: 0, y: 0, w: 320, h: 30, la: "atrium", target: "atrium" },
+    { x: 320, y: 0, w: 320, h: 30, la: "culina", target: "taberna" }
   ]
 };
 
 // ---------- SZENE 7: Theatrum ----------
 SCENES.theatrum = {
-  name: "Theatrum",
+  name: "Lucus",
   draw(ctx, t) {
     // ---- Theatrum: Nachmittagsonne ----
     skyGradient(ctx, "#f0a848", "#f8cc88", "#fce0a8");
@@ -1587,14 +1597,15 @@ SCENES.theatrum = {
       onUse(s, G) { return { type: "text", la: "Scaena magna theatri est." }; } }
   ],
   exits: [
-    { x: 0, y: 0, w: 320, h: 30, la: "domus vicini", target: "domus_vicini" },
-    { x: 320, y: 0, w: 320, h: 30, la: "templum", target: "templum" }
+    { x: 0, y: 0, w: 213, h: 30, la: "atrium", target: "atrium" },
+    { x: 213, y: 0, w: 214, h: 30, la: "sacellum", target: "templum" },
+    { x: 427, y: 0, w: 213, h: 30, la: "lucus nocturnus", target: "vicus_nocturnus" }
   ]
 };
 
 // ---------- SZENE 8: Templum Ceres ----------
 SCENES.templum = {
-  name: "Templum Ceres",
+  name: "Sacellum Ceres",
   draw(ctx, t) {
     // ---- Templum Ceres: goldene Abendsonne ----
     skyGradient(ctx, "#b08868", "#d0a888", "#f0dcb8");
@@ -1724,14 +1735,15 @@ SCENES.templum = {
       onUse(s, G) { return { type: "text", la: "Columnae templi altae sunt." }; } }
   ],
   exits: [
-    { x: 0, y: 0, w: 320, h: 30, la: "theatrum", target: "theatrum" },
-    { x: 320, y: 0, w: 320, h: 30, la: "vicus nocturnus", target: "vicus_nocturnus" }
+    { x: 0, y: 0, w: 213, h: 30, la: "atrium", target: "atrium" },
+    { x: 213, y: 0, w: 214, h: 30, la: "lucus", target: "theatrum" },
+    { x: 427, y: 0, w: 213, h: 30, la: "lucus nocturnus", target: "vicus_nocturnus" }
   ]
 };
 
 // ---------- SZENE 9: Vicus Nocturnus ----------
 SCENES.vicus_nocturnus = {
-  name: "Vicus Nocturnus",
+  name: "Lucus Nocturnus",
   draw(ctx, t) {
     // ---- Vicus Nocturnus: mondenachtliche Gasse ----
     skyGradient(ctx, "#100c20", "#181428", "#282048");
@@ -1897,8 +1909,8 @@ SCENES.vicus_nocturnus = {
       onUse(s, G) { return { type: "feles", text: "Miau! Nox = die Nacht. In nocte oculi Feles lucent!" }; } }
   ],
   exits: [
-    { x: 0, y: 0, w: 320, h: 30, la: "templum", target: "templum" },
-    { x: 320, y: 0, w: 320, h: 30, la: "macellum", target: "macellum" }
+    { x: 0, y: 0, w: 320, h: 30, la: "atrium", target: "atrium" },
+    { x: 320, y: 0, w: 320, h: 30, la: "sacellum", target: "templum" }
   ]
 };
 
@@ -2073,7 +2085,7 @@ SCENES.festum = {
       onUse(s, G) { return { type: "text", la: "Populus laetus festum celebrat." }; } }
   ],
   exits: [
-    { x: 0, y: 0, w: 640, h: 30, la: "vicus nocturnus", target: "vicus_nocturnus" }
+    { x: 0, y: 0, w: 640, h: 30, la: "atrium", target: "atrium" }
   ]
 };
 
@@ -2547,42 +2559,61 @@ function loop(t) {
   watercolor(ctx2d, t || 0);
   // Schriftrollen-Animation beim Szenenwechsel
   scrollAnim(ctx2d, t || 0);
-  // Dauerhaft sichtbare Ausgangs-Buttons (Schilder mit Richtungspfeil + Ziel)
+  // Ausgangs-Schilder: dezent oben, alle sichtbar, leuchten bei Hover
   sc.exits.forEach(ex => {
     const hovered = hoverSpot === ex;
-    const bw = Math.min(ex.w, 150), bx = ex.x + (ex.w - bw) / 2;
-    // Schild-Hintergrund
-    ctx2d.fillStyle = hovered ? "rgba(60,44,20,0.95)" : "rgba(30,22,12,0.85)";
-    ctx2d.fillRect(bx, ex.y + 2, bw, 28);
-    // Rahmen
-    ctx2d.strokeStyle = hovered ? "#f8e8b0" : "#d4a545";
-    ctx2d.lineWidth = 2;
-    ctx2d.strokeRect(bx + 1, ex.y + 3, bw - 2, 26);
-    // Richtungspfeil
-    ctx2d.fillStyle = "#d4a545";
-    const cy = ex.y + 16;
-    const left = /macellum|atrium|domus|hortus/.test(ex.target) && ex.target !== "hortus" ? false : (ex.x < 320);
-    if (left) {
-      ctx2d.beginPath();
-      ctx2d.moveTo(bx + 26, cy - 7); ctx2d.lineTo(bx + 12, cy); ctx2d.lineTo(bx + 26, cy + 7);
-      ctx2d.closePath(); ctx2d.fill();
+    const bw = Math.min(ex.w, 196), bx = ex.x + (ex.w - bw) / 2;
+    const by = ex.y + 3, bh = 24, rr2 = 12;
+    ctx2d.beginPath();
+    ctx2d.moveTo(bx + rr2, by);
+    ctx2d.arcTo(bx + bw, by, bx + bw, by + bh, rr2);
+    ctx2d.arcTo(bx + bw, by + bh, bx, by + bh, rr2);
+    ctx2d.arcTo(bx, by + bh, bx, by, rr2);
+    ctx2d.arcTo(bx, by, bx + bw, by, rr2);
+    ctx2d.closePath();
+    if (hovered) {
+      ctx2d.save();
+      ctx2d.shadowColor = "rgba(255,236,180,0.9)";
+      ctx2d.shadowBlur = 14;
+      ctx2d.fillStyle = "rgba(72,56,80,0.95)";
+      ctx2d.fill();
+      ctx2d.restore();
+      ctx2d.fillStyle = "rgba(96,76,104,0.98)";
+      ctx2d.fill();
+      ctx2d.strokeStyle = "rgba(255,236,180,0.95)";
     } else {
-      ctx2d.beginPath();
-      ctx2d.moveTo(bx + bw - 26, cy - 7); ctx2d.lineTo(bx + bw - 12, cy); ctx2d.lineTo(bx + bw - 26, cy + 7);
-      ctx2d.closePath(); ctx2d.fill();
+      ctx2d.fillStyle = "rgba(52,42,58,0.82)";
+      ctx2d.fill();
+      ctx2d.strokeStyle = "rgba(200,186,204,0.55)";
     }
-    // Ziel-Beschriftung
-    ctx2d.fillStyle = "#f8e8b0";
-    ctx2d.font = "bold 13px Georgia";
+    ctx2d.lineWidth = 1.5;
+    ctx2d.stroke();
+    ctx2d.fillStyle = hovered ? "#fff4dc" : "rgba(238,228,240,0.92)";
+    ctx2d.font = "bold 12px Georgia";
     ctx2d.textAlign = "center";
     ctx2d.textBaseline = "middle";
-    const label = "» " + (SCENES[ex.target] ? SCENES[ex.target].name : ex.la);
-    ctx2d.fillText(label, bx + bw / 2, cy);
+    const label = "\u00bb " + (SCENES[ex.target] ? SCENES[ex.target].name : ex.la);
+    ctx2d.fillText(label, bx + bw / 2, by + bh / 2 + 0.5);
   });
+  // Hover: Objektumriss leuchtet sanft (pulsierend) statt gelbem Kasten
   if (hoverSpot) {
-    ctx2d.strokeStyle = "#f8e8b0";
-    ctx2d.lineWidth = 2;
-    ctx2d.strokeRect(hoverSpot.x + 1, hoverSpot.y + 1, hoverSpot.w - 2, hoverSpot.h - 2);
+    const pulse = 0.55 + Math.sin((t || 0) / 300) * 0.25;
+    ctx2d.save();
+    ctx2d.shadowColor = "rgba(255,236,180," + (0.55 + pulse * 0.4).toFixed(2) + ")";
+    ctx2d.shadowBlur = 16;
+    ctx2d.strokeStyle = "rgba(255,244,214," + (0.5 + pulse * 0.45).toFixed(2) + ")";
+    ctx2d.lineWidth = 2.4;
+    const hx = hoverSpot.x, hy = hoverSpot.y, hw = hoverSpot.w, hh = hoverSpot.h;
+    const rad = Math.min(10, hw / 3, hh / 3);
+    ctx2d.beginPath();
+    ctx2d.moveTo(hx + rad, hy);
+    ctx2d.arcTo(hx + hw, hy, hx + hw, hy + hh, rad);
+    ctx2d.arcTo(hx + hw, hy + hh, hx, hy + hh, rad);
+    ctx2d.arcTo(hx, hy + hh, hx, hy, rad);
+    ctx2d.arcTo(hx, hy, hx + hw, hy, rad);
+    ctx2d.closePath();
+    ctx2d.stroke();
+    ctx2d.restore();
   }
   requestAnimationFrame(loop);
 }
